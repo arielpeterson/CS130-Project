@@ -21,15 +21,18 @@ class Db:
         # If no friends, we are done
         if not friends_list:
             return
-        
         try:
             friends_list.remove('friend_name')
         except ValueError:
             logging.info('Could not remove {} because user {} does not have them in friends list'.format(friend_name, user_name))
             return
         
-        self._db[self.USER_TABLE].update_one({'user': user_name}, {'friendsList': friends_list})
+        self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'friendsList': friends_list}})
     
     def get_location(self, friend_name):
         """Query database for location of specified user"""
         return self._db[self.USER_TABLE].find({'user': friend_name}).get('location')
+
+    def toggle(self, user_name):
+        """Toggle user's location sharing"""
+        self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': False}})
