@@ -1,5 +1,4 @@
 #!/bin/bash
 
-source special.env
-
+# Run on port 3001
 python app.py

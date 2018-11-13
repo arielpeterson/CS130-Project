@@ -1,6 +1,8 @@
 import logging
 
-import flask import Flask, request
+from flask import Flask, request
+
+from db import Db
 
 app = Flask(__name__)
 db = Db()
@@ -49,3 +51,7 @@ def toggle_loc():
         return 'Must provide a user name'
     db.toggle_loc(user_name)
     return "Toggled!"
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')

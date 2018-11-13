@@ -3,6 +3,10 @@ import logging
 
 from pymongo import MongoClient
 
+# Temporary
+os.environ['MONGO_URI'] = 'mongodb://localhost:27017'
+os.environ['USER_TABLE'] = 'User'
+
 
 class Db:
     MONGO_URI = os.environ['MONGO_URI']
