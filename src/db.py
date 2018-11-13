@@ -1,4 +1,5 @@
 import os
+import logging
 
 from pymongo import MongoClient
 
@@ -8,7 +9,27 @@ class Db:
     USER_TABLE = os.environ['USER_TABLE']
     def __init__(self):
         self._db = MongoClient(self.MONGO_URI)
+
+    def add_friend(self, user_name, friend_name):
+        """Add friend to user's friends list"""
+        self._db[self.USER_TABLE].update_one({'user': user_name}, {'$push': {'friendsList': friend_name}})
+
+    def delete_friend(self, user_name, friend_name):
+        """Delete a friend from a user's friends list"""
+        # Unfortunately we need to query the friends_list, search for the user, and remove
+        friends_list = self._db[self.USER_TABLE].find({'user': user_name}).get('friendsList')
+        # If no friends, we are done
+        if not friends_list:
+            return
+        
+        try:
+            friends_list.remove('friend_name')
+        except ValueError:
+            logging.info('Could not remove {} because user {} does not have them in friends list'.format(friend_name, user_name))
+            return
+        
+        self._db[self.USER_TABLE].update_one({'user': user_name}, {'friendsList': friends_list})
     
-    def get_location(self, user_name):
+    def get_location(self, friend_name):
         """Query database for location of specified user"""
-        return self._db[self.USER_TABLE].find({'user': user_name}).get('location')
+        return self._db[self.USER_TABLE].find({'user': friend_name}).get('location')
