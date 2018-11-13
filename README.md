@@ -1,5 +1,11 @@
 # CS131-Project
 
+## Requirements
+* Docker
+* MongoDB
+
+This assumes you have docker installed and running as well as MongoDB running locally on port 27107 (default)
+
 ## To Build:
 
 `docker build -t <name for container> .`
