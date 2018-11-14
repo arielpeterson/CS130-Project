@@ -11,8 +11,13 @@ os.environ['USER_TABLE'] = 'User'
 class Db:
     MONGO_URI = os.environ['MONGO_URI']
     USER_TABLE = os.environ['USER_TABLE']
+
     def __init__(self):
         self._db = MongoClient(self.MONGO_URI)
+
+    def get_friends_list(self, user_name):
+        """Get list of friends for a given user"""
+        return self._db[self.USER_TABLE].find({'user': user_name}).get('friendsList')
 
     def add_friend(self, user_name, friend_name):
         """Add friend to user's friends list"""
@@ -21,7 +26,7 @@ class Db:
     def delete_friend(self, user_name, friend_name):
         """Delete a friend from a user's friends list"""
         # Unfortunately we need to query the friends_list, search for the user, and remove
-        friends_list = self._db[self.USER_TABLE].find({'user': user_name}).get('friendsList')
+        friends_list = self.get_friends_list(user_name)
         # If no friends, we are done
         if not friends_list:
             return

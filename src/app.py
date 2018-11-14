@@ -34,10 +34,18 @@ def delete_friend():
 @app.route('/lookup')
 def lookup_loc():
     """Look up a user's current location"""
+    user_name = request.args.get('user_name')
     friend_name = request.args.get('friend_name')
     if not friend_name:
         logging.info('/lookup_loc: no friend name')
         return 'Must provide a friend name'
+
+    # Ensure user is allowed to view location still
+    friends_list = db.get_friends_list(user_name)
+    if friend_name not in friends_list:
+        logging.info('/lookup_loc: illegal friend lookup')
+        return "Not authroized to view this user's location"
+
     location = db.get_location(friend_name)
     return str(location)
 
@@ -49,7 +57,7 @@ def toggle_loc():
     if not user_name:
         logging.info('/toggle: No user name')
         return 'Must provide a user name'
-    db.toggle_loc(user_name)
+    db.toggle(user_name)
     return "Toggled!"
 
 
