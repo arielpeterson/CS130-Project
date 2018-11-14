@@ -42,6 +42,10 @@ class Db:
         """Query database for location of specified user"""
         return self._db[self.USER_TABLE].find({'user': friend_name}).get('location')
 
+    def set_location(self, user_name, location):
+        """Update user with new location from device"""
+        self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location': location}})
+
     def toggle(self, user_name):
         """Toggle user's location sharing"""
         self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': False}})

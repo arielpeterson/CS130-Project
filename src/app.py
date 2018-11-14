@@ -7,7 +7,7 @@ from db import Db
 app = Flask(__name__)
 db = Db()
 
-@app.route('/addFriend')
+@app.route('/addFriend', methods=['POST'])
 def add_friend():
     """Add user to friends list"""
     user_name = request.args.get('user_name')
@@ -19,7 +19,7 @@ def add_friend():
     return 'Added!'
 
 
-@app.route('/deleteFriend')
+@app.route('/deleteFriend', methods=['POST'])
 def delete_friend():
     """Remove user from friends list"""
     user_name = request.args.get('user_name')
@@ -30,6 +30,14 @@ def delete_friend():
     db.delete_friend(user_name, friend_name)
     return 'Removed!'
 
+
+@app.route('/registerLocation', methods=['POST'])
+def register():
+    """Register a user's most recent location"""
+    user_name = request.args.get('user_name')
+    location = request.args.get('location')
+    db.set_location(user_name, location)
+    return "Updated!"
 
 @app.route('/lookup')
 def lookup_loc():
@@ -50,7 +58,7 @@ def lookup_loc():
     return str(location)
 
 
-@app.route('/toggle')
+@app.route('/toggle', methods=['POST'])
 def toggle_loc():
     """Toggle user location on and off"""
     user_name = request.args.get('user_name')
