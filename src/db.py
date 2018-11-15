@@ -15,6 +15,13 @@ class Db:
     def __init__(self):
         self._db = MongoClient(self.MONGO_URI)
 
+    def add_user(self, user_name):
+        """Add a new user"""
+        if self._db[self.USER_TABLE].find({'user': user_name}):
+            return
+            
+        self._db[self.USER_TABLE].insert_one({'user': user_name})
+
     def get_friends_list(self, user_name):
         """Get list of friends for a given user"""
         return self._db[self.USER_TABLE].find({'user': user_name}).get('friendsList')

@@ -7,6 +7,16 @@ from db import Db
 app = Flask(__name__)
 db = Db()
 
+@app.route('/addUser', methods=['POST'])
+def add_user():
+    """Add a new user to db"""
+    user_name = request.args.get('user_name')
+    if not user_name:
+        logging.info('/addUser: no user name')
+        return 'Must provide user name'
+    db.add_user(user_name)
+    return "Signed up!"
+
 @app.route('/addFriend', methods=['POST'])
 def add_friend():
     """Add user to friends list"""
