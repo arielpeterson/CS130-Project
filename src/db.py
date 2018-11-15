@@ -80,16 +80,17 @@ class Db(object):
         """Toggle user's location sharing"""
         l = self._db[self.USER_TABLE].find_one({'user': user_name})
         if l is None:
-            return None
+            return False
         toggle = l.get('location_sharing')
         if toggle is not None:
             self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': not toggle}})
         else:
             self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': False}})
+        return True
 
     def location_available(self, user_name):
         """Check if user's location is toggled off"""
         l = self._db[self.USER_TABLE].find_one({'user': user_name})
         if l is not None:
             return l.get('location_sharing')
-        return None
+        return False

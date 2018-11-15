@@ -77,7 +77,8 @@ def lookup_loc():
     if friends_list is None:
         return Response('No such user', status=400)
 
-    if not db.location_available(user_name):
+    is_available = db.location_available(user_name)
+    if not is_available and is_available != None:
         return Response('Friend has location toggled off', status=401)
 
     if friend_name not in friends_list:
@@ -98,7 +99,9 @@ def toggle_loc():
     if not user_name:
         logging.info('/toggle: No user name')
         return Response('Must provide a user name', status=400)
-    db.toggle(user_name)
+    res = db.toggle(user_name)
+    if not res:
+        return Response("User doesn't exist", status=400)
     return Response("Toggled!", status=200)
 
 
