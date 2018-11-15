@@ -1,3 +1,19 @@
+"""                                                                                              
+Database module implemented using MongoDB.                                    
+                                                                                                    
+Design Pattern                                                                                   
+----------------------                                                                           
+This module is implemented using a Singleton design pattern. Instantiation of                    
+the class is restricted to only one class instance. If multiple databases are created, 
+there is no gaurantee of synchronoization across these instances. The Singleton design 
+proactively prevents such errors.
+                                                                                                    
+Information Hiding Principle                                                                     
+-----------------------------                                                                    
+The interface to the database is accomplished through a "Db" class, rather than exposing
+the internals of MongoDB. These methods that are unlikely to change, but the database may.               
+"""  
+
 import os
 import logging
 
@@ -9,21 +25,7 @@ os.environ['USER_TABLE'] = 'User'
 
 
 class Db(object):
-    """                                                                                              
-    Database module implemented using MongoDB.                                    
-                                                                                                     
-    Design Pattern                                                                                   
-    ----------------------                                                                           
-    This module is implemented using a Singleton design pattern. Instantiation of                    
-    the class is restricted to only one class instance. If multiple databases are created, 
-    there is no gaurantee of synchronoization across these instances. The Singleton design 
-    proactively prevents such errors.
-                                                                                                     
-    Information Hiding Principle                                                                     
-    -----------------------------                                                                    
-    The interface to the database is accomplished through a "Db" class, rather than exposing
-    the internals of MongoDB. These methods that are unlikely to change, but the database may.               
-    """  
+
     MONGO_URI = os.environ['MONGO_URI']
     USER_TABLE = os.environ['USER_TABLE']
     _db = None
@@ -179,12 +181,13 @@ class Db(object):
         """
         l = self._db[self.USER_TABLE].find_one({'user': user_name})
         if l is None:
-            return None
+            return False
         toggle = l.get('location_sharing')
         if toggle is not None:
             self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': not toggle}})
         else:
             self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': False}})
+        return True
 
     def location_available(self, user_name):
         """                                                                                          
@@ -204,4 +207,4 @@ class Db(object):
         l = self._db[self.USER_TABLE].find_one({'user': user_name})
         if l is not None:
             return l.get('location_sharing')
-        return None
+        return False
