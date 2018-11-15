@@ -33,7 +33,7 @@ import json
 from flask import Flask, request, Response, jsonify
 
 from db import Db
-#from location import IndoorLocation, OutdoorLocation
+from location import IndoorLocation, OutdoorLocation
 
 app = Flask(__name__)
 db = Db()
