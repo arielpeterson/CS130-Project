@@ -18,6 +18,7 @@
 		8EA4B1622199E3DA00AC1E4C /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = 8EA4B1612199E3DA00AC1E4C /* Podfile */; };
 		8EB1EE4C219C4FB100041626 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8EB1EE4A219C4FB000041626 /* Main.strings */; };
 		8EB1EE58219C5D7200041626 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EB1EE56219C5D7200041626 /* Main.storyboard */; };
+		9AAB8CB8219CFDC500228C24 /* MapController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAB8CB7219CFDC500228C24 /* MapController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		8EB1EE4B219C4FB000041626 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "../../../../../../../../var/folders/6k/d2vwr6x9421b_nsqm5p6v0pc0000gn/T/CocoaPods/Try/GoogleSignIn/google-services/ios/signin/SignInExample/en.lproj/Main.strings"; sourceTree = "<group>"; };
 		8EB1EE57219C5D7200041626 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "../../../../../../../../var/folders/6k/d2vwr6x9421b_nsqm5p6v0pc0000gn/T/CocoaPods/Try/GoogleSignIn/google-services/ios/signin/SignInExample/Base.lproj/Main.storyboard"; sourceTree = "<group>"; };
 		9A6809717C89FABFE77C3CFB /* libPods-cs130_project.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-cs130_project.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AAB8CB7219CFDC500228C24 /* MapController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapController.swift; sourceTree = "<group>"; };
 		DE15C1EB205866F7107E00D4 /* Pods-cs130_project.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cs130_project.debug.xcconfig"; path = "Pods/Target Support Files/Pods-cs130_project/Pods-cs130_project.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +124,7 @@
 			children = (
 				8EA4B1412199E39A00AC1E4C /* AppDelegate.swift */,
 				8EA4B1432199E39B00AC1E4C /* ViewController.swift */,
+				9AAB8CB7219CFDC500228C24 /* MapController.swift */,
 				8EA4B1482199E39B00AC1E4C /* Assets.xcassets */,
 				8E426D8C219C48DD00D5BBFE /* appbg.png */,
 				8EB1EE56219C5D7200041626 /* Main.storyboard */,
@@ -347,6 +350,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EA4B1442199E39B00AC1E4C /* ViewController.swift in Sources */,
+				9AAB8CB8219CFDC500228C24 /* MapController.swift in Sources */,
 				8EA4B1422199E39A00AC1E4C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
