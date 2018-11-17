@@ -14,9 +14,7 @@ class AppTest(unittest.TestCase):
 
     def setUp(self):
         ''' Set up test fixtures '''
-
         self.user = 'i_am_a_user'
-
         self.server = MockupDB(auto_ismaster={"maxWireVersion": 6})
         self.server.run()
         self.app = app.create_test_app(self.server.uri).test_client()
