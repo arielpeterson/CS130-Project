@@ -168,25 +168,27 @@ def lookup_loc():
     """
     user_name = request.args.get('user_name')
     friend_name = request.args.get('friend_name')
-    if not friend_name:
-        print('no friend_name')
+    if not user_name or not friend_name:
         logging.info('/lookup_loc: no friend name')
-        return Response('Must provide a friend name', status=400)
+        return Response('Must provide a user and a friend name', status=400)
 
-    # Ensure user exists is allowed to view location still
+    # Get list of friends
+    # TODO: Have friend list contain location information?
     friends_list = db.get_friends_list(user_name)
     if friends_list is None:
         return Response('No such user', status=400)
 
-    is_available = db.location_available(user_name)
-    if not is_available and is_available != None:
-        return Response('Friend has location toggled off', status=401)
-
+    # Is requested user in our friend list?
     if friend_name not in friends_list:
-        print('access denied')
         logging.info('/lookup_loc: illegal friend lookup')
         return Response("Not authroized to view this user's location", status=401)
 
+    # Is friend sharing location?
+    is_available = db.location_available(user_name)
+    if not is_available and is_available != None:
+        return Response('Friend has location toggled off', status=401)
+    
+    # Get location
     location = db.get_location(friend_name)
     if location is None:
         return Response('No such user', status=400)
