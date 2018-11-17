@@ -7,8 +7,9 @@ import app
 
 class AppTest(unittest.TestCase):
     '''
-        Unit test for app.py. This makes use of mockupdb to make it a true unit
-        test case. Each endpoint is tested in a seperate method.
+        Unit test for app.py. 
+        Uses mockupdb to act as the database.
+        Each endpoint is tested in a seperate method.
     '''
 
     def setUp(self):
