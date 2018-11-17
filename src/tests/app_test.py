@@ -18,7 +18,7 @@ class AppTest(unittest.TestCase):
 
         self.server = MockupDB(auto_ismaster={"maxWireVersion": 6})
         self.server.run()
-        self.app = app.make_app(self.server.uri).test_client()
+        self.app = app.create_test_app(self.server.uri).test_client()
 
     def tearDown(self):
         ''' Take down test fixtures '''
