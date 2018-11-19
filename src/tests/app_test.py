@@ -46,14 +46,15 @@ class AppTest(unittest.TestCase):
         res = go(self.app.get, '/addFriend', query_string={'user_name': '', 'friend_name': ''})
         self.assertEqual(res().status_code, 400)
 
-        # Frined was added successfully
+        # Friend was added successfully
         res = go(self.app.get, '/addFriend', query_string={'user_name': self.user, 'friend_name': 'friend_test'})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friendsList': []}]})      
         self.server.reply({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True})
         self.assertEqual(res().status_code, 200)
 
         # Add friend to non-existent user
         res = go(self.app.get, '/addFriend', query_string={'user_name': 'not_a_user', 'friend_name': 'friend_test'})
-        self.server.reply({'n': 0, 'nModified': 0, 'ok': 1.0, 'updatedExisting': False})
+        self.server.reply(cursor={'id': 0, 'firstBatch': []})
         self.assertEqual(res().status_code, 400)
 
     def test_deleteFriend(self):
@@ -101,8 +102,8 @@ class AppTest(unittest.TestCase):
 
         # Requested user not in friend list
         res = go(self.app.get,'/lookup', query_string={'user_name': self.user, 'friend_name': 'not_a_friend'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': 'dont_look_at_me_rn', 'friendsList': ['a_friend']}]})
-        self.assertEqual(res().status_code , 401)
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friendsList': ['a_friend']}]})
+        self.assertEqual(res().status_code , 400)
 
         # Look up friend who is not sharing location
         res = go(self.app.get,'/lookup', query_string={'user_name': self.user, 'friend_name': 'dont_look_at_me_rn'})
@@ -113,21 +114,11 @@ class AppTest(unittest.TestCase):
         # Look up friend's location successfully
         res = go(self.app.get, '/lookup', query_string={'user_name': self.user, 'friend_name': 'look_at_me'})
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friendsList': ['look_at_me']}]})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': 'look_at_me', 'location_sharing': True}]})
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': 'look_at_me', 'location_sharing': True, 'location': {'x': 4, 'y': 4}}]})
         response = res()
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.data)['x'], 4)
         self.assertEqual(json.loads(response.data)['y'], 4)
-
-        # Look up friend's location that does not exist
-        res = go(self.app.get, '/lookup', query_string={'user_name': self.user, 'friend_name': 'i_dont_exist'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friendsList': ['i_dont_exist']}]})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': 'look_at_me', 'location_sharing': True}]})
-        self.server.reply(cursor={'id': 0, 'firstBatch': []})
-        response = res()
-        self.assertEqual(response.status_code, 400)
-
 
     def test_toggle(self):
         '''Test 6: /toggle endpoint'''

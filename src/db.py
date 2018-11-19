@@ -16,8 +16,8 @@ the internals of MongoDB. These methods that are unlikely to change, but the dat
 
 import os
 import logging
-
 from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 
 # Temporary
 os.environ['MONGO_URI'] = 'mongodb://localhost:27017'
@@ -29,8 +29,9 @@ class Db(object):
     MONGO_URI = os.environ['MONGO_URI']
     USER_TABLE = os.environ['USER_TABLE']
     _db = None
+    connected = False
 
-    def __new__(cls, uri=MONGO_URI):
+    def __new__(cls, uri=MONGO_URI,db='wya'):
         """
         Overrides __new__ to ensure only a single instance is created
         """
@@ -38,11 +39,11 @@ class Db(object):
             cls._db = object.__new__(cls)
         return cls._db
 
-    def __init__(self, uri=MONGO_URI):
+    def __init__(self, uri=MONGO_URI, db='wya'):
         """
         Initializes database using a singleton design pattern
         """
-        self._db = MongoClient(uri)['wya']
+        self._db = MongoClient(uri)[db]
 
     def add_user(self, user_name):
         """
@@ -59,7 +60,10 @@ class Db(object):
         if self._db[self.USER_TABLE].find_one({'user': user_name}) is not None:
             return False
 
-        self._db[self.USER_TABLE].insert_one({'user': user_name})
+        # Add new user. Location Sharing defaults to false
+        self._db[self.USER_TABLE].insert_one({'user': user_name, 
+                                              'location_sharing': False,
+                                              'friends_list': []})
         return True
 
     def get_friends_list(self, user_name):
@@ -72,13 +76,13 @@ class Db(object):
 
         Return
         --------------------
-            friendslist     -- a list, all user's current friends
+            friends_list     -- a list, all user's current friends
                             or
                             -- None type, if there was no entry in databasse
         """
         l = self._db[self.USER_TABLE].find_one({'user': user_name})
         if l is not None:
-            return l.get('friendsList')
+            return l.get('friends_list')
         return None
 
     def add_friend(self, user_name, friend_name):
@@ -94,11 +98,17 @@ class Db(object):
         --------------------
             result          -- a Boolean, indicates success or failure
         """
-        res = self._db[self.USER_TABLE].update_one({'user': user_name}, {'$push': {'friendsList': friend_name}})
-        # Check if user exists
-        if res.matched_count == 0:
+        friends_list = self.get_friends_list(user_name)
+        if friends_list is None:         # No such user
             return False
-        return True
+        if friend_name in friends_list:  # Don't add duplicates
+            return False
+    
+        # Make update
+        res = self._db[self.USER_TABLE].update_one({'user': user_name}, {'$push': {'friends_list': friend_name}})
+       
+        return res.matched_count != 0 # Success or failure?
+
 
     def delete_friend(self, user_name, friend_name):
         """
@@ -124,7 +134,7 @@ class Db(object):
             logging.info('Could not remove {} because user {} does not have them in friends list'.format(friend_name, user_name))
             return False
 
-        self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'friendsList': friends_list}})
+        self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'friends_list': friends_list}})
         return True
 
     def get_location(self, friend_name):
@@ -137,14 +147,21 @@ class Db(object):
 
         Return
         --------------------
-            location        -- a list, all user's current friends
+            location        -- JSON String, location of friend_name 
                             or
-                            -- None type, if there was no entry in databasse
+                            -- None type, if there was no entry or not valid lookup
         """
-        l = self._db[self.USER_TABLE].find_one({'user': friend_name})
-        if l is not None:
-            return l.get('location')
-        return None
+        user = self._db[self.USER_TABLE].find_one({'user': friend_name})
+
+        # Does the user exist?
+        if user is None:
+            return None
+
+        # Is locatin_sharing enabled?
+        if not user['location_sharing']:
+            return None
+        
+        return user.get('location')
 
     def set_location(self, user_name, location):
         """
@@ -177,32 +194,13 @@ class Db(object):
             result          -- a Boolean, returns False if user doesn't exist
                                and true otherwise.
         """
-        l = self._db[self.USER_TABLE].find_one({'user': user_name})
-        if l is None:
+        user = self._db[self.USER_TABLE].find_one({'user': user_name})
+
+        if user is None:
             return False
-        toggle = l.get('location_sharing')
-        if toggle is not None:
-            self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': not toggle}})
-        else:
-            self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': False}})
+
+        # Toggle location setting
+        toggle = user.get('location_sharing')
+        self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': not toggle}})
         return True
 
-    def location_available(self, user_name):
-        """
-        Check if user's location is toggled off
-
-        Arguments
-        --------------------
-            user_name       -- a string, user
-
-        Return
-        --------------------
-            is_sharing      -- a Boolean, returns True if user is sharing location and
-                               false otherwise
-                            or
-                            -- None type, if User does not exist
-        """
-        l = self._db[self.USER_TABLE].find_one({'user': user_name})
-        if l is not None:
-            return l.get('location_sharing')
-        return False

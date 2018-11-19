@@ -37,6 +37,7 @@ db = Db()
 
 
 def create_test_app(uri):
+    global db, app
     db = Db(uri)
     return app
 
@@ -181,17 +182,14 @@ def lookup_loc():
     # Is requested user in our friend list?
     if friend_name not in friends_list:
         logging.info('/lookup_loc: illegal friend lookup')
-        return Response("Not authroized to view this user's location", status=401)
+        return Response("Friend not found", status=400)
 
     # Is friend sharing location?
-    is_available = db.location_available(user_name)
-    if not is_available and is_available != None:
+    location = db.get_location(friend_name)
+    if location is None:
         return Response('Friend has location toggled off', status=401)
     
     # Get location
-    location = db.get_location(friend_name)
-    if location is None:
-        return Response('No such user', status=400)
     return Response(json.dumps(location), status=200)
 
 
