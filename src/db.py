@@ -29,7 +29,6 @@ class Db(object):
     MONGO_URI = os.environ['MONGO_URI']
     USER_TABLE = os.environ['USER_TABLE']
     _db = None
-    connected = False
 
     def __new__(cls, uri=MONGO_URI,db='wya'):
         """
@@ -80,10 +79,10 @@ class Db(object):
                             or
                             -- None type, if there was no entry in databasse
         """
-        l = self._db[self.USER_TABLE].find_one({'user': user_name})
-        if l is not None:
-            return l.get('friends_list')
-        return None
+        user = self._db[self.USER_TABLE].find_one({'user': user_name})
+        if user is None:
+            return None
+        return user.get('friends_list')
 
     def add_friend(self, user_name, friend_name):
         """
@@ -103,11 +102,12 @@ class Db(object):
             return False
         if friend_name in friends_list:  # Don't add duplicates
             return False
-    
+
         # Make update
         res = self._db[self.USER_TABLE].update_one({'user': user_name}, {'$push': {'friends_list': friend_name}})
-       
-        return res.matched_count != 0 # Success or failure?
+        if res.matched_count == 0: # Success or failure?
+            return False
+        return True
 
 
     def delete_friend(self, user_name, friend_name):
