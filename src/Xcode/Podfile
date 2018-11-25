@@ -1,0 +1,5 @@
+platform :ios, '12.1'
+target "cs130_project" do
+pod 'GoogleSignIn'
+pod 'Firebase'
+end

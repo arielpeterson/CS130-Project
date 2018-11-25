@@ -1,3 +1,12 @@
+# VSCode settings
+.vscode/*
+
+# Ignore __pycaches
 src/__pycache__
 src/tests/__pycache__
-.vscode/*
+
+# Must generate pods locally
+src/Xcode/Podfile.lock
+src/Xcode/Pods/*
+src/Xcode/cs130_project.xcworkspace
+
