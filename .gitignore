@@ -10,3 +10,7 @@ src/Xcode/Podfile.lock
 src/Xcode/Pods/*
 src/Xcode/cs130_project.xcworkspace
 
+# .DS_Stores
+.DS_Store
+src/.DS_Store
+Xcode/.DS_Store
