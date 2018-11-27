@@ -31,7 +31,7 @@ import QuartzCore
 
 class ContainerViewController: UIViewController {
     
-    let centerPanelExpandedOffset: CGFloat = 60
+    let centerPanelExpandedOffset: CGFloat = 240
     
     enum SlideOutState {
         case bothCollapsed

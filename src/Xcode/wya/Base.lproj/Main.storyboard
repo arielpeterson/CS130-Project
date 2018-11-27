@@ -84,6 +84,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="wya*" id="4Cj-Ki-n5V" userLabel="Title Bar">
                         <barButtonItem key="leftBarButtonItem" title="Menu" image="hamburger" id="vLF-xG-vRO">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="showMenu:" destination="BYZ-38-t0r" id="lEg-Yx-AMx"/>
                             </connections>
@@ -102,21 +103,6 @@
             </objects>
             <point key="canvasLocation" x="-19" y="136"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="YbS-I0-T3A">
-            <objects>
-                <viewController id="kpg-lc-vDN" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="zce-HH-WxT">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="BJ3-RF-Moq"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AaZ-fJ-wO8" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2203" y="955"/>
-        </scene>
         <!--Navigation Screen-->
         <scene sceneID="8sT-hk-oC1">
             <objects>
@@ -125,8 +111,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="qr6-M2-zXS">
-                                <rect key="frame" x="20" y="204" width="414" height="725"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="qr6-M2-zXS">
+                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
                                 <connections>
                                     <outlet property="delegate" destination="kQX-Rz-GME" id="eEi-if-Xr5"/>
                                 </connections>
@@ -147,7 +133,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CRt-wu-GP4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3188" y="136"/>
+            <point key="canvasLocation" x="889.85507246376824" y="135.9375"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="G6A-N3-2FR">
@@ -166,9 +152,6 @@
                                         <state key="normal" title="My Account">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
-                                        <connections>
-                                            <segue destination="I4s-68-XGm" kind="show" identifier="my_account_segue" id="fj7-Dl-LIQ"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Lc-eS-aNa" userLabel="View Friends">
                                         <rect key="frame" x="0.0" y="63" width="96" height="30"/>
@@ -181,9 +164,6 @@
                                         <state key="normal" title="Add Floorplan">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
-                                        <connections>
-                                            <segue destination="kpg-lc-vDN" kind="show" identifier="add_floorplan_segue" id="ew7-LP-GxD"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HRa-Ua-Ujf" userLabel="Sign Out">
                                         <rect key="frame" x="0.0" y="189" width="96" height="30"/>
@@ -197,11 +177,6 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </stackView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sUe-rI-dXU">
-                                <rect key="frame" x="31" y="210" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="YQ9-6T-PXp"/>
@@ -217,30 +192,6 @@
                 <exit id="A86-fF-SuQ" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-20" y="-607"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="URy-ls-7OQ">
-            <objects>
-                <viewController id="I4s-68-XGm" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="hDW-jY-92o">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Let's manage friend stuff here" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gtz-6k-1k9">
-                                <rect key="frame" x="92" y="406" width="230" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <viewLayoutGuide key="safeArea" id="iFq-Pc-0zy"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="WV9-x5-C9K" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2203" y="-627"/>
         </scene>
     </scenes>
     <resources>
