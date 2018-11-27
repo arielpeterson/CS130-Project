@@ -78,4 +78,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // [END_EXCLUDE]
     }
     // [END disconnect_handler]
+    
+    
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:
+
+
+        // FOR DEBUGGING PUPROSES: Logs out everytime we close the app
+        print("Signed out")
+        GIDSignIn.sharedInstance().signOut()
+        NotificationCenter.default.post(
+            name: Notification.Name(rawValue: "ToggleAuthUINotification"),
+            object: nil,
+            userInfo: ["statusText": "User has signed out."])
+    }
+    
 }

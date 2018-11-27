@@ -17,7 +17,7 @@ class LoginScreen: UIViewController, GIDSignInUIDelegate {
         super.viewDidLoad()
         
         GIDSignIn.sharedInstance().uiDelegate = self
-        GIDSignIn.sharedInstance().signInSilently()         // Automatically signs in user
+//        GIDSignIn.sharedInstance().signInSilently()         // Automatically signs in user
         
         // This will registers the receiveToggleAuthUINotification() everytime we login/logout
         NotificationCenter.default.addObserver(self,
@@ -31,10 +31,10 @@ class LoginScreen: UIViewController, GIDSignInUIDelegate {
     // If we are authorized transition to next view
     func toggleAuthUI() {
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
-            signInButton.isHidden = true
+           // signInButton.isHidden = true
             self.performSegue(withIdentifier: "login_to_map", sender: self)
         } else {
-            signInButton.isHidden = false
+           // signInButton.isHidden = false
         }
     }
     
