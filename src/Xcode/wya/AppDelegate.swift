@@ -22,6 +22,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         GIDSignIn.sharedInstance().clientID = "45436180371-0k9ahq8sekcii5a2igt33mt49j72lobn.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self
         
+        let containerViewController = ContainerViewController()
+        window!.rootViewController = containerViewController
+        window!.makeKeyAndVisible()
+        
         return true
     }
     // [END didfinishlaunching]

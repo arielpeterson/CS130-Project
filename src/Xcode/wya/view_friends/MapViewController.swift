@@ -11,9 +11,9 @@ import MapKit
 import CoreLocation
 import GoogleSignIn
 
-class MapScreen: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+class MapViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    var delegate: MapViewControllerDelegate?
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
@@ -27,6 +27,11 @@ class MapScreen: UIViewController, UITableViewDelegate, UITableViewDataSource {
         checkLocationServices()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "customcell")
     }
+    
+    @IBAction func showMenu(_ sender: Any) {
+        delegate?.toggleMenuPanel?()
+    }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return friends.count
@@ -77,7 +82,7 @@ class MapScreen: UIViewController, UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension MapScreen: CLLocationManagerDelegate {
+extension MapViewController: CLLocationManagerDelegate {
     // called whenever user's location updates
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {

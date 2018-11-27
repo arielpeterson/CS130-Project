@@ -27,21 +27,29 @@ class LoginScreen: UIViewController, GIDSignInUIDelegate {
         
         toggleAuthUI()
     }
+    
+    // For unwind segue
+    @IBAction func unwindToVC1(segue:UIStoryboardSegue) { }
 
     // If we are authorized transition to next view
     func toggleAuthUI() {
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
-           // signInButton.isHidden = true
-            self.performSegue(withIdentifier: "login_to_map", sender: self)
+            // Authorized!. Do stuff...
+            self.performSegue(withIdentifier: "login_segue", sender: self)
         } else {
-           // signInButton.isHidden = false
+           // Signed out. Do stuff we need...
         }
     }
     
-    // Function that is called when ToggleAuthUINotification is received from Google Signin
+    // Function that is called whenever we sign in or out of google
     @objc func receiveToggleAuthUINotification(_ notification: NSNotification) {
         if notification.name.rawValue == "ToggleAuthUINotification" {
-            self.toggleAuthUI()
+            
+            // TODO: Workaround
+            // Waits 0.4 seconds before calling toggleAuthUI() Otherwise, SFAuthenticationViewController
+            // is still alive and we get an error. But fix is not high priority
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {self.toggleAuthUI()})
+            
             if notification.userInfo != nil {
                 // Assuming this just holds userInfo. Not sure
                 guard let userInfo = notification.userInfo as? [String:String] else { return }
@@ -49,15 +57,6 @@ class LoginScreen: UIViewController, GIDSignInUIDelegate {
         }
     }
     
-    // Honestly, not sure why this is necessary. I couldn't get it to segue to MapScreen without it
-    func topMostController() -> UIViewController {
-        var topController: UIViewController = UIApplication.shared.keyWindow!.rootViewController!
-        while (topController.presentedViewController != nil) {
-            topController = topController.presentedViewController!
-        }
-        return topController
-    }
-        
     // Destructor
     deinit {
         NotificationCenter.default.removeObserver(self,

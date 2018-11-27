@@ -8,9 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		8647916A21AD2A93001E01BF /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8647916921AD2A93001E01BF /* LoginScreen.swift */; };
+		86753B5F21ADC329005F203E /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86753B5E21ADC329005F203E /* ContainerViewController.swift */; };
+		86753B6121ADC43C005F203E /* MapViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86753B6021ADC43C005F203E /* MapViewControllerDelegate.swift */; };
+		86753B6321ADC750005F203E /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86753B6221ADC750005F203E /* MenuViewController.swift */; };
 		9A6216B9219D6F500092DA68 /* NavigationScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6216B8219D6F500092DA68 /* NavigationScreen.swift */; };
 		9AAB8CC6219D03CE00228C24 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAB8CC5219D03CE00228C24 /* AppDelegate.swift */; };
-		9AAB8CC8219D03CE00228C24 /* MapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAB8CC7219D03CE00228C24 /* MapScreen.swift */; };
+		9AAB8CC8219D03CE00228C24 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAB8CC7219D03CE00228C24 /* MapViewController.swift */; };
 		9AAB8CCB219D03CE00228C24 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AAB8CC9219D03CE00228C24 /* Main.storyboard */; };
 		9AAB8CCD219D03D000228C24 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AAB8CCC219D03D000228C24 /* Assets.xcassets */; };
 		9AAB8CD0219D03D000228C24 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AAB8CCE219D03D000228C24 /* LaunchScreen.storyboard */; };
@@ -41,10 +44,13 @@
 		310527550DA390A8BA280238 /* Pods-wya.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wya.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wya/Pods-wya.debug.xcconfig"; sourceTree = "<group>"; };
 		84512A3864485F88220D7625 /* Pods-wya.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wya.release.xcconfig"; path = "Pods/Target Support Files/Pods-wya/Pods-wya.release.xcconfig"; sourceTree = "<group>"; };
 		8647916921AD2A93001E01BF /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		86753B5E21ADC329005F203E /* ContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		86753B6021ADC43C005F203E /* MapViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewControllerDelegate.swift; sourceTree = "<group>"; };
+		86753B6221ADC750005F203E /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		9A6216B8219D6F500092DA68 /* NavigationScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationScreen.swift; sourceTree = "<group>"; };
 		9AAB8CC2219D03CE00228C24 /* wya.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = wya.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AAB8CC5219D03CE00228C24 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		9AAB8CC7219D03CE00228C24 /* MapScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapScreen.swift; sourceTree = "<group>"; };
+		9AAB8CC7219D03CE00228C24 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		9AAB8CCA219D03CE00228C24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9AAB8CCC219D03D000228C24 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9AAB8CCF219D03D000228C24 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -104,7 +110,8 @@
 			isa = PBXGroup;
 			children = (
 				9A6216B8219D6F500092DA68 /* NavigationScreen.swift */,
-				9AAB8CC7219D03CE00228C24 /* MapScreen.swift */,
+				9AAB8CC7219D03CE00228C24 /* MapViewController.swift */,
+				86753B6021ADC43C005F203E /* MapViewControllerDelegate.swift */,
 			);
 			path = view_friends;
 			sourceTree = "<group>";
@@ -115,6 +122,14 @@
 				8647916921AD2A93001E01BF /* LoginScreen.swift */,
 			);
 			path = login;
+			sourceTree = "<group>";
+		};
+		86753B5B21ADB7BA005F203E /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				86753B6221ADC750005F203E /* MenuViewController.swift */,
+			);
+			path = Menu;
 			sourceTree = "<group>";
 		};
 		9AAB8CB9219D03CE00228C24 = {
@@ -142,7 +157,9 @@
 		9AAB8CC4219D03CE00228C24 /* wya */ = {
 			isa = PBXGroup;
 			children = (
+				86753B5B21ADB7BA005F203E /* Menu */,
 				9AAB8CC5219D03CE00228C24 /* AppDelegate.swift */,
+				86753B5E21ADC329005F203E /* ContainerViewController.swift */,
 				865FC3D921AD21FB0065BA1D /* login */,
 				865FC3D821AD21D50065BA1D /* view_friends */,
 				9AAB8CC9219D03CE00228C24 /* Main.storyboard */,
@@ -355,8 +372,11 @@
 			files = (
 				8647916A21AD2A93001E01BF /* LoginScreen.swift in Sources */,
 				9A6216B9219D6F500092DA68 /* NavigationScreen.swift in Sources */,
-				9AAB8CC8219D03CE00228C24 /* MapScreen.swift in Sources */,
+				9AAB8CC8219D03CE00228C24 /* MapViewController.swift in Sources */,
+				86753B5F21ADC329005F203E /* ContainerViewController.swift in Sources */,
+				86753B6321ADC750005F203E /* MenuViewController.swift in Sources */,
 				9AAB8CC6219D03CE00228C24 /* AppDelegate.swift in Sources */,
+				86753B6121ADC43C005F203E /* MapViewControllerDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
