@@ -15,8 +15,10 @@ To test the app with the server, you need [ngrok](https://ngrok.com/download). A
 
     $ ngrok http 5000
 
-This will forward whatever new IP ngrok gives you to http://localhost:5000. For example, if ngrok gives us http://86dc0c49.ngrok.io, our endpoints will be exposed at http://86dc0c49.ngrok.io/<endpoint>. So any requests made inside the client, should use this format
+This will forward whatever new IP ngrok gives you to `http://localhost:5000`. 
+
+For example, if ngrok gives us `http://86dc0c49.ngrok.io`, our endpoints will be exposed at `http://86dc0c49.ngrok.io/<endpoint>`. Any requests made inside the client, should use this format
 
 ### Monitoring Incoming Requests
 
-Open http://127.0.0.1:4040 to monitor incoming requests while testing. 
+Open `http://127.0.0.1:4040` to monitor incoming requests while testing. 
