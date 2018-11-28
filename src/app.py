@@ -99,7 +99,7 @@ def add_friend():
 @app.route('/deleteFriend', methods=['GET'])
 def delete_friend():
     """
-    Enpoint: /addFriend.
+    Enpoint: /deleteFriend.
     Adds friend to user's friends list.
 
     Arguments
@@ -196,6 +196,7 @@ def lookup_loc():
 @app.route('/toggle', methods=['GET'])
 def toggle_loc():
     """
+    Endpoint: /toggle
     Toggle user's location sharing on and off. Endpoint /toggle.
 
     Arguments
@@ -251,14 +252,52 @@ def add_building():
         return Response("Building is added.", status=200)
     return Response("Building already exists.", status=400)
 
-'''
+
 @app.route('/addFloor', methods=['POST'])
 def add_floor():
-    building = request.args.get('building_name')
+    """
+    Endpoint: /addFloor
+    Add floors to floor list.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+        floor_number        -- a string, floor number
+        floor_plan          -- an image of the floor plan
+
+    Response
+    --------------------
+        Code: 200       -- Success
+        Code: 400       -- Missing building name, number of floors, or location, 
+                           or building already exists and cannot be added as a new building
+    """
+    building_name = request.args.get('building_name')
     floor_number = request.args.get('floor_number')
-    image = building + '_floor_' + floor_numer + '.png'
-    floor_plan = request.
-'''
+    #image = building + '_floor_' + floor_numer + '.png'
+    floor_plan = request.files['floor_plan']
+    if not building:
+        return Response("Must provide building name", status=400)
+    if not floor_number:
+        return Response("Must provide floor number", status=400)
+    if not floor_plan:
+        return Response("Must provide floor plan image", status=400)
+
+    building = db.get_building(building_name)
+    
+    floor_number = int(floor_number)
+    if floor_number < 0 or floor_number > building['num_floors']:
+        return Response("Invalid floor number", status=400)
+
+    if not footprint:
+        # TODO: create footprint and update building
+    
+    added = db.add_floor(building, floor_number, floor_plan)
+    if added:
+        return Response("Floor is added.", status=200)
+    return Response("Floor cannot be added.", status=400)
+
+def update_building(new_info):
+    return db.update_building(new_info)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1')
