@@ -152,7 +152,7 @@ def register():
 @app.route('/lookup', methods=['GET'])
 def lookup_loc():
     """
-    Endpoint: /register
+    Endpoint: /lookup
     Looks up location of a friend for a given user.
 
     Arguments
@@ -216,6 +216,49 @@ def toggle_loc():
         return Response("User doesn't exist", status=400)
     return Response("Toggled!", status=200)
 
+@app.route('/addBuilding', methods=['POST'])
+def add_building():
+    """
+    Endpoint: /addBuilding
+    Add buildings to building list.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+        location            -- JSON object, Location object formatted as JSON. Contains GPS data.
+        num_of_floors       -- a string, number of floors in the building
+
+    Response
+    --------------------
+        Code: 200       -- Success
+        Code: 400       -- Missing building name, number of floors, or location, 
+                           or building already exists and cannot be added as a new building
+    """
+    building_name = request.args.get('building_name')
+    location = request.json
+    num_floors = request.args.get('num_of_floors')
+    footprint = []
+    if not building_name:
+        return Response("Must provide building name", status=400)
+    if not num_floors:
+        return Response("Must provide number of floors", status=400)
+    if not location:
+        return Response("Must provide building location", status=400)
+        
+    num_floors = int(num_floors)
+    added = db.add_building(building_name, location, num_floors, footprint)
+    if added:
+        return Response("Building is added.", status=200)
+    return Response("Building already exists.", status=400)
+
+'''
+@app.route('/addFloor', methods=['POST'])
+def add_floor():
+    building = request.args.get('building_name')
+    floor_number = request.args.get('floor_number')
+    image = building + '_floor_' + floor_numer + '.png'
+    floor_plan = request.
+'''
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
