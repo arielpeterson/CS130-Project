@@ -64,7 +64,7 @@ def add_user():
         return Response('Must provide user name', status=400)
     added = db.add_user(user_name)
     if added:
-        return Response("Signed up!", status=200)
+       return Response("Signed up!", status=200)
     return Response('User already exists', status=400)
 
 
@@ -261,4 +261,4 @@ def add_floor():
 '''
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='127.0.0.1')

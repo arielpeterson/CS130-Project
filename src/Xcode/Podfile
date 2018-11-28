@@ -1,5 +1,4 @@
 platform :ios, '12.1'
-target "cs130_project" do
+target "wya" do
 pod 'GoogleSignIn'
-pod 'Firebase'
 end

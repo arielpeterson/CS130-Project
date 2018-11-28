@@ -8,5 +8,9 @@ src/tests/__pycache__
 # Must generate pods locally
 src/Xcode/Podfile.lock
 src/Xcode/Pods/*
-src/Xcode/cs130_project.xcworkspace
+src/Xcode/wya.xcworkspace/*
 
+# .DS_Stores
+.DS_Store
+src/.DS_Store
+Xcode/.DS_Store
