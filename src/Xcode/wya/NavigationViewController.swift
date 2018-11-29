@@ -1,5 +1,5 @@
 //
-//  NavigationScreen.swift
+//  NavigationViewController.swift
 //  testing
 //
 //  Created by Arti Patankar on 11/15/18.
@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class NavigationScreen: UIViewController {
+class NavigationViewController: UIViewController {
     
     @IBOutlet weak var navigationView: MKMapView!
     
@@ -44,10 +44,10 @@ class NavigationScreen: UIViewController {
         
         let location = locationManager.location?.coordinate
         let destination = CLLocationCoordinate2DMake(34.0688, -118.4440)
-    
+        
         let start = MKPlacemark(coordinate: location!)
         let end = MKPlacemark(coordinate: destination)
-    
+        
         let startItem = MKMapItem(placemark: start)
         let endItem = MKMapItem(placemark: end)
         
@@ -67,7 +67,7 @@ class NavigationScreen: UIViewController {
             guard let response = response else {
                 return
             }
-        
+            
             let route = response.routes[0]
             self.navigationView.addOverlay(route.polyline, level: .aboveRoads)
             
@@ -77,6 +77,6 @@ class NavigationScreen: UIViewController {
     }
 }
 
-extension NavigationScreen: MKMapViewDelegate {}
+extension NavigationViewController: MKMapViewDelegate {}
 
-extension NavigationScreen: CLLocationManagerDelegate {}
+extension NavigationViewController: CLLocationManagerDelegate {}

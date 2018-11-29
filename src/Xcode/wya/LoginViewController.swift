@@ -9,19 +9,19 @@
 import UIKit
 import GoogleSignIn
 
-class LoginScreen: UIViewController, GIDSignInUIDelegate {
-
+class LoginViewController: UIViewController, GIDSignInUIDelegate {
+    
     @IBOutlet weak var signInButton: GIDSignInButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         GIDSignIn.sharedInstance().uiDelegate = self
-//        GIDSignIn.sharedInstance().signInSilently()         // Automatically signs in user
+        GIDSignIn.sharedInstance().signInSilently()         // Automatically signs in user
         
         // This will registers the receiveToggleAuthUINotification() everytime we login/logout
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(LoginScreen.receiveToggleAuthUINotification(_:)),
+                                               selector: #selector(LoginViewController.receiveToggleAuthUINotification(_:)),
                                                name: NSNotification.Name(rawValue: "ToggleAuthUINotification"),
                                                object: nil)
         
@@ -30,14 +30,14 @@ class LoginScreen: UIViewController, GIDSignInUIDelegate {
     
     // For unwind segue
     @IBAction func unwindToVC1(segue:UIStoryboardSegue) { }
-
+    
     // If we are authorized transition to next view
     func toggleAuthUI() {
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
             // Authorized!. Do stuff...
             self.performSegue(withIdentifier: "login_segue", sender: self)
         } else {
-           // Signed out. Do stuff we need...
+            // Signed out. Do stuff we need...
         }
     }
     
@@ -63,6 +63,6 @@ class LoginScreen: UIViewController, GIDSignInUIDelegate {
                                                   name: NSNotification.Name(rawValue: "ToggleAuthUINotification"),
                                                   object: nil)
     }
-
-
+    
+    
 }
