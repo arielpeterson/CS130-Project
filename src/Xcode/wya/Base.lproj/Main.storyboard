@@ -279,7 +279,7 @@
         <!--View Friends Controller-->
         <scene sceneID="zlE-oa-2Wh">
             <objects>
-                <viewController id="X6g-kI-JQ3" customClass="ViewFriendsController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="X6g-kI-JQ3" customClass="ViewFriendsController" customModule="wya" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="iPX-L1-4HQ">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="725"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
