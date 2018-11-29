@@ -193,6 +193,31 @@ def lookup_loc():
     return Response(json.dumps(location), status=200)
 
 
+@app.route('/getFriends', methods=['GET'])
+def get_friends():
+    """
+        
+    Endpoint: /getFriends
+    Get the user's list of friends
+    
+    Arguments
+    --------------------
+    user_name       -- a string, user who wants to get list of friends
+    
+    Response
+    --------------------
+    Code: 200       -- Success
+    Code: 400       -- No user name provided.
+    
+    """
+    user_name = request.args.get('user_name')
+    if not user_name:
+        logging.info('/addUser: no user name')
+        return Response('Must provide user name', status=400)
+    friends = db.get_friends_list(user_name)
+    return Response(json.dumps(friends), status=200)
+
+
 @app.route('/toggle', methods=['GET'])
 def toggle_loc():
     """
