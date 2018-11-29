@@ -30,9 +30,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         getFriends(user_name: "Ariel")
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "customcell")
+        tableView.register(HomeViewCell.self, forCellReuseIdentifier: "customcell")
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.reloadData()
         checkLocationServices()
         
     }
@@ -48,7 +49,21 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let qs = QueryService()
+        let cell = tableView.cellForRow(at: indexPath) as! HomeViewCell
+        let selected_friend = cell.nameLabel.text
+        // TO DO: uncommet this line when return type from qs.lookup is CLLocationCoordinate2D
+        // Change to wait for completionHandler from query
+        
+        // let friend_location = qs.lookup(user_name: "Ariel", friend_name: selected_friend!) // add check to see if selected_friend is nill
+        
+        // send friend_location to NavigationViewController
+        let navigationVC = NavigationViewController()
+        //navigationVC.destination = friend_location // friend_location is CLLocation2D
+        // for testing a hardcoded location
+        //navigationVC.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
         self.performSegue(withIdentifier: "showNavigation", sender: self)
+        
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -145,4 +160,31 @@ extension HomeViewController: CLLocationManagerDelegate {
     }
 }
 
+class HomeViewCell : UITableViewCell {
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    let nameLabel: UILabel = {
+        let label = UILabel()
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 14)
+        return label
+    }()
+    
+    func setupViews() {
+        addSubview(nameLabel)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel]))
+        
+    }
+    
+    
+}
 
