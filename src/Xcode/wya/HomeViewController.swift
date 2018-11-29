@@ -16,17 +16,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
     
+    var errorMessage = ""
+    let defaultSession = URLSession(configuration: .default)
+    var dataTask: URLSessionDataTask?
+    let SERVER = "http://c02c0a92.ngrok.io"
+
     let locationManager = CLLocationManager()
     let range:Double = 1000
-    let friends = ["An", "Ariel", "Brad", "Zach"]
+    
+    var friends : [String] = []
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkLocationServices()
+        getFriends(user_name: "Ariel")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "customcell")
+        tableView.dataSource = self
+        tableView.delegate = self
+        checkLocationServices()
+        
     }
-    
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return friends.count
@@ -40,6 +49,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.performSegue(withIdentifier: "showNavigation", sender: self)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            self.friends.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
     }
     
     func setUpLocationManager() {
@@ -74,6 +90,41 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         default:
             break
         }
+    }
+    
+    func getFriends(user_name: String)  {
+        
+        var friends : Array<String> = []
+        dataTask?.cancel()
+        let url_string = SERVER+"/getFriends?user_name="+user_name
+        let url = NSURL(string: url_string)!
+        
+        
+        let request = NSMutableURLRequest(url: url as URL)
+        request.httpMethod = "GET"
+        
+        dataTask = defaultSession.dataTask(with: request as URLRequest) {
+            data, response, error in
+            defer { self.dataTask = nil }
+            if let error = error {
+                self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
+                print(self.errorMessage)
+            } else if let data = data,
+                let response = response as? HTTPURLResponse,
+                response.statusCode == 200
+            {
+                // data sent back from server is a json_object
+                let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>]
+                friends = (json?["friends"])!
+                for friend in friends {
+                    self.friends.append(friend)
+                }
+                print(response)
+                self.tableView.reloadData()
+            }
+        }
+        dataTask?.resume()
+        
     }
 }
 
