@@ -246,7 +246,10 @@ def get_friends():
         logging.info('/addUser: no user name')
         return Response('Must provide user name', status=400)
     friends = db.get_friends_list(user_name)
-    return Response(json.dumps(friends), status=200)
+    data = {}
+    data['friends'] = friends
+    json_obj = json.dumps(data)
+    return Response(json_obj, status=200)
 
 
 @app.route('/toggle', methods=['GET'])
