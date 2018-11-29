@@ -43,8 +43,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath as IndexPath)
-        cell.textLabel?.text = friends[indexPath.item]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath) as! HomeViewCell
+        cell.nameLabel.text = friends[indexPath.row]
+        cell.myHomeViewController = self
         return cell
     }
     
@@ -54,14 +55,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let selected_friend = cell.nameLabel.text
         // TO DO: uncommet this line when return type from qs.lookup is CLLocationCoordinate2D
         // Change to wait for completionHandler from query
-        
+        let user = GIDSignIn.sharedInstance().currentUser
+        let user_name = user?.profile.givenName
         // let friend_location = qs.lookup(user_name: "Ariel", friend_name: selected_friend!) // add check to see if selected_friend is nill
         
         // send friend_location to NavigationViewController
         let navigationVC = NavigationViewController()
         //navigationVC.destination = friend_location // friend_location is CLLocation2D
+    
         // for testing a hardcoded location
-        //navigationVC.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
+        navigationVC.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
         self.performSegue(withIdentifier: "showNavigation", sender: self)
         
     }
@@ -162,6 +165,8 @@ extension HomeViewController: CLLocationManagerDelegate {
 
 class HomeViewCell : UITableViewCell {
     
+    var myHomeViewController: HomeViewController?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -173,9 +178,9 @@ class HomeViewCell : UITableViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        
+        label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        //label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()
     

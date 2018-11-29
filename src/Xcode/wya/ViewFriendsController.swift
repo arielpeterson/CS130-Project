@@ -42,6 +42,8 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath) as! MyCell
+        
+        //cell.nameLabel.text = friends[indexPath.row]
         cell.nameLabel.text = friends[indexPath.row]
         cell.myViewFriendsController = self
         return cell
@@ -156,9 +158,16 @@ class MyCell : UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    let actionButton: UIButton = {
+    let deleteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Delete", for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let addButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Add Friend", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -167,22 +176,26 @@ class MyCell : UITableViewCell {
         let label = UILabel()
         label.text = "Sample Item"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        //label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()
     
     func setupViews() {
         addSubview(nameLabel)
-        addSubview(actionButton)
+        addSubview(deleteButton)
+        addSubview(addButton)
         
-        actionButton.addTarget(self, action: #selector(handleDeleteAction), for: .touchUpInside)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1(80)]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": actionButton]))
+        deleteButton.addTarget(self, action: #selector(handleDeleteAction), for: .touchUpInside)
+        //addButton.addTarget(self, action: #selector(handleAddAction), for: .touchUpInside)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1(80)]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": deleteButton]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": actionButton]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": deleteButton]))
         
     }
     
     @objc func handleDeleteAction() {
         myViewFriendsController?.deleteCell(cell: self)
     }
+    
+    
 }
