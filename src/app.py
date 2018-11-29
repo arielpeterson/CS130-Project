@@ -29,11 +29,20 @@ a Flask Response object, containing the HTTP status and a data field.
 
 import logging
 import json
+
 from flask import Flask, request, Response
+from PIL import Image
+
 from db import Db
+from image import CvExtractor
 
 app = Flask(__name__)
 db = Db()
+
+
+# TEMP
+os.environ['FLOOR_DIR'] = '../floor-images' # This is used for images processed to be sent to front-end
+os.environ['FULL_IMAGE_DIR'] = '../images' # This is used for images taken by user
 
 
 def create_test_app(uri):
@@ -149,6 +158,28 @@ def register():
     return Response('No such user', status=400)
 
 
+@app.route('/registerIndoor', methods=['POST'])
+def register_indoor():
+    user_name = request.args.get('user_name')
+    # TODO: let's expect this location json to be (x,y) in model coordinates
+    location = request.json
+    building = location['building']
+    # TODO: implement this function
+    px,py = model_to_pixel(location['x'], location['y'])
+    try:
+        image = Image.open('../full-images/{}'.format(building))
+    except FileNotFoundError:
+        logging.info('File not found for building: {}'.format(building))
+    # Crop 
+    image = image.crop((px-50, py-50, px+50, py+50))
+    # Read room number
+    room = int(pytesseract.image_to_string(image))
+    res = db.register_indoor(user_name, location, room)
+    if res:
+        return Response('Updated!', status=200)
+    return Response('Could not upload location for user', status=400)
+
+
 @app.route('/lookup', methods=['GET'])
 def lookup_loc():
     """
@@ -242,47 +273,48 @@ def toggle_loc():
         return Response("User doesn't exist", status=400)
     return Response("Toggled!", status=200)
 
-@app.route('/addBuilding', methods=['POST'])
-def add_building():
-    """
-    Endpoint: /addBuilding
-    Add buildings to building list.
 
-    Arguments
-    --------------------
-        building_name       -- a string, building's name
-        location            -- JSON object, Location object formatted as JSON. Contains GPS data.
-        num_of_floors       -- a string, number of floors in the building
+# @app.route('/addBuilding', methods=['POST'])
+# def add_building():
+#     """
+#     Endpoint: /addBuilding
+#     Add buildings to building list.
 
-    Response
-    --------------------
-        Code: 200       -- Success
-        Code: 400       -- Missing building name, number of floors, or location, 
-                           or building already exists and cannot be added as a new building
-    """
-    building_name = request.args.get('building_name')
-    location = request.json
-    num_floors = request.args.get('num_of_floors')
-    footprint = []
-    if not building_name:
-        return Response("Must provide building name", status=400)
-    if not num_floors:
-        return Response("Must provide number of floors", status=400)
-    if not location:
-        return Response("Must provide building location", status=400)
+#     Arguments
+#     --------------------
+#         building_name       -- a string, building's name
+#         location            -- JSON object, Location object formatted as JSON. Contains GPS data.
+#         num_of_floors       -- a string, number of floors in the building
+
+#     Response
+#     --------------------
+#         Code: 200       -- Success
+#         Code: 400       -- Missing building name, number of floors, or location, 
+#                            or building already exists and cannot be added as a new building
+#     """
+#     building_name = request.args.get('building_name')
+#     location = request.json
+#     num_floors = request.args.get('num_of_floors')
+#     footprint = []
+#     if not building_name:
+#         return Response("Must provide building name", status=400)
+#     if not num_floors:
+#         return Response("Must provide number of floors", status=400)
+#     if not location:
+#         return Response("Must provide building location", status=400)
         
-    num_floors = int(num_floors)
-    added = db.add_building(building_name, location, num_floors, footprint)
-    if added:
-        return Response("Building is added.", status=200)
-    return Response("Building already exists.", status=400)
+#     num_floors = int(num_floors)
+#     added = db.add_building(building_name, location, num_floors, footprint)
+#     if added:
+#         return Response("Building is added.", status=200)
+#     return Response("Building already exists.", status=400)
 
 
 @app.route('/addFloor', methods=['POST'])
 def add_floor():
     """
     Endpoint: /addFloor
-    Add floors to floor list.
+    Save floor plan image, add floor data to db, and process to extract building shape.
 
     Arguments
     --------------------
@@ -307,19 +339,48 @@ def add_floor():
     if not floor_plan:
         return Response("Must provide floor plan image", status=400)
 
-    building = db.get_building(building_name)
+    # building = db.get_building(building_name) REMOVE
+
+    # Update database with new floor or create building in database
+    # TODO temp
+    vertices = [(0,0), (100,0), (0,100), (100,100)]
+    res = db.add_floor(building_name, floor_number, vertices)
+    if not res:
+        return Response('Could not add floor to database', status=400)
     
     floor_number = int(floor_number)
     if floor_number < 0 or floor_number > building['num_floors']:
         return Response("Invalid floor number", status=400)
 
-    if not footprint:
-        # TODO: create footprint and update building
-    
-    added = db.add_floor(building, floor_number, floor_plan)
-    if added:
-        return Response("Floor is added.", status=200)
-    return Response("Floor cannot be added.", status=400)
+    # Save full image as ../images/<building_name>/<floor>.jpg
+    full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name, '{}.jpg'.format(floor_number))
+    floor_plan.save(full_image_path)
+
+    # Run CV on image
+    cv = CvExtractor()
+    proc_image = cv.extract_image(full_image_path)
+
+    # Save this image a well
+    proc_image.save(os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number)))
+
+    return Response("Floor is added.", status=200)
+
+
+@app.route('/getBuildingMetadata', methods=['GET'])
+def get_building_metadata():
+    """ TODO Right now this just returns the number of floors. Future want vertices"""
+    building_name = request.args.get('building_name')
+    floors = db.get_building(building_name)
+    return len(floors)
+
+
+@app.route('/getFloorImage', methods=['GET'])
+def get_building():
+    building_name = request.args.get('building_name')
+    floor = request.args.get('floor')
+    image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, floor)
+    return send_file(image_path)
+
 
 def update_building(new_info):
     return db.update_building(new_info)
