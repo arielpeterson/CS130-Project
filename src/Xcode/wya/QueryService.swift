@@ -13,7 +13,7 @@ import Alamofire
 
 
 // Must change each time we run ngrok
-let SERVER = "http://96189baa.ngrok.io"
+let SERVER = "http://ae57e33d.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -53,9 +53,9 @@ class QueryService {
     }
     
     // Get friends list. Note has a completion handler because asynchronous
-    func getFriends(user_name: String, completion: @escaping (Array<String>?) -> Void) {
+    func getFriends(user_name: String, completion: @escaping ([String]?) -> Void) {
         let urlString = SERVER + "/getFriends"
-        let parameters : Parameters = ["user_name" : "bradsquicciarini@gmail.com", "friend_name": "zachrash@gmail.com"]
+        let parameters : Parameters = ["user_name" : user_name]
         Alamofire.request(urlString, parameters: parameters).response { response in
             
             guard let data = response.data else {
@@ -66,6 +66,7 @@ class QueryService {
             
             let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>]
             
+            // TODO: Error check            
             // Upon completion, return friends list
             completion((json?["friends"])!)
         }
@@ -95,6 +96,7 @@ class QueryService {
                     completion(nil)
                     return
                 }
+                
                 // Upon completion, return a the latitude and longitude
                 completion(CLLocationCoordinate2DMake(location["latitude"]!, location["longitude"]!))
         }
