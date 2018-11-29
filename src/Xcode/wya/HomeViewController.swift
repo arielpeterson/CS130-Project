@@ -5,16 +5,14 @@
 //  Created by Arti Patankar on 11/14/18.
 //  Copyright © 2018 com.example. All rights reserved.
 //
-
 import UIKit
 import MapKit
 import CoreLocation
 import GoogleSignIn
 
-class MapViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
-    var delegate: MapViewControllerDelegate?
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
     
@@ -28,9 +26,6 @@ class MapViewController: UIViewController, UITableViewDelegate, UITableViewDataS
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "customcell")
     }
     
-    @IBAction func showMenu(_ sender: Any) {
-        delegate?.toggleMenuPanel?()
-    }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -44,7 +39,7 @@ class MapViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "mapToNav", sender: self)
+        self.performSegue(withIdentifier: "showNavigation", sender: self)
     }
     
     func setUpLocationManager() {
@@ -59,7 +54,7 @@ class MapViewController: UIViewController, UITableViewDelegate, UITableViewDataS
             mapView.setRegion(region, animated: true)
         }
     }
-
+    
     func checkLocationServices() {
         if CLLocationManager.locationServicesEnabled() {
             setUpLocationManager()
@@ -82,7 +77,7 @@ class MapViewController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
 }
 
-extension MapViewController: CLLocationManagerDelegate {
+extension HomeViewController: CLLocationManagerDelegate {
     // called whenever user's location updates
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
@@ -98,4 +93,5 @@ extension MapViewController: CLLocationManagerDelegate {
         checkLocationAuthorization()
     }
 }
+
 
