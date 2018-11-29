@@ -32,8 +32,8 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(MyCell.self, forCellReuseIdentifier: "customcell")
-        //tableView.register(Header.self, forHeaderFooterViewReuseIdentifier: "headerId")
-        //tableView.sectionHeaderHeight = 50
+        tableView.register(Header.self, forHeaderFooterViewReuseIdentifier: "headerId")
+        tableView.sectionHeaderHeight = 50
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -42,22 +42,28 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath) as! MyCell
-        cell.nameLabel.text = friends[indexPath.item]
+        cell.nameLabel.text = friends[indexPath.row]
         cell.myViewFriendsController = self
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "showNavigation", sender: self)
-    }
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        self.performSegue(withIdentifier: "showNavigation", sender: self)
+//    }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.dequeueReusableHeaderFooterView(withIdentifier: "headerId")
     }
     
+    
     func deleteCell(cell: UITableViewCell) {
         if let deletionIndexPath = tableView.indexPath(for: cell) {
+            // get friend's name
+            let delete_friend_name = friends[deletionIndexPath.row]
             friends.remove(at: deletionIndexPath.row)
+            // do a database call to delete friend
+            let qs = QueryService()
+            qs.deleteFriend(user_name: "Ariel", friend_name: delete_friend_name)
             tableView.deleteRows(at: [deletionIndexPath], with: .automatic)
         }
     }
@@ -157,15 +163,14 @@ class MyCell : UITableViewCell {
         addSubview(nameLabel)
         addSubview(actionButton)
         
-        actionButton.addTarget(self, action: Selector(("handleAction")), for: .touchUpInside)
-        
+        actionButton.addTarget(self, action: #selector(handleDeleteAction), for: .touchUpInside)
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1(80)]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": actionButton]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": actionButton]))
         
     }
     
-    func handleAction() {
+    @objc func handleDeleteAction() {
         myViewFriendsController?.deleteCell(cell: self)
     }
 }
