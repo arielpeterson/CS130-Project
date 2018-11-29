@@ -276,6 +276,23 @@
             </objects>
             <point key="canvasLocation" x="210" y="-13"/>
         </scene>
+        <!--View Friends Controller-->
+        <scene sceneID="zlE-oa-2Wh">
+            <objects>
+                <viewController id="X6g-kI-JQ3" customClass="ViewFriendsController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="iPX-L1-4HQ">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="725"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tableView>
+                    <connections>
+                        <outlet property="tableView" destination="iPX-L1-4HQ" id="vhl-gJ-IP5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zl9-Ry-dxM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="113.04347826086958" y="758.37053571428567"/>
+        </scene>
         <!--Hamburger View Controller-->
         <scene sceneID="2E8-gZ-edL">
             <objects>
@@ -344,6 +361,7 @@
                         <segue destination="Mhw-yf-QM8" kind="unwind" identifier="unwindToVC1" unwindAction="unwindToVC1WithSegue:" id="zxb-0m-HVG"/>
                         <segue destination="cIF-Bb-p4h" kind="show" identifier="addFloorplan_segue" id="MD1-iP-l5P"/>
                         <segue destination="6zy-FU-hyr" kind="show" identifier="myAccount_segue" id="5Hl-al-Baz"/>
+                        <segue destination="X6g-kI-JQ3" kind="show" identifier="viewFriends_segue" id="vsx-jn-d1u"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kXO-GA-W2k" userLabel="First Responder" sceneMemberID="firstResponder"/>
