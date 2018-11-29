@@ -22,6 +22,7 @@ from pymongo.errors import ConnectionFailure
 # Temporary
 os.environ['MONGO_URI'] = 'mongodb://localhost:27017'
 os.environ['USER_TABLE'] = 'User'
+os.environ['BUILDING_TABLE'] = 'Building'
 
 
 class Db(object):
@@ -202,5 +203,49 @@ class Db(object):
         # Toggle location setting
         toggle = user.get('location_sharing')
         self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': not toggle}})
+        return True
+
+    def register_indoor(self, user_name, location, room):
+        """
+        Register a user's indoor location
+
+        Arguments
+        --------------------
+            user_name       -- a String, the name of the user
+            location        -- a dictionary, keys: 'x', 'y', 'building', 'floor'
+            room            -- an int, the detected room number of user
+
+        Return
+        --------------------
+            result          -- a Boolean, return success or failure
+        """
+        location['room'] = room
+        try:
+            self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'indoor_location': location}})
+            return True
+        except Exception:
+            return False
+
+    def get_building(self, building_name):
+        """
+        Get information about a building and each of its floors
+
+        Arguments
+        --------------------
+            building_name       -- a String, the name of the building
+
+        Return
+        --------------------
+            building          -- a list of dictionaries, keys: 'floor', 'vertices'
+        """
+        floors = self._db[self.BUILDING_TABLE].find({'building_name': building_name}, {'building_name': 0})
+        return floors
+
+    def add_floor(self, building_name, floor, vertices):
+        res = self._db[self.BUILDING_TABLE].insert_one({'building_name': building_name,
+                                                        'vertices': vertices,
+                                                        'floor': floor})
+        if not res.acknowledged:
+            return False
         return True
 
