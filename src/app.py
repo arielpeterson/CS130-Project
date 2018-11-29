@@ -30,6 +30,7 @@ a Flask Response object, containing the HTTP status and a data field.
 import logging
 import json
 
+import pytesseract
 from flask import Flask, request, Response
 from PIL import Image
 

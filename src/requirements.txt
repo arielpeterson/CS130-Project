@@ -1,2 +1,6 @@
 Flask
 pymongo
+pillow
+pytesseract
+numpy
+opencv-python
