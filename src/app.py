@@ -164,13 +164,14 @@ def register_indoor():
     # TODO: let's expect this location json to be (x,y) in model coordinates
     location = request.json
     building = location['building']
-    # TODO: implement this function
-    px,py = model_to_pixel(location['x'], location['y'])
+
     try:
         image = Image.open('../full-images/{}'.format(building))
     except FileNotFoundError:
         logging.info('File not found for building: {}'.format(building))
+        
     # Crop 
+    px,py = model_to_pixel(location['x'], location['y'], image.shape)
     image = image.crop((px-50, py-50, px+50, py+50))
     # Read room number
     room = int(pytesseract.image_to_string(image))
@@ -179,6 +180,8 @@ def register_indoor():
         return Response('Updated!', status=200)
     return Response('Could not upload location for user', status=400)
 
+def model_to_pixel(x, y, shape=[100, 100]):
+    return int(x * shape[1] / 100), int(y * shape[0] / 100)
 
 @app.route('/lookup', methods=['GET'])
 def lookup_loc():
