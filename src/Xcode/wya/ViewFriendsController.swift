@@ -47,9 +47,21 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
         return cell
     }
     
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        self.performSegue(withIdentifier: "showNavigation", sender: self)
-//    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let qs = QueryService()
+        let cell = tableView.cellForRow(at: indexPath) as! MyCell
+        let selected_friend = cell.nameLabel.text
+        //let friend_location = qs.lookup(user_name: "Ariel", friend_name: selected_friend!) // add check to see if selected_friend is nill
+        
+        // send friend_location to NavigationViewController
+        let navigationVC = NavigationViewController()
+        
+        //navigationVC.destination = friend_location // friend_location is CLLocation2D
+        // test hardcoded location
+        navigationVC.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
+        self.performSegue(withIdentifier: "showNavigation", sender: self)
+    }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return tableView.dequeueReusableHeaderFooterView(withIdentifier: "headerId")
