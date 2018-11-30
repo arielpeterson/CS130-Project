@@ -12,6 +12,8 @@
 		8629651621AFA0D400F240AE /* MyAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651521AFA0D400F240AE /* MyAccountViewController.swift */; };
 		8629651821AFA26800F240AE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651721AFA26800F240AE /* HomeViewController.swift */; };
 		8629651A21AFA30200F240AE /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651921AFA30200F240AE /* NavigationViewController.swift */; };
+		8E26420621B044CE00BAF9B5 /* ViewFriendsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */; };
+		8EB20BA421B03A3B00BF211B /* QueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB20BA321B03A3B00BF211B /* QueryService.swift */; };
 		B33E89A61ED67A3B00E5A503 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33E89A51ED67A3B00E5A503 /* AppDelegate.swift */; };
 		B33E89AB1ED67A3B00E5A503 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B33E89A91ED67A3B00E5A503 /* Main.storyboard */; };
 		B33E89AD1ED67A3B00E5A503 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B33E89AC1ED67A3B00E5A503 /* Assets.xcassets */; };
@@ -31,6 +33,8 @@
 		8629651521AFA0D400F240AE /* MyAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountViewController.swift; sourceTree = "<group>"; };
 		8629651721AFA26800F240AE /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		8629651921AFA30200F240AE /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
+		8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFriendsController.swift; sourceTree = "<group>"; };
+		8EB20BA321B03A3B00BF211B /* QueryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryService.swift; sourceTree = "<group>"; };
 		9B757972FD9C35F6773132A8 /* Pods-wya.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wya.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wya/Pods-wya.debug.xcconfig"; sourceTree = "<group>"; };
 		A2F7274B2487BD77FB273E15 /* Pods-Menu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Menu/Pods-Menu.debug.xcconfig"; sourceTree = "<group>"; };
 		B33E89A21ED67A3B00E5A503 /* wya.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = wya.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,9 +121,11 @@
 				86AF231421AFCB05000C6CBE /* Menu */,
 				B33E89A51ED67A3B00E5A503 /* AppDelegate.swift */,
 				8629651321AF931400F240AE /* LoginViewController.swift */,
+				8EB20BA321B03A3B00BF211B /* QueryService.swift */,
 				8629651521AFA0D400F240AE /* MyAccountViewController.swift */,
 				B33E89A91ED67A3B00E5A503 /* Main.storyboard */,
 				8629651721AFA26800F240AE /* HomeViewController.swift */,
+				8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */,
 				8629651921AFA30200F240AE /* NavigationViewController.swift */,
 				B33E89AC1ED67A3B00E5A503 /* Assets.xcassets */,
 				B33E89AE1ED67A3B00E5A503 /* LaunchScreen.storyboard */,
@@ -208,14 +214,12 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-wya/Pods-wya-resources.sh",
-				"${PODS_ROOT}/GTMOAuth2/Source/Touch/GTMOAuth2ViewTouch.xib",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GTMOAuth2ViewTouch.nib",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -252,6 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E26420621B044CE00BAF9B5 /* ViewFriendsController.swift in Sources */,
 				B33E89D41ED67AF300E5A503 /* HamburgerViewController.swift in Sources */,
 				8629651A21AFA30200F240AE /* NavigationViewController.swift in Sources */,
 				B33E8A101ED869E500E5A503 /* MenuViewController.swift in Sources */,
@@ -260,6 +265,7 @@
 				8629651421AF931400F240AE /* LoginViewController.swift in Sources */,
 				8629651821AFA26800F240AE /* HomeViewController.swift in Sources */,
 				B33E89E31ED7D83500E5A503 /* HamburgerViewModel.swift in Sources */,
+				8EB20BA421B03A3B00BF211B /* QueryService.swift in Sources */,
 				B33E89A61ED67A3B00E5A503 /* AppDelegate.swift in Sources */,
 				8629651621AFA0D400F240AE /* MyAccountViewController.swift in Sources */,
 			);

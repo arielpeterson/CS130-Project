@@ -14,6 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     // [END appdelegate_interfaces]
     var window: UIWindow?
+    let qs =  QueryService()
     
     // [START didfinishlaunching]
     func application(_ application: UIApplication,
@@ -53,15 +54,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             // Perform any operations on signed in user here.
             let userId = user.userID                  // For client-side use only!
             let idToken = user.authentication.idToken // Safe to send to the server
-            let fullName = user.profile.name
-            let givenName = user.profile.givenName
-            let familyName = user.profile.familyName
-            let email = user.profile.email
+
+            // Add user if they don't exist, otherwise does nothing
+            qs.addUser()
+            
             // [START_EXCLUDE]
             NotificationCenter.default.post(
                 name: Notification.Name(rawValue: "ToggleAuthUINotification"),
                 object: nil,
-                userInfo: ["statusText": "Signed in user:\n\(fullName)"])
+                userInfo: ["statusText": "Signed in user"])
             // [END_EXCLUDE]
         }
     }

@@ -14,6 +14,7 @@ class NavigationViewController: UIViewController {
     
     @IBOutlet weak var navigationView: MKMapView!
     
+    var destination = CLLocationCoordinate2D()
     let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
@@ -43,18 +44,19 @@ class NavigationViewController: UIViewController {
         locationManager.startUpdatingLocation()
         
         let location = locationManager.location?.coordinate
-        let destination = CLLocationCoordinate2DMake(34.0688, -118.4440)
+        //let destination = CLLocationCoordinate2DMake(34.0688, -118.4440)
         
         let start = MKPlacemark(coordinate: location!)
         let end = MKPlacemark(coordinate: destination)
-        
+
         let startItem = MKMapItem(placemark: start)
         let endItem = MKMapItem(placemark: end)
-        
+
         let endPin = MKPointAnnotation()
         endPin.coordinate = destination
         endPin.title = "X"
         navigationView.addAnnotation(endPin)
+
         
         let request = MKDirections.Request()
         request.source = startItem

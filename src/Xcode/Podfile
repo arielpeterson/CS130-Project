@@ -1,4 +1,5 @@
 platform :ios, '12.1'
 target "wya" do
 pod 'GoogleSignIn'
+pod 'Alamofire'
 end

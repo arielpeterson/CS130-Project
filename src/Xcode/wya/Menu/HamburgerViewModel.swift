@@ -15,6 +15,7 @@ class HamburgerViewModel: NSObject {
         var layers: [HamburgerLayer] = []
         
         layers.append(.home)
+        layers.append(.viewFriends)
         layers.append(.addFloorplan)
         layers.append(.account)
         layers.append(.signout)
