@@ -38,6 +38,7 @@ from PIL import Image
 from db import Db
 #from image import CvExtractor
 
+
 app = Flask(__name__)
 db = Db()
 
@@ -333,8 +334,8 @@ def add_floor():
         Code: 400       -- Missing building name, number of floors, or location, 
                            or building already exists and cannot be added as a new building
     """
-    building_name = request.args.get('building_name')
-    floor_number = request.args.get('floor_number')
+    building_name = request.form['building_name']
+    floor_number = request.form['floor_number']
     #image = building + '_floor_' + floor_numer + '.png'
     floor_plan = request.files['floor_plan']
     if not building_name:
