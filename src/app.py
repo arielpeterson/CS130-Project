@@ -180,7 +180,7 @@ def register_indoor():
     return Response('Could not upload location for user', status=400)
 
 def model_to_pixel(x, y, shape=[100, 100]):
-    return int(x * shape[1] / 100), int(y * shape[0] / 100)
+    return int(x * shape[1] * 0.01), int(y * shape[0] * 0.01)
 
 @app.route('/lookup', methods=['GET'])
 def lookup_loc():
