@@ -21,6 +21,7 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     let defaultSession = URLSession(configuration: .default)
     var dataTask: URLSessionDataTask?
     let SERVER = "http://c02c0a92.ngrok.io"
+    let qs = QueryService()
     
     var friends : [String] = []
     
@@ -28,12 +29,27 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getFriends(user_name: "Ariel")
+        
+        tableView.register(MyCell.self, forCellReuseIdentifier: "customcell")
+        
+        qs.getFriends(user_name: "Ariel") { response in
+            guard let friendList = response else {
+                print("No friends! :(")
+                return
+            }
+            self.friends = friendList
+            DispatchQueue.main.async(execute: {self.do_table_refresh()})
+        }
+        
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(MyCell.self, forCellReuseIdentifier: "customcell")
-        tableView.register(Header.self, forHeaderFooterViewReuseIdentifier: "headerId")
-        tableView.sectionHeaderHeight = 50
+        
+        
+    }
+    
+    func do_table_refresh()
+    {
+        self.tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -42,6 +58,8 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath) as! MyCell
+        
+        //cell.nameLabel.text = friends[indexPath.row]
         cell.nameLabel.text = friends[indexPath.row]
         cell.myViewFriendsController = self
         return cell
@@ -49,18 +67,9 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let qs = QueryService()
         let cell = tableView.cellForRow(at: indexPath) as! MyCell
         let selected_friend = cell.nameLabel.text
-        //let friend_location = qs.lookup(user_name: "Ariel", friend_name: selected_friend!) // add check to see if selected_friend is nill
         
-        // send friend_location to NavigationViewController
-        let navigationVC = NavigationViewController()
-        
-        //navigationVC.destination = friend_location // friend_location is CLLocation2D
-        // test hardcoded location
-        navigationVC.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
-        self.performSegue(withIdentifier: "showNavigation", sender: self)
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -80,39 +89,6 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    func getFriends(user_name: String)  {
-        
-        var friends : Array<String> = []
-        dataTask?.cancel()
-        let url_string = SERVER+"/getFriends?user_name="+user_name
-        let url = NSURL(string: url_string)!
-        
-        let request = NSMutableURLRequest(url: url as URL)
-        request.httpMethod = "GET"
-        
-        dataTask = defaultSession.dataTask(with: request as URLRequest) {
-            data, response, error in
-            defer { self.dataTask = nil }
-            if let error = error {
-                self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-                print(self.errorMessage)
-            } else if let data = data,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200
-            {
-                // data sent back from server is a json_object
-                let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>]
-                friends = (json?["friends"])!
-                for friend in friends {
-                    self.friends.append(friend)
-                }
-                print(response)
-                self.tableView.reloadData()
-            }
-        }
-        dataTask?.resume()
-        
-    }
 }
 
 class Header: UITableViewHeaderFooterView {
@@ -156,33 +132,38 @@ class MyCell : UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    let actionButton: UIButton = {
+    let deleteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Delete", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    
+    
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Sample Item"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        //label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()
     
     func setupViews() {
         addSubview(nameLabel)
-        addSubview(actionButton)
+        addSubview(deleteButton)
         
-        actionButton.addTarget(self, action: #selector(handleDeleteAction), for: .touchUpInside)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1(80)]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": actionButton]))
+        deleteButton.addTarget(self, action: #selector(handleDeleteAction), for: .touchUpInside)
+        //addButton.addTarget(self, action: #selector(handleAddAction), for: .touchUpInside)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1(80)]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": deleteButton]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": actionButton]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": deleteButton]))
         
     }
     
     @objc func handleDeleteAction() {
         myViewFriendsController?.deleteCell(cell: self)
     }
+    
+    
 }

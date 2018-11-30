@@ -21,7 +21,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let range : Double = 1000
     let qs = QueryService()
     var friends : [String] = []
-
    
     
     override func viewDidLoad() {
@@ -51,8 +50,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath as IndexPath)
-        cell.textLabel?.text = friends[indexPath.item]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath) as! HomeViewCell
+        cell.nameLabel.text = friends[indexPath.row]
+        cell.myHomeViewController = self
         return cell
     }
     
@@ -61,7 +61,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.cellForRow(at: indexPath) as! HomeViewCell
         
         // TODO: This is returing nil. idk why
-        let selected_friend = cell.nameLabel.text
+        selected_friend = cell.nameLabel.text!
         
         // TO DO: uncommet this line when return type from qs.lookup is CLLocationCoordinate2D
         // Change to wait for completionHandler from query
@@ -89,6 +89,28 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
+    // Called before segue is performed to set parameters in Target View Controller
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.destination is NavigationViewController
+        {
+            let vc = segue.destination as? NavigationViewController
+            
+            qs.lookup(user_name: user_name, friend_name: selected_friend) // add check to see if selected_friend is nill
+            {
+                response in
+                guard let location = response else {
+                    print("No loction received.")
+                    return
+                }
+                // send friend_location to NavigationViewController
+                // Hard coded location to test if segue destination is set properly
+                vc?.destination = location
+            }
+            // hardcoded value to use for testing if segue destination is set properly
+            // vc?.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
+        }
+    }
     func setUpLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -143,6 +165,8 @@ extension HomeViewController: CLLocationManagerDelegate {
 
 class HomeViewCell : UITableViewCell {
     
+    var myHomeViewController: HomeViewController?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
@@ -154,9 +178,9 @@ class HomeViewCell : UITableViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        
+        label.text = ""
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14)
+        //label.font = UIFont.boldSystemFont(ofSize: 14)
         return label
     }()
     
