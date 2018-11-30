@@ -284,14 +284,58 @@
                         <rect key="frame" x="0.0" y="0.0" width="300" height="725"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zI5-KO-Bfa">
+                            <rect key="frame" x="0.0" y="72" width="300" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <state key="normal" title="Add Friend"/>
+                            <connections>
+                                <action selector="addFriendButtonTapped:" destination="X6g-kI-JQ3" eventType="touchUpInside" id="HvE-hR-23O"/>
+                                <action selector="addFriendButtonTapped:" destination="N72-Ba-FeG" eventType="touchUpInside" id="WVF-su-ODT"/>
+                                <action selector="test:" destination="N72-Ba-FeG" eventType="touchUpInside" id="zcj-sQ-2Yj"/>
+                            </connections>
+                        </button>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="mycell" id="BkQ-OU-6Yy" customClass="MyTableViewCell" customModule="wya" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="300" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="BkQ-OU-6Yy" id="9C6-Cl-uR0" customClass="MyTableViewCell" customModule="wya" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OG7-Cy-d1X">
+                                            <rect key="frame" x="16" y="11" width="181" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQv-55-Cp2">
+                                            <rect key="frame" x="205" y="6" width="64" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Delete">
+                                                <color key="titleColor" red="1" green="0.18296587063028569" blue="0.10053905669281393" alpha="0.84705882352941175" colorSpace="custom" customColorSpace="displayP3"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="deleteButtonTapped:" destination="BkQ-OU-6Yy" eventType="touchUpInside" id="bPr-ns-lZM"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="deleteButton" destination="fQv-55-Cp2" id="WVm-Td-jsT"/>
+                                    <outlet property="nameLabel" destination="OG7-Cy-d1X" id="ZgP-fB-oLY"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
                     </tableView>
                     <connections>
                         <outlet property="tableView" destination="iPX-L1-4HQ" id="vhl-gJ-IP5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zl9-Ry-dxM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="N72-Ba-FeG" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="113.04347826086958" y="758.37053571428567"/>
+            <point key="canvasLocation" x="163.768115942029" y="1345.6473214285713"/>
         </scene>
         <!--Hamburger View Controller-->
         <scene sceneID="2E8-gZ-edL">

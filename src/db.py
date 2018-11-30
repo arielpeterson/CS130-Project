@@ -29,6 +29,7 @@ class Db(object):
 
     MONGO_URI = os.environ['MONGO_URI']
     USER_TABLE = os.environ['USER_TABLE']
+    BUILDING_TABLE = os.environ['BUILDING_TABLE']
     _db = None
 
     def __new__(cls, uri=MONGO_URI,db='wya'):
@@ -238,7 +239,7 @@ class Db(object):
         --------------------
             building          -- a list of dictionaries, keys: 'floor', 'vertices'
         """
-        floors = self._db[self.BUILDING_TABLE].find({'building_name': building_name}, {'building_name': 0})
+        floors = list(self._db[self.BUILDING_TABLE].find({'building_name': building_name}, {'building_name': 0}))
         return floors
 
     def add_floor(self, building_name, floor, vertices):
