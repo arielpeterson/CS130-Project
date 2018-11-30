@@ -9,6 +9,7 @@ import UIKit
 import Foundation
 import MapKit
 
+import GoogleSignIn
 import Alamofire
 
 
@@ -18,14 +19,17 @@ let SERVER = "http://ae57e33d.ngrok.io"
 class QueryService {
     typealias JSONDictionary = [String: Any]
     var errorMessage = ""
-    
-    let defaultSession = URLSession(configuration: .default)
-    var dataTask: URLSessionDataTask?
+    var username_ : String
+
+    init() {
+        // We are using email for username
+        username_ =  (GIDSignIn.sharedInstance().currentUser?.profile.email)!
+    }
     
     // Adds a new user to the database.
-    func addUser(user_name :String) {
+    func addUser() {
         let urlString = SERVER + "/addUser"
-        let parameters : Parameters = ["user_name" : user_name]
+        let parameters : Parameters = ["user_name" : username_]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
@@ -33,9 +37,9 @@ class QueryService {
     }
     
     // Adds friend to user's friends list.
-    func addFriend(user_name :String, friend_name :String){
+    func addFriend(friend_name :String){
         let urlString = SERVER + "/addFriend"
-        let parameters : Parameters = ["user_name" : user_name, "friend_name": friend_name]
+        let parameters : Parameters = ["user_name" : username_, "friend_name": friend_name]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
@@ -43,9 +47,9 @@ class QueryService {
     }
     
     // Remove friend from user's friend list
-    func deleteFriend(user_name :String, friend_name :String) {
+    func deleteFriend(friend_name :String) {
         let urlString = SERVER + "/deleteFriend"
-        let parameters : Parameters = ["user_name" : user_name, "friend_name": friend_name]
+        let parameters : Parameters = ["user_name" : username_, "friend_name": friend_name]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
@@ -53,9 +57,9 @@ class QueryService {
     }
     
     // Get friends list. Note has a completion handler because asynchronous
-    func getFriends(user_name: String, completion: @escaping ([String]?) -> Void) {
+    func getFriends(completion: @escaping ([String]?) -> Void) {
         let urlString = SERVER + "/getFriends"
-        let parameters : Parameters = ["user_name" : user_name]
+        let parameters : Parameters = ["user_name" : username_]
         Alamofire.request(urlString, parameters: parameters).response { response in
             
             guard let data = response.data else {
@@ -64,20 +68,22 @@ class QueryService {
                 return
             }
             
-            let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>]
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>] else {
+                print("No json data received")
+                return
+            }
             
-            // TODO: Error check            
             // Upon completion, return friends list
-            completion((json?["friends"])!)
+            completion((json["friends"])!)
         }
     }
     
     // Register a user's most recent location.
-    func registerLocation(user_name :String, location : CLLocationCoordinate2D) {
+    func registerLocation(location : CLLocationCoordinate2D) {
         let urlString = SERVER + "/registerLocation"
         
         // Store MKCoordinateREgion as JSON?
-        let params : [String:Any] = ["user_name" :  user_name, "location": ["latitude": location.latitude, "longitude": location.latitude]]
+        let params : [String:Any] = ["user_name" :  username_, "location": ["latitude": location.latitude, "longitude": location.latitude]]
         Alamofire.request(urlString, method: .post, parameters: params, encoding: JSONEncoding.default).response { response in
             // Handle resonse
             debugPrint(response)
@@ -85,10 +91,10 @@ class QueryService {
     }
     
     // Looks up location of a friend for a given user. Note has completion handler
-    func lookup(user_name :String, friend_name :String, completion: @escaping (CLLocationCoordinate2D?) -> Void) {
+    func lookup(friend_name :String, completion: @escaping (CLLocationCoordinate2D?) -> Void) {
         
         let urlString = SERVER + "/lookup"
-        let parameters : Parameters = ["user_name" : user_name, "friend_name": friend_name]
+        let parameters : Parameters = ["user_name" : username_, "friend_name": friend_name]
         Alamofire.request(urlString, parameters: parameters).responseJSON
             { response in
                 guard let location = response.result.value as? [String: Double] else {
@@ -103,9 +109,9 @@ class QueryService {
     }
     
     // Toggle user's location sharing on and off.
-    func toggle(user_name :String) {
+    func toggle() {
         let urlString = SERVER + "/toggle"
-        let parameters : Parameters = ["user_name" : user_name]
+        let parameters : Parameters = ["user_name" : username_]
         Alamofire.request(urlString, parameters: parameters).response { response in debugPrint(response) }
     }
 

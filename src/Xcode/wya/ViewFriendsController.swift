@@ -75,7 +75,7 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
             friends.remove(at: deletionIndexPath.row)
             // do a database call to delete friend
             let qs = QueryService()
-            qs.deleteFriend(user_name: "Ariel", friend_name: delete_friend_name)
+            qs.deleteFriend(friend_name: delete_friend_name)
             tableView.deleteRows(at: [deletionIndexPath], with: .automatic)
         }
     }
