@@ -41,10 +41,7 @@ from db import Db
 app = Flask(__name__)
 db = Db()
 
-
-# TEMP
-os.environ['FLOOR_DIR'] = '../floor-images' # This is used for images processed to be sent to front-end
-os.environ['FULL_IMAGE_DIR'] = '../images' # This is used for images taken by user
+import environ
 
 
 def create_test_app(uri):
@@ -360,8 +357,8 @@ def toggle_loc():
 #     if floor_number < 0 or floor_number > building['num_floors']:
 #         return Response("Invalid floor number", status=400)
 
-#     # Save full image as ../images/<building_name>/<floor>.jpg
-#     full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name, '{}.jpg'.format(floor_number))
+#     # Save full image as ../images/<building_name>/<floor>.png
+#     full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name, '{}.png'.format(floor_number))
 #     floor_plan.save(full_image_path)
 
 #     # Run CV on image
