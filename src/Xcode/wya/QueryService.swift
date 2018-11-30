@@ -7,9 +7,13 @@
 
 import UIKit
 import Foundation
+import MapKit
+
+import Alamofire
+
 
 // Must change each time we run ngrok
-let SERVER = "http://c02c0a92.ngrok.io"
+let SERVER = "http://ae57e33d.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -20,211 +24,89 @@ class QueryService {
     
     // Adds a new user to the database.
     func addUser(user_name :String) {
-        dataTask?.cancel()
-        let url_string = SERVER+"/addUser?user_name="+user_name
-        let url = NSURL(string: url_string)!
-        var return_value = false
-        let request = NSMutableURLRequest(url: url as URL)
-        request.httpMethod = "GET"
-        
-        dataTask = defaultSession.dataTask(with: request as URLRequest) {
-            data, response, error in
-            defer { self.dataTask = nil }
-            if let error = error {
-                self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-                print(self.errorMessage)
-            } else if let data = data,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200
-            {
-                print(data)
-                print(response)
-                
-            }
+        let urlString = SERVER + "/addUser"
+        let parameters : Parameters = ["user_name" : user_name]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            // Handle response
+            debugPrint(response)
         }
-        dataTask?.resume()
-        
     }
     
     // Adds friend to user's friends list.
     func addFriend(user_name :String, friend_name :String){
-        dataTask?.cancel()
-        let url_string = SERVER+"/addFriend?user_name="+user_name+"&friend_name="+friend_name
-        let url = NSURL(string: url_string)!
-        
-        let request = NSMutableURLRequest(url: url as URL)
-        request.httpMethod = "GET"
-        
-        dataTask = defaultSession.dataTask(with: request as URLRequest) {
-            // data is the data returned from the server
-            // response is the response metadata
-            // error is an error object that indicates why the request failed
-            data, response, error in
-            defer { self.dataTask = nil }
-            if let error = error {
-                self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-                print(self.errorMessage)
-            } else if let data = data,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200
-            {
-                print(data)
-                print(response)
-                
-            }
+        let urlString = SERVER + "/addFriend"
+        let parameters : Parameters = ["user_name" : user_name, "friend_name": friend_name]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            // Handle response
+            debugPrint(response)
         }
-        
-        dataTask?.resume()
-        
     }
     
     // Remove friend from user's friend list
     func deleteFriend(user_name :String, friend_name :String) {
-        dataTask?.cancel()
-        let url_string = SERVER+"/deleteFriend?user_name="+user_name+"&friend_name="+friend_name
-        let url = NSURL(string: url_string)!
-        
-        
-        let request = NSMutableURLRequest(url: url as URL)
-        request.httpMethod = "GET"
-        
-        dataTask = defaultSession.dataTask(with: request as URLRequest) {
-            data, response, error in
-            defer { self.dataTask = nil }
-            if let error = error {
-                self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-                print(self.errorMessage)
-            } else if let data = data,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200
-            {
-                print(data)
-                print(response)
-                
-            }
+        let urlString = SERVER + "/deleteFriend"
+        let parameters : Parameters = ["user_name" : user_name, "friend_name": friend_name]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            // Handle response
+            debugPrint(response)
         }
-        dataTask?.resume()
-        
     }
     
-    
-    func getFriends(user_name: String) -> Array<String>{
-        
-        var friends : Array<String> = []
-        dataTask?.cancel()
-        let url_string = SERVER+"/getFriends?user_name="+user_name
-        let url = NSURL(string: url_string)!
-        
-        
-        let request = NSMutableURLRequest(url: url as URL)
-        request.httpMethod = "GET"
-        
-        dataTask = defaultSession.dataTask(with: request as URLRequest) {
-            data, response, error in
-            defer { self.dataTask = nil }
-            if let error = error {
-                self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-                print(self.errorMessage)
-            } else if let data = data,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200
-            {
-                // data sent back from server is a json_object
-                let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>]
-                friends = (json?["friends"])!
-                print(response)
+    // Get friends list. Note has a completion handler because asynchronous
+    func getFriends(user_name: String, completion: @escaping ([String]?) -> Void) {
+        let urlString = SERVER + "/getFriends"
+        let parameters : Parameters = ["user_name" : user_name]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            
+            guard let data = response.data else {
+                print("No friend's list received")
+                completion(nil)
+                return
             }
+            
+            let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>]
+            
+            // TODO: Error check            
+            // Upon completion, return friends list
+            completion((json?["friends"])!)
         }
-        dataTask?.resume()
-        return friends
     }
+    
     // Register a user's most recent location.
-    // Is JSONDictionary the right type to use?
-    func registerLocation(user_name :String, location :JSONDictionary) {
-        dataTask?.cancel()
-        let url_string = SERVER+"/registerLocation"
-        let url = NSURL(string: url_string)!
+    func registerLocation(user_name :String, location : CLLocationCoordinate2D) {
+        let urlString = SERVER + "/registerLocation"
         
-        
-        let request = NSMutableURLRequest(url: url as URL)
-        request.httpMethod = "POST"
-        // request.httpBody =
-        // Add body to include user_name and location
-        
-        dataTask = defaultSession.dataTask(with: request as URLRequest) {
-            data, response, error in
-            defer { self.dataTask = nil }
-            if let error = error {
-                self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-                print(self.errorMessage)
-            } else if let data = data,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200
-            {
-                print(data)
-                print(response)
-                
-            }
+        // Store MKCoordinateREgion as JSON?
+        let params : [String:Any] = ["user_name" :  user_name, "location": ["latitude": location.latitude, "longitude": location.latitude]]
+        Alamofire.request(urlString, method: .post, parameters: params, encoding: JSONEncoding.default).response { response in
+            // Handle resonse
+            debugPrint(response)
         }
-        dataTask?.resume()
-        
     }
     
-    // Looks up location of a friend for a given user.
-    func lookup(user_name :String, friend_name :String) {
-        dataTask?.cancel()
-        let url_string = SERVER+"/lookup?user_name="+user_name+"&friend_name="+friend_name
-        let url = NSURL(string: url_string)!
-        var return_value = false
+    // Looks up location of a friend for a given user. Note has completion handler
+    func lookup(user_name :String, friend_name :String, completion: @escaping (CLLocationCoordinate2D?) -> Void) {
         
-        let request = NSMutableURLRequest(url: url as URL)
-        request.httpMethod = "GET"
-        
-        dataTask = defaultSession.dataTask(with: request as URLRequest) {
-            data, response, error in
-            defer { self.dataTask = nil }
-            if let error = error {
-                self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-                print(self.errorMessage)
-            } else if let data = data,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200
-            {
-                print(data)
-                print(response)
+        let urlString = SERVER + "/lookup"
+        let parameters : Parameters = ["user_name" : user_name, "friend_name": friend_name]
+        Alamofire.request(urlString, parameters: parameters).responseJSON
+            { response in
+                guard let location = response.result.value as? [String: Double] else {
+                    print("Malformed loction data")
+                    completion(nil)
+                    return
+                }
                 
-            }
+                // Upon completion, return a the latitude and longitude
+                completion(CLLocationCoordinate2DMake(location["latitude"]!, location["longitude"]!))
         }
-        dataTask?.resume()
     }
     
     // Toggle user's location sharing on and off.
     func toggle(user_name :String) {
-        dataTask?.cancel()
-        let url_string = SERVER+"/toggle?user_name="+user_name
-        let url = NSURL(string: url_string)!
-        var return_value = false
-        
-        let request = NSMutableURLRequest(url: url as URL)
-        request.httpMethod = "GET"
-        
-        dataTask = defaultSession.dataTask(with: request as URLRequest) {
-            data, response, error in
-            defer { self.dataTask = nil }
-            if let error = error {
-                self.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
-                print(self.errorMessage)
-            } else if let data = data,
-                let response = response as? HTTPURLResponse,
-                response.statusCode == 200
-            {
-                print(data)
-                print(response)
-                
-            }
-        }
-        dataTask?.resume()
+        let urlString = SERVER + "/toggle"
+        let parameters : Parameters = ["user_name" : user_name]
+        Alamofire.request(urlString, parameters: parameters).response { response in debugPrint(response) }
     }
-    
-    
+
 }
