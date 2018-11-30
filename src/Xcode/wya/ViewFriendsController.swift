@@ -32,7 +32,7 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        qs.getFriends(user_name: user_name) { response in
+        qs.getFriends() { response in
             guard let friendList = response else {
                 print("No friends! :(")
                 return
@@ -74,7 +74,7 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
         
         alert.addAction(UIAlertAction(title: "ENTER", style: .default, handler: { [weak alert] (_) in
             let add_friend_name = alert!.textFields![0].text // Force unwrapping because we know it exists.
-            self.qs.addFriend(user_name: user_name, friend_name: add_friend_name!)
+            self.qs.addFriend(friend_name: add_friend_name!)
             self.friends.append(add_friend_name!)
             //print("Text field: \(UITextField.text)")
             self.do_table_refresh()
@@ -99,7 +99,7 @@ extension ViewFriendsController: TableViewNew {
         friends.remove(at: index)
         // do a database call to delete friend
         let qs = QueryService()
-        qs.deleteFriend(user_name: user_name, friend_name: delete_friend_name)
+        qs.deleteFriend(friend_name: delete_friend_name)
         tableView.deleteRows(at: [deletionIndexPath!], with: .automatic)
     }
 }

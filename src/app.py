@@ -29,21 +29,19 @@ a Flask Response object, containing the HTTP status and a data field.
 
 import logging
 import json
+import os
 
 import pytesseract
 from flask import Flask, request, Response
 from PIL import Image
 
 from db import Db
-from image import CvExtractor
+#from image import CvExtractor
 
 app = Flask(__name__)
 db = Db()
 
-
-# TEMP
-os.environ['FLOOR_DIR'] = '../floor-images' # This is used for images processed to be sent to front-end
-os.environ['FULL_IMAGE_DIR'] = '../images' # This is used for images taken by user
+import environ
 
 
 def create_test_app(uri):
@@ -318,59 +316,59 @@ def toggle_loc():
 
 
 @app.route('/addFloor', methods=['POST'])
-def add_floor():
-    """
-    Endpoint: /addFloor
-    Save floor plan image, add floor data to db, and process to extract building shape.
+# def add_floor():
+#     """
+#     Endpoint: /addFloor
+#     Save floor plan image, add floor data to db, and process to extract building shape.
 
-    Arguments
-    --------------------
-        building_name       -- a string, building's name
-        floor_number        -- a string, floor number
-        floor_plan          -- an image of the floor plan
+#     Arguments
+#     --------------------
+#         building_name       -- a string, building's name
+#         floor_number        -- a string, floor number
+#         floor_plan          -- an image of the floor plan
 
-    Response
-    --------------------
-        Code: 200       -- Success
-        Code: 400       -- Missing building name, number of floors, or location, 
-                           or building already exists and cannot be added as a new building
-    """
-    building_name = request.args.get('building_name')
-    floor_number = request.args.get('floor_number')
-    #image = building + '_floor_' + floor_numer + '.png'
-    floor_plan = request.files['floor_plan']
-    if not building:
-        return Response("Must provide building name", status=400)
-    if not floor_number:
-        return Response("Must provide floor number", status=400)
-    if not floor_plan:
-        return Response("Must provide floor plan image", status=400)
+#     Response
+#     --------------------
+#         Code: 200       -- Success
+#         Code: 400       -- Missing building name, number of floors, or location, 
+#                            or building already exists and cannot be added as a new building
+#     """
+#     building_name = request.args.get('building_name')
+#     floor_number = request.args.get('floor_number')
+#     #image = building + '_floor_' + floor_numer + '.png'
+#     floor_plan = request.files['floor_plan']
+#     if not building:
+#         return Response("Must provide building name", status=400)
+#     if not floor_number:
+#         return Response("Must provide floor number", status=400)
+#     if not floor_plan:
+#         return Response("Must provide floor plan image", status=400)
 
-    # building = db.get_building(building_name) REMOVE
+#     # building = db.get_building(building_name) REMOVE
 
-    # Update database with new floor or create building in database
-    # TODO temp
-    vertices = [(0,0), (100,0), (0,100), (100,100)]
-    res = db.add_floor(building_name, floor_number, vertices)
-    if not res:
-        return Response('Could not add floor to database', status=400)
+#     # Update database with new floor or create building in database
+#     # TODO temp
+#     vertices = [(0,0), (100,0), (0,100), (100,100)]
+#     res = db.add_floor(building_name, floor_number, vertices)
+#     if not res:
+#         return Response('Could not add floor to database', status=400)
     
-    floor_number = int(floor_number)
-    if floor_number < 0 or floor_number > building['num_floors']:
-        return Response("Invalid floor number", status=400)
+#     floor_number = int(floor_number)
+#     if floor_number < 0 or floor_number > building['num_floors']:
+#         return Response("Invalid floor number", status=400)
 
-    # Save full image as ../images/<building_name>/<floor>.jpg
-    full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name, '{}.jpg'.format(floor_number))
-    floor_plan.save(full_image_path)
+#     # Save full image as ../images/<building_name>/<floor>.png
+#     full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name, '{}.png'.format(floor_number))
+#     floor_plan.save(full_image_path)
 
-    # Run CV on image
-    cv = CvExtractor()
-    proc_image = cv.extract_image(full_image_path)
+#     # Run CV on image
+#     cv = CvExtractor()
+#     proc_image = cv.extract_image(full_image_path)
 
-    # Save this image a well
-    proc_image.save(os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number)))
+#     # Save this image a well
+#     proc_image.save(os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number)))
 
-    return Response("Floor is added.", status=200)
+#     return Response("Floor is added.", status=200)
 
 
 @app.route('/getBuildingMetadata', methods=['GET'])

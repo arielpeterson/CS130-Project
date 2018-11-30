@@ -5,8 +5,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
-## TEMP
-os.environ['IMAGE_DIR'] = '../images'
+import environ
 
 
 class CvExtractor:
@@ -104,6 +103,8 @@ class CvExtractor:
         for pixel in full_lines:
             x = int(pixel[0])
             y = int(pixel[1])
+            if x >= width or y >= height:
+                continue
             mask[y][x] = 0
         
         # Apply mask
@@ -118,4 +119,4 @@ class CvExtractor:
 
 if __name__ == '__main__':
     model = CvExtractor()
-    model.extract_image('test.jpg', 'MooreHall', 1)
+    model.extract_image('../images/MooreHall_floor2.png', 'MooreHall', 2)

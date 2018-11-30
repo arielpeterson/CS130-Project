@@ -12,22 +12,16 @@ import GoogleSignIn
 
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
     
-    let qs = QueryService()
     var errorMessage = ""
-    let defaultSession = URLSession(configuration: .default)
-    var dataTask: URLSessionDataTask?
     let SERVER = "http://c02c0a92.ngrok.io"
-
     let locationManager = CLLocationManager()
-    let range:Double = 1000
-    
+    let range : Double = 1000
+    let qs = QueryService()
     var friends : [String] = []
-    var user_name : String = ""
-    var selected_friend : String = ""
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +30,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.register(HomeViewCell.self, forCellReuseIdentifier: "customcell")
         checkLocationServices()
 
-        qs.getFriends(user_name: "Ariel") { response in
+        qs.getFriends() { response in
             guard let friendList = response else {
                 print("No friends! :(")
                 return
@@ -71,9 +65,19 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         // TO DO: uncommet this line when return type from qs.lookup is CLLocationCoordinate2D
         // Change to wait for completionHandler from query
-        
-        let user = GIDSignIn.sharedInstance().currentUser
-        user_name = (user?.profile.givenName)!
+
+        let navigationVC = NavigationViewController()
+
+        qs.lookup(friend_name: selected_friend!) // add check to see if selected_friend is nill
+        {
+            response in
+            guard let location = response else {
+                print("No loction received.")
+                return
+            }
+            // send friend_location to NavigationViewController
+            navigationVC.destination = location
+        }
         
         self.performSegue(withIdentifier: "showNavigation", sender: self)
     }
