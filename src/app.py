@@ -378,6 +378,8 @@ def get_building_metadata():
     """ TODO Right now this just returns the number of floors. Future want vertices"""
     building_name = request.args.get('building_name')
     floors = db.get_building(building_name)
+    if floors is None:
+        return Response('Could not find building', status=400)
     return len(floors)
 
 

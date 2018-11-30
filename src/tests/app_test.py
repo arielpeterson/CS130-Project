@@ -13,6 +13,7 @@ class AppTest(unittest.TestCase):
     def setUp(self):
         ''' Set up test fixtures '''
         self.user = 'i_am_a_user'
+        self.building = 'i_am_building'
         self.server = MockupDB(auto_ismaster={"maxWireVersion": 6})
         self.server.run()
         self.app = app.create_test_app(self.server.uri).test_client()
@@ -138,6 +139,23 @@ class AppTest(unittest.TestCase):
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': 'toggle_me', 'location_sharing': False}]})
         self.server.reply({'n': 1, 'ok': 1.0})
         self.assertEqual(res().status_code, 200)
+
+    def test_add_floor(self):
+        pass
+
+    def test_get_building_metadata(self):
+        res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': self.building})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': self.building, 'floor': 1}, {'building_name': self.building, 'floor': 2}]})
+        result = res()
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result, 2)
+
+        res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': 'not_a_building'})
+        self.assertEqual(res().status_code, 400)
+
+
+    def test_get_floor_image(self):
+        pass
 
 
 if __name__ == '__main__':
