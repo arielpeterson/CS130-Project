@@ -26,7 +26,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let range:Double = 1000
     
     var friends : [String] = []
-   
+    var user_name : String = ""
+    var selected_friend : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,27 +67,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.cellForRow(at: indexPath) as! HomeViewCell
         
         // TODO: This is returing nil. idk why
-        let selected_friend = cell.nameLabel.text
+        selected_friend = cell.nameLabel.text!
         
         // TO DO: uncommet this line when return type from qs.lookup is CLLocationCoordinate2D
         // Change to wait for completionHandler from query
         
         let user = GIDSignIn.sharedInstance().currentUser
-        let user_name = user?.profile.givenName
-        // for testing a hardcoded location
-        // navigationVC.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
-        let navigationVC = NavigationViewController()
-
-        qs.lookup(user_name: "Ariel", friend_name: selected_friend!) // add check to see if selected_friend is nill
-        {
-            response in
-            guard let location = response else {
-                print("No loction received.")
-                return
-            }
-            // send friend_location to NavigationViewController
-            navigationVC.destination = location
-        }
+        user_name = (user?.profile.givenName)!
         
         self.performSegue(withIdentifier: "showNavigation", sender: self)
     }
@@ -98,6 +85,28 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
+    // Called before segue is performed to set parameters in Target View Controller
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.destination is NavigationViewController
+        {
+            let vc = segue.destination as? NavigationViewController
+            
+            qs.lookup(user_name: user_name, friend_name: selected_friend) // add check to see if selected_friend is nill
+            {
+                response in
+                guard let location = response else {
+                    print("No loction received.")
+                    return
+                }
+                // send friend_location to NavigationViewController
+                // Hard coded location to test if segue destination is set properly
+                vc?.destination = location
+            }
+            // hardcoded value to use for testing if segue destination is set properly
+            // vc?.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
+        }
+    }
     func setUpLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
