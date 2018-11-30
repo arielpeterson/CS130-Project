@@ -44,7 +44,6 @@ class NavigationViewController: UIViewController {
         locationManager.startUpdatingLocation()
         
         let location = locationManager.location?.coordinate
-        // let destination = self.destination.center
         //let destination = CLLocationCoordinate2DMake(34.0688, -118.4440)
         
         let start = MKPlacemark(coordinate: location!)
