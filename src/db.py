@@ -233,11 +233,11 @@ class Db(object):
 
         Arguments
         --------------------
-            building_name       -- a String, the name of the building
+            building_name   -- a String, the name of the building
 
         Return
         --------------------
-            building          -- a list of dictionaries, keys: 'floor', 'vertices'
+            building        -- a list of dictionaries, keys: 'floor', 'vertices'
         """
         floors = list(self._db[self.BUILDING_TABLE].find({'building_name': building_name}, {'building_name': 0}))
         return floors

@@ -143,7 +143,7 @@ def register():
     --------------------
         user_name       -- a string, user
         location        -- JSON object, Location object formatted as JSON. Contains either GPS data
-                           for outdoor locations or Indoor Formatted for indoor locations.
+                           for outdoor locations.
 
     Response
     --------------------
@@ -160,19 +160,38 @@ def register():
 
 @app.route('/registerIndoor', methods=['POST'])
 def register_indoor():
+    """
+    Endpoint: /registerIndoor
+    Register a user's indoor location.
+
+    Arguments
+    --------------------
+        user_name       -- a string, user
+        location        -- JSON object, Location object formatted as JSON.
+                        Contains building, floor, user's coordinates as x, y on the floor plan.
+
+    Response
+    --------------------
+        Code: 200       -- Success
+        Code: 400       -- No such user
+    """
     user_name = request.args.get('user_name')
     # TODO: let's expect this location json to be (x,y) in model coordinates
     location = request.json
     building = location['building']
+    floor = location['floor']
+    path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building, '{}.png'.format(floor))
 
     try:
-        image = Image.open('../full-images/{}'.format(building))
+        #image = Image.open('../full-images/{}'.format(building))
+        image = Image.open(path)
     except FileNotFoundError:
         logging.info('File not found for building: {}'.format(building))
         
     # Crop 
     px,py = model_to_pixel(location['x'], location['y'], image.shape)
     image = image.crop((px-50, py-50, px+50, py+50))
+    
     # Read room number
     room = int(pytesseract.image_to_string(image))
     res = db.register_indoor(user_name, location, room)
@@ -279,43 +298,6 @@ def toggle_loc():
         return Response("User doesn't exist", status=400)
     return Response("Toggled!", status=200)
 
-
-# @app.route('/addBuilding', methods=['POST'])
-# def add_building():
-#     """
-#     Endpoint: /addBuilding
-#     Add buildings to building list.
-
-#     Arguments
-#     --------------------
-#         building_name       -- a string, building's name
-#         location            -- JSON object, Location object formatted as JSON. Contains GPS data.
-#         num_of_floors       -- a string, number of floors in the building
-
-#     Response
-#     --------------------
-#         Code: 200       -- Success
-#         Code: 400       -- Missing building name, number of floors, or location, 
-#                            or building already exists and cannot be added as a new building
-#     """
-#     building_name = request.args.get('building_name')
-#     location = request.json
-#     num_floors = request.args.get('num_of_floors')
-#     footprint = []
-#     if not building_name:
-#         return Response("Must provide building name", status=400)
-#     if not num_floors:
-#         return Response("Must provide number of floors", status=400)
-#     if not location:
-#         return Response("Must provide building location", status=400)
-        
-#     num_floors = int(num_floors)
-#     added = db.add_building(building_name, location, num_floors, footprint)
-#     if added:
-#         return Response("Building is added.", status=200)
-#     return Response("Building already exists.", status=400)
-
-
 @app.route('/addFloor', methods=['POST'])
 def add_floor():
     """
@@ -336,7 +318,6 @@ def add_floor():
     """
     building_name = request.form['building_name']
     floor_number = request.form['floor_number']
-    #image = building + '_floor_' + floor_numer + '.png'
     floor_plan = request.files['floor_plan']
     if not building_name:
         return Response("Must provide building name", status=400)
@@ -345,10 +326,8 @@ def add_floor():
     if not floor_plan:
         return Response("Must provide floor plan image", status=400)
 
-    # building = db.get_building(building_name) REMOVE
-
     # Update database with new floor or create building in database
-    # TODO temp
+    # TODO: extract floor shape
     vertices = [(0,0), (100,0), (0,100), (100,100)]
     res = db.add_floor(building_name, floor_number, vertices)
     if not res:
@@ -356,7 +335,7 @@ def add_floor():
         return Response('Could not add floor to database', status=400)
     
     floor_number = int(floor_number)
-    if floor_number < 0 or floor_number > building['num_floors']:
+    if floor_number < 0:
         print('bad floor')
         return Response("Invalid floor number", status=400)
 
@@ -388,10 +367,6 @@ def get_building():
     floor = request.args.get('floor')
     image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, floor)
     return send_file(image_path)
-
-
-def update_building(new_info):
-    return db.update_building(new_info)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1')
