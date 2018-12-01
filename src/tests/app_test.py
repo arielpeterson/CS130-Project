@@ -13,6 +13,7 @@ class AppTest(unittest.TestCase):
     def setUp(self):
         ''' Set up test fixtures '''
         self.user = 'i_am_a_user'
+        self.building = 'test_building'
         self.server = MockupDB(auto_ismaster={"maxWireVersion": 6})
         self.server.run()
         self.app = app.create_test_app(self.server.uri).test_client()
@@ -65,7 +66,7 @@ class AppTest(unittest.TestCase):
         res = go(self.app.get, '/deleteFriend', query_string={'user_name': '', 'friend_name': ''})
         self.assertEqual(res().status_code, 400)
 
-        # Frined was deleted successfully
+        # Friend was deleted successfully
         res = go(self.app.get, '/deleteFriend', query_string={'user_name': self.user, 'friend_name': 'delete_me'})
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friends_list': ['delete_me']}]})
         self.server.reply({'n': 1, 'ok': 1.0})
@@ -118,8 +119,8 @@ class AppTest(unittest.TestCase):
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': 'look_at_me', 'location_sharing': True, 'location': {'x': 4, 'y': 4}}]})
         response = res()
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(json.loads(response.data)['x'], 4)
-        self.assertEqual(json.loads(response.data)['y'], 4)
+        self.assertEqual(response.get_json()['x'], 4)
+        self.assertEqual(response.get_json()['y'], 4)
 
     def test_toggle(self):
         '''Test 6: /toggle endpoint'''
@@ -139,6 +140,42 @@ class AppTest(unittest.TestCase):
         self.server.reply({'n': 1, 'ok': 1.0})
         self.assertEqual(res().status_code, 200)
 
+    def test_registerIndoor(self):
+        pass
+    
+    def test_getFriends(self):
+        # No username provided
+        res = go(self.app.get, '/getFriends', query_string={'user_name': ''})
+        self.assertEqual(res().status_code, 400)
+        
+        # User doesn't exist
+        res = go(self.app.get, '/getFriends', query_string={'user_name': 'i_dont_exist'})
+        self.server.reply(cursor={'id': 0, 'firstBatch': []})
+        self.assertEqual(res().status_code, 400)
+        
+        # User exists and has friends
+        res = go(self.app.get, '/getFriends', query_string={'user_name': self.user})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'user_name': self.user, 'friends_list':['friend_1']}]})
+        self.assertEqual(res().status_code, 200)
+    
+    def test_addFloor(self):
+        pass
+    
+    def test_getBuildingMetadata(self):
+        # No building name provided
+        res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': ''})
+        self.assertEqual(res().status_code, 400)
+        
+        # Get number of floor plans in db for building
+        #res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': self.building})
+        #self.server.reply({'n': 0, 'ok': 1.0})
+        #self.assertEqual(res, 0)
+    
+    def test_getFloorImage(self):
+        pass
+        
+    def test_modal_to_pixel(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()

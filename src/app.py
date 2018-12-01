@@ -200,6 +200,14 @@ def register_indoor():
     return Response('Could not upload location for user', status=400)
 
 def model_to_pixel(x, y, shape=[100, 100]):
+    if x < 0:
+        x = 0
+    if y < 0:
+        y = 0
+    if x > 100:
+        x = 100
+    if y > 100:
+        y = 100
     return int(x * shape[1] * 0.01), int(y * shape[0] * 0.01)
 
 @app.route('/lookup', methods=['GET'])
@@ -243,7 +251,7 @@ def lookup_loc():
         return Response('Friend has location toggled off', status=401)
     
     # Get location
-    return Response(json.dumps(location), status=200)
+    return Response(json.dumps(location), status=200, mimetype='application/json')
 
 
 @app.route('/getFriends', methods=['GET'])
@@ -267,11 +275,15 @@ def get_friends():
     if not user_name:
         logging.info('/addUser: no user name')
         return Response('Must provide user name', status=400)
+        
     friends = db.get_friends_list(user_name)
+    if friends is None:
+        return Response('User name does not exist', status=400)
+        
     data = {}
     data['friends'] = friends
     json_obj = json.dumps(data)
-    return Response(json_obj, status=200)
+    return Response(json_obj, status=200, mimetype='application/json')
 
 
 @app.route('/toggle', methods=['GET'])
@@ -357,6 +369,8 @@ def add_floor():
 def get_building_metadata():
     """ TODO Right now this just returns the number of floors. Future want vertices"""
     building_name = request.args.get('building_name')
+    if not building_name:
+        return Response("Must provide building name", status=400)
     floors = db.get_building(building_name)
     return len(floors)
 
@@ -365,7 +379,7 @@ def get_building_metadata():
 def get_building():
     building_name = request.args.get('building_name')
     floor = request.args.get('floor')
-    image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, floor)
+    image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor))
     return send_file(image_path)
 
 if __name__ == '__main__':
