@@ -167,9 +167,15 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res().status_code, 400)
         
         # Get number of floor plans in db for building
-        #res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': self.building})
-        #self.server.reply({'n': 0, 'ok': 1.0})
-        #self.assertEqual(res, 0)
+        res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': self.building})
+        self.server.reply(cursor={'id': 0, 
+                                  'firstBatch': [{'building_name': self.building, 
+                                                  'floor': 1, 
+                                                  'vertices': [(0,0), (100,0), (0,100), (100,100)]}]
+                                 }
+                         )
+        self.assertEqual(res().status_code, 200)
+        self.assertEqual(res().get_json()['floors'], 1)
     
     def test_getFloorImage(self):
         pass

@@ -372,7 +372,7 @@ def get_building_metadata():
     if not building_name:
         return Response("Must provide building name", status=400)
     floors = db.get_building(building_name)
-    return len(floors)
+    return Response(json.dumps({'floors': len(floors)}), status=200, mimetype='application/json')
 
 
 @app.route('/getFloorImage', methods=['GET'])

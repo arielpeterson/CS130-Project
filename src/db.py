@@ -237,7 +237,7 @@ class Db(object):
 
         Return
         --------------------
-            building        -- a list of dictionaries, keys: 'floor', 'vertices'
+            floors          -- a list of dictionaries, keys: 'floor', 'vertices'
         """
         floors = list(self._db[self.BUILDING_TABLE].find({'building_name': building_name}, {'building_name': 0}))
         return floors
