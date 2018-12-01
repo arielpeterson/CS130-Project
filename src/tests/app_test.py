@@ -2,6 +2,7 @@ import json
 import unittest
 from mockupdb import MockupDB, go
 from context import app
+import app as my_app
 
 class AppTest(unittest.TestCase):
     '''
@@ -170,7 +171,7 @@ class AppTest(unittest.TestCase):
         res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': self.building})
         self.server.reply(cursor={'id': 0, 
                                   'firstBatch': [{'building_name': self.building, 
-                                                  'floor': 1, 
+                                                  'floor': '1', 
                                                   'vertices': [(0,0), (100,0), (0,100), (100,100)]}]
                                  }
                          )
@@ -181,7 +182,21 @@ class AppTest(unittest.TestCase):
         pass
         
     def test_modal_to_pixel(self):
-        pass
+        '''
+        Using default shape=[100, 100]
+        Condition evaluation: TTFF
+        Branch coverage: 50%
+        '''
+        res = go(my_app.model_to_pixel, -1, -1)
+        self.assertEqual(res(), (0, 0))
+        
+        '''
+        Using shape=[500, 500]
+        Condition evaluation: TTFF
+        Branch coverage: 100%
+        '''
+        res = go(my_app.model_to_pixel, 101, 101, [500, 500])
+        self.assertEqual(res(), (500, 500))
 
 if __name__ == '__main__':
     unittest.main()
