@@ -14,7 +14,7 @@ import Alamofire
 
 
 // Must change each time we run ngrok
-let SERVER = "http://23a9b67b.ngrok.io"
+let SERVER = "http://8c51e5f9.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
