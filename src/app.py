@@ -154,8 +154,11 @@ def register():
         Code: 200       -- Success
         Code: 400       -- No such user
     """
-    user_email = request.args.get('user_email')
-    location = request.json
+    data = request.get_json(force=True)
+    user_email = data['user_email'] 
+
+    location = data['location'] 
+
     res = db.set_location(user_email, location)
     if res:
         return Response('Updated!', status=200)
@@ -177,12 +180,21 @@ def register_indoor():
     Response
     --------------------
         Code: 200       -- Success
-        Code: 400       -- No such user
+        Code: 400       -- No such user or no user_email provided
+        COde: 401       -- No location provided
     """
-    user_email = request.args.get('user_email')
+    data = request.get_json(force=True)
+    user_email = data['user_email'] 
+
+    if not user_email:
+        return Response('Must provide user email', status=400)
         
     # TODO: let's expect this location json to be (x,y) in model coordinates
-    location = request.json
+    location = data['location'] 
+
+    if not location:
+        return Response('Must provide location', status=401)
+
     building = location['building']
     floor = location['floor']
     path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building, '{}.png'.format(floor))
@@ -255,8 +267,11 @@ def lookup_loc():
         return Response('Friend has location toggled off', status=401)
     
     # Get location
-    last_seen = time.time() - last_seen
-    minutes, seconds = divmod(int(last_seen), 60)
+    if not last_seen:
+        minutes = None
+    else:
+        last_seen = time.time() - last_seen
+        minutes, seconds = divmod(int(last_seen), 60)
     data = {'location': location, 'minutes_ago_indoor': minutes}
     return Response(json.dumps(data), status=200, mimetype='application/json')
 
