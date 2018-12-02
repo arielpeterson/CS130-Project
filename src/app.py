@@ -185,12 +185,13 @@ def register_indoor():
     """
     data = request.get_json(force=True)
     user_email = data['user_email'] 
+
     if not user_email:
         return Response('Must provide user email', status=400)
         
     # TODO: let's expect this location json to be (x,y) in model coordinates
     location = data['location'] 
-    #request.json
+
     if not location:
         return Response('Must provide location', status=401)
 
@@ -266,8 +267,11 @@ def lookup_loc():
         return Response('Friend has location toggled off', status=401)
     
     # Get location
-    last_seen = time.time() - last_seen
-    minutes, seconds = divmod(int(last_seen), 60)
+    if not last_seen:
+        minutes = None
+    else:
+        last_seen = time.time() - last_seen
+        minutes, seconds = divmod(int(last_seen), 60)
     data = {'location': location, 'minutes_ago_indoor': minutes}
     return Response(json.dumps(data), status=200, mimetype='application/json')
 
