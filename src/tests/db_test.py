@@ -17,8 +17,7 @@ class DbTest(unittest.TestCase):
     def setUp(self):
         """ Set up test fixtures """
 
-        # Set up mongod daemon 
-        # TODO: Warnings are raised about not killing subprocess. I'm not sure why
+        # Set up mongod daemon
         self.devnull = open(os.devnull,'w')
         self.mongod = subprocess.Popen(PATH_TO_MONGOD,stdout=self.devnull) 
         
