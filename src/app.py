@@ -308,7 +308,10 @@ def get_name():
     name = db.get_name(email)
     if not name:
         return Response("User doesn't exist", status=400)
-    return Response(name, status=200)
+    data = {}
+    data['name'] = name
+    json_obj = json.dumps(data)
+    return Response(json_obj, status=200, mimetype='application/json')
 
 @app.route('/toggle', methods=['GET'])
 def toggle_loc():
