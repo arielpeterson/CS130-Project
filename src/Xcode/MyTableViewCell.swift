@@ -9,8 +9,8 @@ import UIKit
 
 protocol TableViewNew {
     func onDeleteCell(index: Int, cell: MyTableViewCell)
-    
 }
+
 class MyTableViewCell: UITableViewCell {
 
     @IBOutlet weak var deleteButton: UIButton!
