@@ -16,8 +16,6 @@
 		8EB20BA421B03A3B00BF211B /* QueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB20BA321B03A3B00BF211B /* QueryService.swift */; };
 		8EDC809B21B0E5220025ED4B /* MyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */; };
 		9AEDAF2B21B3AC9E009C78E9 /* AddFloorPlanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */; };
-		9AEDAF2D21B3C260009C78E9 /* texture.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9AEDAF2C21B3C260009C78E9 /* texture.jpeg */; };
-		9AEDAF2F21B3C269009C78E9 /* another.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9AEDAF2E21B3C269009C78E9 /* another.jpeg */; };
 		B33E89A61ED67A3B00E5A503 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33E89A51ED67A3B00E5A503 /* AppDelegate.swift */; };
 		B33E89AB1ED67A3B00E5A503 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B33E89A91ED67A3B00E5A503 /* Main.storyboard */; };
 		B33E89AD1ED67A3B00E5A503 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B33E89AC1ED67A3B00E5A503 /* Assets.xcassets */; };
@@ -40,8 +38,6 @@
 		8EB20BA321B03A3B00BF211B /* QueryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryService.swift; sourceTree = "<group>"; };
 		8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MyTableViewCell.swift; path = ../MyTableViewCell.swift; sourceTree = "<group>"; };
 		9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFloorPlanController.swift; sourceTree = "<group>"; };
-		9AEDAF2C21B3C260009C78E9 /* texture.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = texture.jpeg; path = ../../../../sk/sk/texture.jpeg; sourceTree = "<group>"; };
-		9AEDAF2E21B3C269009C78E9 /* another.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = another.jpeg; path = ../../../../sk/sk/another.jpeg; sourceTree = "<group>"; };
 		9B757972FD9C35F6773132A8 /* Pods-wya.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wya.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wya/Pods-wya.debug.xcconfig"; sourceTree = "<group>"; };
 		A2F7274B2487BD77FB273E15 /* Pods-Menu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Menu/Pods-Menu.debug.xcconfig"; sourceTree = "<group>"; };
 		AF481C89D416BA512BE22209 /* libPods-wya.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wya.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,8 +131,6 @@
 				B33E89A91ED67A3B00E5A503 /* Main.storyboard */,
 				8629651721AFA26800F240AE /* HomeViewController.swift */,
 				8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */,
-				9AEDAF2C21B3C260009C78E9 /* texture.jpeg */,
-				9AEDAF2E21B3C269009C78E9 /* another.jpeg */,
 				9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */,
 				8629651921AFA30200F240AE /* NavigationViewController.swift */,
 				B33E89AC1ED67A3B00E5A503 /* Assets.xcassets */,
@@ -209,9 +203,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B33E89B01ED67A3B00E5A503 /* LaunchScreen.storyboard in Resources */,
-				9AEDAF2D21B3C260009C78E9 /* texture.jpeg in Resources */,
 				B33E89AD1ED67A3B00E5A503 /* Assets.xcassets in Resources */,
-				9AEDAF2F21B3C269009C78E9 /* another.jpeg in Resources */,
 				B33E89AB1ED67A3B00E5A503 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
