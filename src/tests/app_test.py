@@ -50,7 +50,7 @@ class AppTest(unittest.TestCase):
 
         # Friend was added successfully
         res = go(self.app.get, '/addFriend', query_string={'user_name': self.user, 'friend_name': 'friend_test'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friends_list': []}]})      
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friends_list': []}]})
         self.server.reply({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True})
         self.assertEqual(res().status_code, 200)
 
@@ -143,6 +143,17 @@ class AppTest(unittest.TestCase):
 
     def test_registerIndoor(self):
         pass
+        '''
+        # Location update successful
+        res = go(self.app.post, '/registerIndoor', query_string={'user_name': self.user, 'location': {'building': '0.000','floor': '0.000', 'x': 10, 'y': 10}})
+        self.server.reply({'n': 1, 'ok': 1.0})
+        self.assertEqual(res().status_code, 200)
+
+        # Location update failed
+        res = go(self.app.post, '/registerIndoor', query_string={'user_name': self.user, 'location': {'latitude': '0.000','longitude': '0.000'}})
+        self.server.reply({'n': 0, 'ok': 1.0})
+        self.assertEqual(res().status_code, 400) 
+        '''       
     
     def test_getFriends(self):
         # No username provided

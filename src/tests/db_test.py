@@ -34,6 +34,7 @@ class DbTest(unittest.TestCase):
         """ Take down test fixtures """
         # Delete all data we just added
         self.db_verify.User.drop()
+        self.db_verify.Building.drop()
         self.mongod.kill()
         self.devnull.close()
 
@@ -121,7 +122,12 @@ class DbTest(unittest.TestCase):
         # Username and friend
         user0 = 'user_{}'.format(time.time())
         user1 = 'friend_{}'.format(time.time())
+
+        # Location and building
         location_user0 = {'x': 0, 'y': 0}
+        floor = {'building': 'MooreHall', 'floor': '1', 'vertices': [(0,0), (100,0), (0,100), (100,100)]}
+        indoor_loc_user0 = {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82}
+        room_user0 = 1009
 
         # Add initial user to database
         self.db_test.add_user(user0)
@@ -134,42 +140,51 @@ class DbTest(unittest.TestCase):
         self.assertEqual(rv, True)
         self.assertEqual(result['location'], location_user0)
 
+        # Set indoor location for user0
+        rv = self.db_test.register_indoor(user0,indoor_loc_user0, room_user0)
+        result = self.db_verify['User'].find_one({'user': user0})
+        self.assertEqual(rv, True)
+        self.assertEqual(result['indoor_location'], indoor_loc_user0)
+        
+        # Get user0's location with user0 not sharing location
+        rv = self.db_test.get_location(user0)
+        self.assertEqual(rv, None)
+
         # Toggle user0's location sharing settings
         rv_toggle = self.db_test.toggle(user0)
         result = self.db_verify['User'].find_one({'user': user0})
         self.assertEqual(rv_toggle, True)
         self.assertEqual(result['location_sharing'], True)        # Default was False
 
-        # Get user0's loction
+        # Get user0's location with user0 sharing location
         rv = self.db_test.get_location(user0)
-        self.assertEqual(rv, location_user0)
+        user0_loc = {'outdoor_location': location_user0, 'indoor_location': indoor_loc_user0}
+        self.assertEqual(rv, user0_loc)
 
+    def test_get_building(self):
+        """ 
+            Test 4:
+            Verify that we can add building floors and get building
+        """
 
+        # Building
+        building = 'MooreHall'
+        floor = '1'
+        vertices = [[0,0], [100,0], [0,100], [100,100]]
+        floors = [{'floor': '1', 'vertices': [[0,0], [100,0], [0,100], [100,100]]}]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
+        # Add building to database
+        rv = self.db_test.add_floor(building, floor, vertices)
+        self.assertEqual(rv, True)
+        verify = self.db_verify['Building'].find_one({'building_name': building})
+        self.assertEqual(verify['building_name'], building)
+        self.assertEqual(verify['floor'], floor)
+        self.assertEqual(verify['vertices'], vertices)
+   
+        # Get floors of a building
+        rv = self.db_test.get_building(building)
+        self.assertEqual(rv[0]['floor'], floors[0]['floor'])
+        self.assertEqual(rv[0]['vertices'], floors[0]['vertices'])
 
 if __name__ == '__main__':
     unittest.main()
