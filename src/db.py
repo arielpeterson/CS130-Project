@@ -46,7 +46,7 @@ class Db(object):
         """
         self._db = MongoClient(uri)[db]
 
-    def add_user(self, user_name):
+    def add_user(self, user_name, email):
         """
         Adds a new user to the database
 
@@ -58,22 +58,24 @@ class Db(object):
         --------------------
             result          -- a Boolean, indicates success or failure
         """
-        if self._db[self.USER_TABLE].find_one({'user': user_name}) is not None:
+        # User already exists
+        if self._db[self.USER_TABLE].find_one({'email': email}) is not None:
             return False
 
         # Add new user. Location Sharing defaults to false
-        self._db[self.USER_TABLE].insert_one({'user': user_name, 
+        self._db[self.USER_TABLE].insert_one({'user': user_name,
+                                              'email': email,
                                               'location_sharing': False,
                                               'friends_list': []})
         return True
 
-    def get_friends_list(self, user_name):
+    def get_friends_list(self, user_email):
         """
         Get list of friends for a given user
 
         Arguments
         --------------------
-            user_name       -- a string, user
+            user_email       -- a string, user
 
         Return
         --------------------
@@ -81,71 +83,90 @@ class Db(object):
                             or
                             -- None type, if there was no entry in databasse
         """
-        user = self._db[self.USER_TABLE].find_one({'user': user_name})
+        user = self._db[self.USER_TABLE].find_one({'email': user_email})
         if user is None:
             return None
         return user.get('friends_list')
 
-    def add_friend(self, user_name, friend_name):
+    def get_name(self, email):
+        """
+        Get user for a given email
+
+        Arguments
+        --------------------
+            email           -- a string, email
+
+        Return
+        --------------------
+            name            -- a string, user
+                            or
+                            -- None type, if there was no entry in databasse
+        """
+        user = self._db[self.USER_TABLE].find_one({'email': email})
+        if user is None:
+            return None
+        return user.get('user')
+
+    def add_friend(self, user_email, friend_email):
         """
         Add a friend to a user's friends list
 
         Arguments
         --------------------
-            user_name       -- a string, user
-            friend_name     -- a string, friend to be deleted
+            user_email       -- a string, user
+            friend_email     -- a string, friend to be deleted
 
         Return
         --------------------
             result          -- a Boolean, indicates success or failure
         """
-        friends_list = self.get_friends_list(user_name)
+        friends_list = self.get_friends_list(user_email)
         if friends_list is None:         # No such user
             return False
-        if friend_name in friends_list:  # Don't add duplicates
+        if friend_email in friends_list:  # Don't add duplicates
             return False
 
         # Make update
-        res = self._db[self.USER_TABLE].update_one({'user': user_name}, {'$push': {'friends_list': friend_name}})
+        res = self._db[self.USER_TABLE].update_one({'email': user_email}, {'$push': {'friends_list': friend_email}})
         if res.matched_count == 0: # Success or failure?
             return False
         return True
 
 
-    def delete_friend(self, user_name, friend_name):
+    def delete_friend(self, user_email, friend_email):
         """
         Delete a friend from a user's friends list
 
         Arguments
         --------------------
-            user_name       -- a string, user
-            friend_name     -- a string, friend to be deleted
+            user_email      -- a string, user
+            friend_email    -- a string, friend to be deleted
 
         Return
         --------------------
             result          -- a Boolean, indicates success or failure
         """
         # Unfortunately we need to query the friends_list, search for the user, and remove
-        friends_list = self.get_friends_list(user_name)
+        friends_list = self.get_friends_list(user_email)
         # If no friends, we are done
         if not friends_list:
             return False
         try:
-            friends_list.remove(friend_name)
+            friends_list.remove(friend_email)
         except ValueError:
-            logging.info('Could not remove {} because user {} does not have them in friends list'.format(friend_name, user_name))
+            logging.info('Could not remove {} because user {} does not have them in friends list'.format(friend_email, user_email))
             return False
 
-        self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'friends_list': friends_list}})
+        self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'friends_list': friends_list}})
         return True
 
-    def get_location(self, friend_name):
+    def get_location(self, friend_email):
         """
         Query database for location of specified user
 
         Arguments
         --------------------
-            friend_name     -- a string, friendname
+            friend_email    -- a string, friend's email
 
         Return
         --------------------
@@ -153,7 +174,7 @@ class Db(object):
                             or
                             -- None type, if there was no entry or not valid lookup
         """
-        user = self._db[self.USER_TABLE].find_one({'user': friend_name})
+        user = self._db[self.USER_TABLE].find_one({'email': friend_email})
 
         # Does the user exist?
         if user is None:
@@ -165,54 +186,54 @@ class Db(object):
         
         return {'outdoor_location': user.get('location'), 'indoor_location': user.get('indoor_location')}
 
-    def set_location(self, user_name, location):
+    def set_location(self, user_email, location):
         """
         Update user with new location from device
 
         Arguments
         --------------------
-            user_name       -- a string, user
+            user_email       -- a string, user
             location        -- location, most recent location of user
 
         Return
         --------------------
             result          -- a Boolean, indicates success or failure
         """
-        res = self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location': location}})
+        res = self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'location': location}})
         if res.matched_count == 0:
             return False
         return True
 
-    def toggle(self, user_name):
+    def toggle(self, user_email):
         """
         Toggle user's location sharing
 
         Arguments
         --------------------
-            user_name       -- a string, user
+            user_email       -- a string, user
 
         Return
         --------------------
             result          -- a Boolean, returns False if user doesn't exist
                                and true otherwise.
         """
-        user = self._db[self.USER_TABLE].find_one({'user': user_name})
+        user = self._db[self.USER_TABLE].find_one({'email': user_email})
 
         if user is None:
             return False
 
         # Toggle location setting
         toggle = user.get('location_sharing')
-        self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'location_sharing': not toggle}})
+        self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'location_sharing': not toggle}})
         return True
 
-    def register_indoor(self, user_name, location, room):
+    def register_indoor(self, user_email, location, room):
         """
         Register a user's indoor location
 
         Arguments
         --------------------
-            user_name       -- a String, the name of the user
+            user_email      -- a String, the name of the user
             location        -- a dictionary, keys: 'x', 'y', 'building', 'floor'
             room            -- an int, the detected room number of user
 
@@ -222,7 +243,7 @@ class Db(object):
         """
         location['room'] = room
         try:
-            self._db[self.USER_TABLE].update_one({'user': user_name}, {'$set': {'indoor_location': location}})
+            self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'indoor_location': location}})
             return True
         except Exception:
             return False
