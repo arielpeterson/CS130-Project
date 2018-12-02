@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4FC2D70BD8284EFE01F890A1 /* libPods-wya.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F80D6F1DA294361E13E796A /* libPods-wya.a */; };
+		1694C07FC81F51B36B2A1C30 /* libPods-wya.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF481C89D416BA512BE22209 /* libPods-wya.a */; };
 		8629651421AF931400F240AE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651321AF931400F240AE /* LoginViewController.swift */; };
 		8629651621AFA0D400F240AE /* MyAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651521AFA0D400F240AE /* MyAccountViewController.swift */; };
 		8629651821AFA26800F240AE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651721AFA26800F240AE /* HomeViewController.swift */; };
@@ -15,6 +15,9 @@
 		8E26420621B044CE00BAF9B5 /* ViewFriendsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */; };
 		8EB20BA421B03A3B00BF211B /* QueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB20BA321B03A3B00BF211B /* QueryService.swift */; };
 		8EDC809B21B0E5220025ED4B /* MyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */; };
+		9AEDAF2B21B3AC9E009C78E9 /* AddFloorPlanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */; };
+		9AEDAF2D21B3C260009C78E9 /* texture.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9AEDAF2C21B3C260009C78E9 /* texture.jpeg */; };
+		9AEDAF2F21B3C269009C78E9 /* another.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9AEDAF2E21B3C269009C78E9 /* another.jpeg */; };
 		B33E89A61ED67A3B00E5A503 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33E89A51ED67A3B00E5A503 /* AppDelegate.swift */; };
 		B33E89AB1ED67A3B00E5A503 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B33E89A91ED67A3B00E5A503 /* Main.storyboard */; };
 		B33E89AD1ED67A3B00E5A503 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B33E89AC1ED67A3B00E5A503 /* Assets.xcassets */; };
@@ -27,7 +30,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3F80D6F1DA294361E13E796A /* libPods-wya.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wya.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6006E01824C2C19615C1E7F4 /* Pods-Menu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menu.release.xcconfig"; path = "Pods/Target Support Files/Pods-Menu/Pods-Menu.release.xcconfig"; sourceTree = "<group>"; };
 		80523F577275F10515F6AE77 /* libPods-Menu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Menu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8629651321AF931400F240AE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -37,8 +39,12 @@
 		8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFriendsController.swift; sourceTree = "<group>"; };
 		8EB20BA321B03A3B00BF211B /* QueryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryService.swift; sourceTree = "<group>"; };
 		8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MyTableViewCell.swift; path = ../MyTableViewCell.swift; sourceTree = "<group>"; };
+		9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFloorPlanController.swift; sourceTree = "<group>"; };
+		9AEDAF2C21B3C260009C78E9 /* texture.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = texture.jpeg; path = ../../../../sk/sk/texture.jpeg; sourceTree = "<group>"; };
+		9AEDAF2E21B3C269009C78E9 /* another.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = another.jpeg; path = ../../../../sk/sk/another.jpeg; sourceTree = "<group>"; };
 		9B757972FD9C35F6773132A8 /* Pods-wya.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wya.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wya/Pods-wya.debug.xcconfig"; sourceTree = "<group>"; };
 		A2F7274B2487BD77FB273E15 /* Pods-Menu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Menu/Pods-Menu.debug.xcconfig"; sourceTree = "<group>"; };
+		AF481C89D416BA512BE22209 /* libPods-wya.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-wya.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B33E89A21ED67A3B00E5A503 /* wya.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = wya.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B33E89A51ED67A3B00E5A503 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B33E89AA1ED67A3B00E5A503 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -60,7 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FC2D70BD8284EFE01F890A1 /* libPods-wya.a in Frameworks */,
+				1694C07FC81F51B36B2A1C30 /* libPods-wya.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				80523F577275F10515F6AE77 /* libPods-Menu.a */,
-				3F80D6F1DA294361E13E796A /* libPods-wya.a */,
+				AF481C89D416BA512BE22209 /* libPods-wya.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -129,6 +135,9 @@
 				B33E89A91ED67A3B00E5A503 /* Main.storyboard */,
 				8629651721AFA26800F240AE /* HomeViewController.swift */,
 				8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */,
+				9AEDAF2C21B3C260009C78E9 /* texture.jpeg */,
+				9AEDAF2E21B3C269009C78E9 /* another.jpeg */,
+				9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */,
 				8629651921AFA30200F240AE /* NavigationViewController.swift */,
 				B33E89AC1ED67A3B00E5A503 /* Assets.xcassets */,
 				B33E89AE1ED67A3B00E5A503 /* LaunchScreen.storyboard */,
@@ -148,7 +157,7 @@
 				B33E899E1ED67A3B00E5A503 /* Sources */,
 				B33E899F1ED67A3B00E5A503 /* Frameworks */,
 				B33E89A01ED67A3B00E5A503 /* Resources */,
-				57BE83CD0EFF252C380BA600 /* [CP] Copy Pods Resources */,
+				7EAA748415663A197217EC33 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -200,7 +209,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B33E89B01ED67A3B00E5A503 /* LaunchScreen.storyboard in Resources */,
+				9AEDAF2D21B3C260009C78E9 /* texture.jpeg in Resources */,
 				B33E89AD1ED67A3B00E5A503 /* Assets.xcassets in Resources */,
+				9AEDAF2F21B3C269009C78E9 /* another.jpeg in Resources */,
 				B33E89AB1ED67A3B00E5A503 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -208,7 +219,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		57BE83CD0EFF252C380BA600 /* [CP] Copy Pods Resources */ = {
+		7EAA748415663A197217EC33 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -270,6 +281,7 @@
 				8629651821AFA26800F240AE /* HomeViewController.swift in Sources */,
 				B33E89E31ED7D83500E5A503 /* HamburgerViewModel.swift in Sources */,
 				8EB20BA421B03A3B00BF211B /* QueryService.swift in Sources */,
+				9AEDAF2B21B3AC9E009C78E9 /* AddFloorPlanController.swift in Sources */,
 				B33E89A61ED67A3B00E5A503 /* AppDelegate.swift in Sources */,
 				8629651621AFA0D400F240AE /* MyAccountViewController.swift in Sources */,
 			);
