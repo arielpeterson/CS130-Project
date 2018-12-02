@@ -30,6 +30,7 @@ a Flask Response object, containing the HTTP status and a data field.
 import logging
 import json
 import os
+import time
 
 import pytesseract
 from flask import Flask, request, Response
@@ -188,6 +189,7 @@ def register_indoor():
 
     try:
         image = Image.open(path)
+        last_seen = time.time()
     except FileNotFoundError:
         logging.info('File not found for building: {}'.format(building))
         
@@ -197,7 +199,7 @@ def register_indoor():
     
     # Read room number
     room = int(pytesseract.image_to_string(image))
-    res = db.register_indoor(user_email, location, room)
+    res = db.register_indoor(user_email, location, room, last_seen)
     if res:
         return Response('Updated!', status=200)
     return Response('Could not upload location for user', status=400)
@@ -248,12 +250,15 @@ def lookup_loc():
         return Response("Friend not found", status=400)
 
     # Is friend sharing location?
-    location = db.get_location(friend_email)
+    location, last_seen = db.get_location(friend_email)
     if location is None:
         return Response('Friend has location toggled off', status=401)
     
     # Get location
-    return Response(json.dumps(location), status=200, mimetype='application/json')
+    last_seen = time.time() - last_seen
+    minutes, seconds = divmod(int(last_seen), 60)
+    data = {'location': location, 'minutes_ago_indoor': minutes}
+    return Response(json.dumps(data), status=200, mimetype='application/json')
 
 
 @app.route('/getFriends', methods=['GET'])

@@ -118,11 +118,13 @@ class AppTest(unittest.TestCase):
         # Look up friend's location successfully
         res = go(self.app.get, '/lookup', query_string={'user_email': self.email, 'friend_email': 'look_at_me'})
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list': ['look_at_me']}]})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': 'look_at_me', 'location_sharing': True, 'location': {'x': 4, 'y': 4}}]})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': 'look_at_me', 'location_sharing': True, 'location': {'x': 4, 'y': 4}, 'indoor_location': {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82, 'room': 1009}, 'last_seen_indoor': 10.0}]})
+        outdoor = {'x': 4, 'y': 4}
+        indoor = {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82, 'room': 1009}
         response = res()
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.get_json()['outdoor_location']['x'], 4)
-        self.assertEqual(response.get_json()['outdoor_location']['y'], 4)
+        self.assertEqual(response.get_json()['location']['outdoor_location'], outdoor)
+        self.assertEqual(response.get_json()['location']['indoor_location'], indoor)
 
     def test_toggle(self):
         '''Test 6: /toggle endpoint'''

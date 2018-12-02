@@ -131,9 +131,10 @@ class DbTest(unittest.TestCase):
 
         # Location and building
         location_user0 = {'x': 0, 'y': 0}
-        floor = {'building': 'MooreHall', 'floor': '1', 'vertices': [(0,0), (100,0), (0,100), (100,100)]}
         indoor_loc_user0 = {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82}
         room_user0 = 1009
+        last_seen = 1235678.0
+        indoor_res = {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82, 'room': 1009}
 
         # Add initial user to database
         self.db_test.add_user(name0, user0)
@@ -147,14 +148,15 @@ class DbTest(unittest.TestCase):
         self.assertEqual(result['location'], location_user0)
 
         # Set indoor location for user0
-        rv = self.db_test.register_indoor(user0,indoor_loc_user0, room_user0)
+        rv = self.db_test.register_indoor(user0,indoor_loc_user0, room_user0, last_seen)
         result = self.db_verify['User'].find_one({'email': user0})
         self.assertEqual(rv, True)
-        self.assertEqual(result['indoor_location'], indoor_loc_user0)
+        self.assertEqual(result['indoor_location'], indoor_res)
+        self.assertEqual(result['last_seen_indoor'], last_seen)
         
         # Get user0's location with user0 not sharing location
         rv = self.db_test.get_location(user0)
-        self.assertEqual(rv, None)
+        self.assertEqual(rv, (None, None))
 
         # Toggle user0's location sharing settings
         rv_toggle = self.db_test.toggle(user0)
@@ -164,8 +166,8 @@ class DbTest(unittest.TestCase):
 
         # Get user0's location with user0 sharing location
         rv = self.db_test.get_location(user0)
-        user0_loc = {'outdoor_location': location_user0, 'indoor_location': indoor_loc_user0}
-        self.assertEqual(rv, user0_loc)
+        user0_loc = {'outdoor_location': location_user0, 'indoor_location': indoor_res}
+        self.assertEqual(rv, (user0_loc, last_seen))
 
     def test_get_building(self):
         """ 

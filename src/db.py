@@ -178,13 +178,12 @@ class Db(object):
 
         # Does the user exist?
         if user is None:
-            return None
+            return None, None
 
         # Is locatin_sharing enabled?
         if not user['location_sharing']:
-            return None
+            return None, None
         
-        return {'outdoor_location': user.get('location'), 'indoor_location': user.get('indoor_location')}
 
     def set_location(self, user_email, location):
         """
@@ -227,7 +226,7 @@ class Db(object):
         self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'location_sharing': not toggle}})
         return True
 
-    def register_indoor(self, user_email, location, room):
+    def register_indoor(self, user_email, location, room, last_seen):
         """
         Register a user's indoor location
 
@@ -236,6 +235,7 @@ class Db(object):
             user_email      -- a String, the name of the user
             location        -- a dictionary, keys: 'x', 'y', 'building', 'floor'
             room            -- an int, the detected room number of user
+            last_seen       -- a float, the timestamp of when indoor location is registered
 
         Return
         --------------------
@@ -244,6 +244,7 @@ class Db(object):
         location['room'] = room
         try:
             self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'indoor_location': location}})
+            self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'last_seen_indoor': last_seen}})
             return True
         except Exception:
             return False
