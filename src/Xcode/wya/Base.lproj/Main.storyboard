@@ -267,29 +267,10 @@
         <!--My Account View Controller-->
         <scene sceneID="ZSt-DX-pPl">
             <objects>
-                <viewController storyboardIdentifier="MyAccountViewController" id="6zy-FU-hyr" customClass="MyAccountViewController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="CQF-UF-T03"/>
-                        <viewControllerLayoutGuide type="bottom" id="XXO-i4-cms"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="pdW-ac-cvG">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="725"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Account Info here" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O96-zj-MZy">
-                                <rect key="frame" x="82" y="352" width="136" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
+                <viewController storyboardIdentifier="MyAccountViewController" id="6zy-FU-hyr" customClass="MyAccountViewController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vn7-l1-xMI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1801" y="1362"/>
+            <point key="canvasLocation" x="1800.0000000000002" y="1361.71875"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="m1r-vs-LoX">
@@ -315,8 +296,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="300" height="725"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="qMW-bR-jow">
+                        <view key="tableHeaderView" contentMode="scaleToFill" misplaced="YES" id="qMW-bR-jow">
                             <rect key="frame" x="0.0" y="0.0" width="300" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
@@ -330,9 +310,8 @@
                             </subviews>
                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         </view>
-                        <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zI5-KO-Bfa">
+                        <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zI5-KO-Bfa">
                             <rect key="frame" x="0.0" y="183" width="300" height="70"/>
-
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Add Friend"/>
                             <connections>
@@ -349,7 +328,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="300" height="110.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OG7-Cy-d1X">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OG7-Cy-d1X">
                                             <rect key="frame" x="16" y="11" width="181" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -463,7 +442,7 @@
     </scenes>
     <resources>
         <image name="carsIcon" width="24" height="24"/>
-        <image name="hamburger" width="25" height="25"/>
+        <image name="hamburger" width="37.5" height="37.5"/>
         <image name="login_screen" width="1125" height="2436"/>
     </resources>
 </document>
