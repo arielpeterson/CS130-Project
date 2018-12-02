@@ -14,6 +14,7 @@ class AppTest(unittest.TestCase):
     def setUp(self):
         ''' Set up test fixtures '''
         self.user = 'i_am_a_user'
+        self.email = 'user@email.ucla'
         self.building = 'test_building'
         self.server = MockupDB(auto_ismaster={"maxWireVersion": 6})
         self.server.run()
@@ -26,37 +27,37 @@ class AppTest(unittest.TestCase):
     def test_addUser(self):
         '''Test 1: /addUser endpoint'''
 
-        # No username provided
-        res = go(self.app.get, '/addUser', query_string={'user_name': ''})
+        # No username or email provided
+        res = go(self.app.get, '/addUser', query_string={'user_name': '', 'user_email': ''})
         self.assertEqual(res().status_code, 400)
 
         # User doesn't exist
-        res = go(self.app.get, '/addUser', query_string={'user_name': self.user})
+        res = go(self.app.get, '/addUser', query_string={'user_name': self.user, 'user_email': self.email})
         self.server.reply(cursor={'id': 0, 'firstBatch': [None]})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user}]})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'user': self.user, 'email': self.email}]})
         self.assertEqual(res().status_code, 200)
 
         # User was added twice
-        res = go(self.app.get, '/addUser', query_string={'user_name': self.user})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user}]})
+        res = go(self.app.get, '/addUser', query_string={'user_name': self.user, 'user_email': self.email})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'user': self.user, 'email': self.email}]})
         self.assertEqual(res().status_code, 400)
 
     def test_addFriend(self):
         ''' Test 2: /addFriend endpoint'''
 
         # No username/friend provided
-        res = go(self.app.get, '/addFriend', query_string={'user_name': '', 'friend_name': ''})
+        res = go(self.app.get, '/addFriend', query_string={'user_email': '', 'friend_email': ''})
         self.assertEqual(res().status_code, 400)
 
         # Friend was added successfully
-        res = go(self.app.get, '/addFriend', query_string={'user_name': self.user, 'friend_name': 'friend_test'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friends_list': []}]})      
+        res = go(self.app.get, '/addFriend', query_string={'user_email': self.email, 'friend_email': 'friend_test@ucla.edu'})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list': []}]})
         self.server.reply({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True})
         self.assertEqual(res().status_code, 200)
 
 
         # Add friend to non-existent user
-        res = go(self.app.get, '/addFriend', query_string={'user_name': 'not_a_user', 'friend_name': 'friend_test'})
+        res = go(self.app.get, '/addFriend', query_string={'user_email': 'not_a_user', 'friend_email': 'friend_test'})
         self.server.reply(cursor={'id': 0, 'firstBatch': []})
         self.assertEqual(res().status_code, 400)
 
@@ -64,30 +65,30 @@ class AppTest(unittest.TestCase):
         ''' Test 3: /deleteFriend endpoint'''
 
         # Bad arguments
-        res = go(self.app.get, '/deleteFriend', query_string={'user_name': '', 'friend_name': ''})
+        res = go(self.app.get, '/deleteFriend', query_string={'user_email': '', 'friend_email': ''})
         self.assertEqual(res().status_code, 400)
 
         # Friend was deleted successfully
-        res = go(self.app.get, '/deleteFriend', query_string={'user_name': self.user, 'friend_name': 'delete_me'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friends_list': ['delete_me']}]})
+        res = go(self.app.get, '/deleteFriend', query_string={'user_email': self.email, 'friend_email': 'delete_me@ucla.edu'})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list': ['delete_me@ucla.edu']}]})
         self.server.reply({'n': 1, 'ok': 1.0})
         self.assertEqual(res().status_code, 200)
 
         # Friend does not exist
-        res = go(self.app.get, '/deleteFriend', query_string={'user_name': self.user, 'friend_name': 'i_dont_exist'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friends_list': ['i_do_exist']}]})
+        res = go(self.app.get, '/deleteFriend', query_string={'user_email': self.email, 'friend_email': 'i_dont_exist'})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list': ['i_do_exist']}]})
         self.assertEqual(res().status_code, 400)
 
     def test_registerLocation(self):
         ''' Test 3: /registerLocation endpoint'''
 
         # Location update successful
-        res = go(self.app.post, '/registerLocation', query_string={'user_name': self.user, 'location': {'latitude': '0.000','longitude': '0.000'}})
+        res = go(self.app.post, '/registerLocation', query_string={'user_email': self.email, 'location': {'latitude': '0.000','longitude': '0.000'}})
         self.server.reply({'n': 1, 'ok': 1.0})
         self.assertEqual(res().status_code, 200)
 
         # Location update failed
-        res = go(self.app.post, '/registerLocation', query_string={'user_name': self.user, 'location': {'latitude': '0.000','longitude': '0.000'}})
+        res = go(self.app.post, '/registerLocation', query_string={'user_email': self.email, 'location': {'latitude': '0.000','longitude': '0.000'}})
         self.server.reply({'n': 0, 'ok': 1.0})
         self.assertEqual(res().status_code, 400)
 
@@ -95,68 +96,79 @@ class AppTest(unittest.TestCase):
         ''' Test 4: /lookup endpoint'''
 
         # No friend/user name provided
-        res = go(self.app.get,'/lookup', query_string={'user_name': '', 'friend_name': ''})
+        res = go(self.app.get,'/lookup', query_string={'user_email': '', 'friend_email': ''})
         self.assertEqual(res().status_code , 400)
 
         # No such user
-        res = go(self.app.get,'/lookup', query_string={'user_name': self.user, 'friend_name': 'n/a'})
+        res = go(self.app.get,'/lookup', query_string={'user_email': self.user, 'friend_email': 'n/a'})
         self.server.reply(cursor={'id': 0, 'firstBatch': []})
         self.assertEqual(res().status_code , 400)
 
         # Requested user not in friend list
-        res = go(self.app.get,'/lookup', query_string={'user_name': self.user, 'friend_name': 'not_a_friend'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friends_list': ['a_friend']}]})
+        res = go(self.app.get,'/lookup', query_string={'user_email': self.email, 'friend_email': 'not_a_friend'})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list': ['a_friend']}]})
         self.assertEqual(res().status_code , 400)
 
         # Look up friend who is not sharing location
-        res = go(self.app.get,'/lookup', query_string={'user_name': self.user, 'friend_name': 'dont_look_at_me_rn'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friends_list': ['dont_look_at_me_rn']}]})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': 'dont_look_at_me_rn', 'location_sharing': False}]})
+        res = go(self.app.get,'/lookup', query_string={'user_email': self.email, 'friend_email': 'dont_look_at_me_rn'})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list': ['dont_look_at_me_rn']}]})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': 'dont_look_at_me_rn', 'location_sharing': False}]})
         self.assertEqual(res().status_code , 401)
 
         # Look up friend's location successfully
-        res = go(self.app.get, '/lookup', query_string={'user_name': self.user, 'friend_name': 'look_at_me'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': self.user, 'friends_list': ['look_at_me']}]})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': 'look_at_me', 'location_sharing': True, 'location': {'x': 4, 'y': 4}}]})
+        res = go(self.app.get, '/lookup', query_string={'user_email': self.email, 'friend_email': 'look_at_me'})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list': ['look_at_me']}]})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': 'look_at_me', 'location_sharing': True, 'location': {'x': 4, 'y': 4}}]})
         response = res()
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.get_json()['x'], 4)
-        self.assertEqual(response.get_json()['y'], 4)
+        self.assertEqual(response.get_json()['outdoor_location']['x'], 4)
+        self.assertEqual(response.get_json()['outdoor_location']['y'], 4)
 
     def test_toggle(self):
         '''Test 6: /toggle endpoint'''
 
         # No username provided
-        res = go(self.app.get, '/toggle', query_string={'user_name': ''})
+        res = go(self.app.get, '/toggle', query_string={'user_email': ''})
         self.assertEqual(res().status_code, 400)
 
         # User doesn't exist
-        res = go(self.app.get, '/toggle', query_string={'user_name': 'i_dont_exist'})
+        res = go(self.app.get, '/toggle', query_string={'user_email': 'i_dont_exist'})
         self.server.reply(cursor={'id': 0, 'firstBatch': []})
         self.assertEqual(res().status_code, 400)
 
         # Untoggle
-        res = go(self.app.get, '/toggle', query_string={'user_name': self.user})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'User': 'toggle_me', 'location_sharing': False}]})
+        res = go(self.app.get, '/toggle', query_string={'user_email': self.email})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': 'toggle_me', 'location_sharing': False}]})
         self.server.reply({'n': 1, 'ok': 1.0})
         self.assertEqual(res().status_code, 200)
 
     def test_registerIndoor(self):
         pass
+        '''
+        # Location update successful
+        res = go(self.app.post, '/registerIndoor', query_string={'user_email': self.email, 'location': {'building': '0.000','floor': '0.000', 'x': 10, 'y': 10}})
+        self.server.reply({'n': 1, 'ok': 1.0})
+        self.assertEqual(res().status_code, 200)
+
+        # Location update failed
+        res = go(self.app.post, '/registerIndoor', query_string={'user_email': self.email, 'location': {'latitude': '0.000','longitude': '0.000'}})
+        self.server.reply({'n': 0, 'ok': 1.0})
+        self.assertEqual(res().status_code, 400) 
+        '''       
     
     def test_getFriends(self):
         # No username provided
-        res = go(self.app.get, '/getFriends', query_string={'user_name': ''})
+        res = go(self.app.get, '/getFriends', query_string={'user_email': ''})
         self.assertEqual(res().status_code, 400)
         
         # User doesn't exist
-        res = go(self.app.get, '/getFriends', query_string={'user_name': 'i_dont_exist'})
+        res = go(self.app.get, '/getFriends', query_string={'user_email': 'i_dont_exist'})
         self.server.reply(cursor={'id': 0, 'firstBatch': []})
         self.assertEqual(res().status_code, 400)
         
         # User exists and has friends
-        res = go(self.app.get, '/getFriends', query_string={'user_name': self.user})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'user_name': self.user, 'friends_list':['friend_1']}]})
+        res = go(self.app.get, '/getFriends', query_string={'user_email': self.email})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list':['friend_1']}]})
         self.assertEqual(res().status_code, 200)
     
     def test_addFloor(self):
@@ -197,6 +209,21 @@ class AppTest(unittest.TestCase):
         '''
         res = go(my_app.model_to_pixel, 101, 101, [500, 500])
         self.assertEqual(res(), (500, 500))
+
+    def test_getName(self):
+        # No email provided
+        res = go(self.app.get, '/getName', query_string={'email': ''})
+        self.assertEqual(res().status_code, 400)
+        
+        # No user
+        res = go(self.app.get, '/getName', query_string={'email': 'not_exist@ucla.edu'})
+        self.server.reply(cursor={'id': 0, 'firstBatch': []})
+        self.assertEqual(res().status_code, 400)
+        
+        # User exists
+        res = go(self.app.get, '/getName', query_string={'email': self.email})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'user': self.user, 'email': self.email}]})
+        self.assertEqual(res().status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()

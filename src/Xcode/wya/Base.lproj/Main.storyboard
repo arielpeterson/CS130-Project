@@ -141,10 +141,10 @@
             </objects>
             <point key="canvasLocation" x="982.60869565217399" y="-13.392857142857142"/>
         </scene>
-        <!--View Controller-->
+        <!--Add Floor Plan Controller-->
         <scene sceneID="mCx-Vm-CrY">
             <objects>
-                <viewController id="cIF-Bb-p4h" sceneMemberID="viewController">
+                <viewController id="cIF-Bb-p4h" customClass="AddFloorPlanController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ddV-Dk-okz"/>
                         <viewControllerLayoutGuide type="bottom" id="QzF-ka-0Pv"/>
@@ -153,16 +153,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="300" height="725"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Camera View goes here" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sN9-09-wJF">
-                                <rect key="frame" x="59" y="352" width="182" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lTo-qx-s2E">
+                                <rect key="frame" x="0.0" y="44" width="300" height="647"/>
+                            </sceneKitView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LSj-fc-ehI">
+                                <rect key="frame" x="260" y="44" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="Hgu-cj-3x2"/>
+                                    <constraint firstAttribute="height" constant="40" id="PO1-Uy-syP"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <state key="normal" title="+"/>
+                                <connections>
+                                    <action selector="addFloor:" destination="cIF-Bb-p4h" eventType="touchUpInside" id="GZ7-LS-rTd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="LSj-fc-ehI" secondAttribute="trailing" id="A0V-e2-1dq"/>
+                            <constraint firstItem="QzF-ka-0Pv" firstAttribute="top" secondItem="lTo-qx-s2E" secondAttribute="bottom" id="JRg-Bm-vRR"/>
+                            <constraint firstItem="lTo-qx-s2E" firstAttribute="top" secondItem="ddV-Dk-okz" secondAttribute="bottom" id="REI-0S-yBN"/>
+                            <constraint firstItem="LSj-fc-ehI" firstAttribute="top" secondItem="ddV-Dk-okz" secondAttribute="bottom" id="WPA-gO-ouN"/>
+                            <constraint firstAttribute="trailing" secondItem="lTo-qx-s2E" secondAttribute="trailing" id="mXq-Dv-h5R"/>
+                            <constraint firstItem="lTo-qx-s2E" firstAttribute="leading" secondItem="ra3-sU-MI8" secondAttribute="leading" id="rL5-K0-IXu"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="sceneView" destination="lTo-qx-s2E" id="ZJV-ru-biJ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tnf-Od-PJB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -296,6 +315,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="300" height="725"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+<<<<<<< HEAD
                         <view key="tableHeaderView" contentMode="scaleToFill" id="qMW-bR-jow">
                             <rect key="frame" x="0.0" y="0.0" width="300" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -312,6 +332,10 @@
                         </view>
                         <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zI5-KO-Bfa">
                             <rect key="frame" x="0.0" y="183" width="300" height="70"/>
+=======
+                        <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zI5-KO-Bfa">
+                            <rect key="frame" x="0.0" y="72" width="300" height="44"/>
+>>>>>>> 4afb0879f3708857aa614ad4f8c3e4494b5adcf0
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Add Friend"/>
                             <connections>
@@ -442,7 +466,7 @@
     </scenes>
     <resources>
         <image name="carsIcon" width="24" height="24"/>
-        <image name="hamburger" width="37.5" height="37.5"/>
+        <image name="hamburger" width="25" height="25"/>
         <image name="login_screen" width="1125" height="2436"/>
     </resources>
 </document>
