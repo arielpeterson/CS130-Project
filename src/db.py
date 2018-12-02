@@ -184,6 +184,7 @@ class Db(object):
         if not user['location_sharing']:
             return None, None
         
+        return {'outdoor_location': user.get('location'), 'indoor_location': user.get('indoor_location')}, user.get('last_seen_indoor')
 
     def set_location(self, user_email, location):
         """
