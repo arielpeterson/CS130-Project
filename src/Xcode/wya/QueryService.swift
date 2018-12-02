@@ -14,22 +14,24 @@ import Alamofire
 
 
 // Must change each time we run ngrok
-let SERVER = "http://ae57e33d.ngrok.io"
+let SERVER = "http://23a9b67b.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
     var errorMessage = ""
     var username_ : String
+    var user_email_ : String
 
     init() {
         // We are using email for username
-        username_ =  (GIDSignIn.sharedInstance().currentUser?.profile.email)!
+        username_ =  (GIDSignIn.sharedInstance().currentUser?.profile.givenName)!
+        user_email_ =  (GIDSignIn.sharedInstance().currentUser?.profile.email)!
     }
     
     // Adds a new user to the database.
     func addUser() {
         let urlString = SERVER + "/addUser"
-        let parameters : Parameters = ["user_name" : username_]
+        let parameters : Parameters = ["user_email": user_email_, "user_name" : username_]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
@@ -37,19 +39,32 @@ class QueryService {
     }
     
     // Adds friend to user's friends list.
-    func addFriend(friend_name :String){
+    // AND add user to friend's friend list
+    func addFriend(friend_email :String){
         let urlString = SERVER + "/addFriend"
-        let parameters : Parameters = ["user_name" : username_, "friend_name": friend_name]
+        var parameters : Parameters = ["user_email" : user_email_, "friend_email": friend_email]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
         }
+        parameters = ["user_email" : friend_email, "friend_email": user_email_]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            // Handle response
+            debugPrint(response)
+        }
+        
     }
     
     // Remove friend from user's friend list
-    func deleteFriend(friend_name :String) {
+    // AND remove user from friend's friend list
+    func deleteFriend(friend_email :String) {
         let urlString = SERVER + "/deleteFriend"
-        let parameters : Parameters = ["user_name" : username_, "friend_name": friend_name]
+        var parameters : Parameters = ["user_email" : user_email_, "friend_email": friend_email]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            // Handle response
+            debugPrint(response)
+        }
+        parameters = ["user_email" : friend_email, "friend_email": user_email_]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
@@ -59,7 +74,7 @@ class QueryService {
     // Get friends list. Note has a completion handler because asynchronous
     func getFriends(completion: @escaping ([String]?) -> Void) {
         let urlString = SERVER + "/getFriends"
-        let parameters : Parameters = ["user_name" : username_]
+        var parameters : Parameters = ["user_email" : user_email_]
         Alamofire.request(urlString, parameters: parameters).response { response in
             
             guard let data = response.data else {
@@ -74,6 +89,7 @@ class QueryService {
             }
             
             // Upon completion, return friends list
+            
             completion((json["friends"])!)
         }
     }
@@ -81,38 +97,70 @@ class QueryService {
     // Register a user's most recent location.
     func registerLocation(location : CLLocationCoordinate2D) {
         let urlString = SERVER + "/registerLocation"
-        
         // Store MKCoordinateREgion as JSON?
-        let params : [String:Any] = ["user_name" :  username_, "location": ["latitude": location.latitude, "longitude": location.latitude]]
-        Alamofire.request(urlString, method: .post, parameters: params, encoding: JSONEncoding.default).response { response in
+        let params : [String:Any] = ["user_email" :  user_email_, "location": ["latitude": location.latitude, "longitude": location.longitude]]
+        let request = Alamofire.request(urlString, method: .post, parameters: params, encoding: JSONEncoding.default).response { response in
             // Handle resonse
             debugPrint(response)
         }
     }
     
     // Looks up location of a friend for a given user. Note has completion handler
-    func lookup(friend_name :String, completion: @escaping (CLLocationCoordinate2D?) -> Void) {
+    func lookup(friend_email :String, completion: @escaping (CLLocationCoordinate2D?) -> Void) {
         
         let urlString = SERVER + "/lookup"
-        let parameters : Parameters = ["user_name" : username_, "friend_name": friend_name]
+        let parameters : Parameters = ["user_email" : user_email_, "friend_email": friend_email]
         Alamofire.request(urlString, parameters: parameters).responseJSON
             { response in
-                guard let location = response.result.value as? [String: Double] else {
-                    print("Malformed loction data")
+                guard let data = response.data else {
+                    print("No location received")
                     completion(nil)
                     return
                 }
                 
+                guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Any] else {
+                    print("No json data received")
+                    return
+                }
+                
+                // TO DO: this line is causing a crash because outdoor_location is null even though the user's location is registered in the database.
+                
+                let outdoor_location = json["location"] as! [String:Any]
+                //let indoor_location = json["indoor_location"] as! [String:Any]
+                let latitude: Double = outdoor_location["latitude"] as! Double
+                let longitude: Double = outdoor_location["longitude"] as! Double
                 // Upon completion, return a the latitude and longitude
-                completion(CLLocationCoordinate2DMake(location["latitude"]!, location["longitude"]!))
+                completion(CLLocationCoordinate2DMake(latitude, longitude))
         }
     }
     
     // Toggle user's location sharing on and off.
     func toggle() {
         let urlString = SERVER + "/toggle"
-        let parameters : Parameters = ["user_name" : username_]
+        let parameters : Parameters = ["user_email" : user_email_]
         Alamofire.request(urlString, parameters: parameters).response { response in debugPrint(response) }
+    }
+    
+    // Get a user's name based on their email
+    func getName(email: String, completion: @escaping (String?) -> Void) {
+        let urlString = SERVER + "/getName"
+        let parameters : Parameters = ["email" : email]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            
+            guard let data = response.data else {
+                print("No friend's list received")
+                completion(nil)
+                return
+            }
+            
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:String] else {
+                print("No json data received")
+                return
+            }
+            
+            // Upon completion, return the user's name
+            completion(json["name"])
+        }
     }
 
 }

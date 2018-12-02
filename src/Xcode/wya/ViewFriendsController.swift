@@ -22,9 +22,9 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     var errorMessage = ""
     let defaultSession = URLSession(configuration: .default)
     var dataTask: URLSessionDataTask?
-    let SERVER = "http://c02c0a92.ngrok.io"
     let qs = QueryService()
     
+    // List of friend's emails
     var friends : [String] = []
     
     @IBOutlet weak var tableView: UITableView!
@@ -55,34 +55,62 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
             let cell = tableView.dequeueReusableCell(withIdentifier: "mycell", for: indexPath) as! MyTableViewCell
-            cell.nameLabel?.text = friends[indexPath.row]
-            cell.cellDelegate = self
-            cell.index = indexPath
+            qs.getName(email: friends[indexPath.row]) { response in
+                guard let name = response else {
+                    print("No name for that email address")
+                    return
+                }
+                cell.nameLabel?.text = name
+                cell.cellDelegate = self
+                cell.index = indexPath
+            }
             return cell
-        
     }
     
     @IBAction func addFriendButtonTapped(_ sender: Any) {
         
-        let alert = UIAlertController(title: "Add Friend", message: "Enter your friend's name", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add Friend", message: "Enter your friend's email", preferredStyle: .alert)
+        let error_email_dne = UIAlertController(title: "Error", message: "No friend with that email exists", preferredStyle: .alert)
+        let error_duplicate_friend = UIAlertController(title: "Error", message: "You are already friends with that user", preferredStyle: .alert)
         
         alert.addTextField { (textField) in
-            textField.text = "Name"
+            textField.text = ""
         }
-        
-        alert.addAction(UIAlertAction(title: "ENTER", style: .default, handler: { [weak alert] (_) in
-            let add_friend_name = alert!.textFields![0].text // Force unwrapping because we know it exists.
-            self.qs.addFriend(friend_name: add_friend_name!)
-            self.friends.append(add_friend_name!)
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Enter", style: .default, handler: { [weak alert] (_) in
+            let add_friend_email = alert!.textFields![0].text // Force unwrapping because we know it exists.
+            // Check if friend is a user in our database
+            self.qs.getName(email: add_friend_email!) { response in
+                guard let name = response else {
+                    print("No name for that email address")
+                    error_email_dne.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+                    self.present(error_email_dne, animated: true, completion: nil)
+                    return
+                }
+            }
+            // Check if user is already friends
+            if self.friends.contains(add_friend_email!) {
+                print("No name for that email address")
+                error_duplicate_friend.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+                self.present(error_duplicate_friend, animated: true, completion: nil)
+                return
+            }
+            
+            
+            self.qs.addFriend(friend_email: add_friend_email!)
+            
+            self.friends.append(add_friend_email!)
             //print("Text field: \(UITextField.text)")
             self.do_table_refresh()
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "load"), object: nil)
         }))
     
         self.present(alert, animated: true, completion:nil)
-        
+    
     }
+    
+    
     
 }
 
@@ -91,16 +119,12 @@ extension ViewFriendsController: TableViewNew {
     func onDeleteCell(index: Int, cell: MyTableViewCell) {
         print(index)
         let deletionIndexPath = tableView.indexPath(for: cell)
-        let user = GIDSignIn.sharedInstance().currentUser
-        let user_name = (user?.profile.givenName)!
-        
-        let delete_friend_name = friends[index]
-            // get friend's name
+        let delete_friend_email = friends[index]
         friends.remove(at: index)
         // do a database call to delete friend
-        let qs = QueryService()
-        qs.deleteFriend(friend_name: delete_friend_name)
+        qs.deleteFriend(friend_email: delete_friend_email)
         tableView.deleteRows(at: [deletionIndexPath!], with: .automatic)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "load"), object: nil)
     }
 }
 
