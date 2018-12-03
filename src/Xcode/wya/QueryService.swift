@@ -14,7 +14,7 @@ import Alamofire
 
 
 // Must change each time we run ngrok
-let SERVER = "http://a124824b.ngrok.io"
+let SERVER = "http://caeb9921.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -166,16 +166,6 @@ class QueryService {
         }
     }
     
-    // Add floor plan of building
-    func addFloor(building_name: String, floor_number: String, floor_plan: UIImage) {
-        let urlString = SERVER + "/addFloor"
-        let parameters : Parameters = ["building_name" : building_name, "floor_number" : floor_number, "floor_plan" : floor_plan]
-        Alamofire.request(urlString, parameters: parameters).response { response in
-            // Handle response
-            debugPrint(response)
-        }
-    }
-    
     // Add building model
     func addBuilding(building_name: String, longitude: Double, latitude: Double) {
         let urlString = SERVER + "/addBuilding"
@@ -187,7 +177,7 @@ class QueryService {
     }
     
     // Get building location, number of floors
-    func getBuildingMetadata(building_name: String, completion: @escaping ([String:String]?) -> Void) {
+    func getBuildingMetadata(building_name: String, completion: @escaping ([String:Any]?) -> Void) {
         let urlString = SERVER + "/getBuildingMetadata"
         let parameters : Parameters = ["building_name" : building_name]
         Alamofire.request(urlString, parameters: parameters).response { response in
@@ -198,7 +188,7 @@ class QueryService {
                 return
             }
             
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:String] else {
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Any] else {
                 print("No json data received")
                 completion(nil)
                 return
@@ -230,4 +220,54 @@ class QueryService {
     func getBuildingByRadius() {
         
     }
+    
+    // Toggle user's location sharing on and off.
+    func addFloor(building_name: String, floor_number: Int, floor_plan: UIImage) {
+        let urlString = "/addFloor"
+        let img = floor_plan.jpegData(compressionQuality: 0.2)
+        let params : Parameters = ["building_name" : building_name,
+                                   "floor_number" : floor_number ]
+        requestWith(endUrl: urlString, imageData: img , parameters: params) { response in
+            print("Sent Floorplan")
+        }
+    }
+    func requestWith(endUrl: String, imageData: Data?, parameters: [String : Any], onCompletion: (( [String: Any]?) -> Void)? = nil, onError: ((Error?) -> Void)? = nil) {
+        
+        let url = SERVER + endUrl /* your API url */
+        let headers: HTTPHeaders = ["Content-type": "multipart/form-data"]
+        
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
+            for (key, value) in parameters {
+                multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
+            }
+            
+            if let data = imageData{
+                multipartFormData.append(data, withName: "floor_plan", fileName: "dick_pic.png", mimeType: "image/png")
+            }
+            
+        }, usingThreshold: UInt64.init(), to: url, method: .post, headers: headers) { (result) in
+            switch result {
+            case .success(let upload, _, _):
+                upload.response { response in
+                    print("Succesfully uploaded")
+                    
+                    if let data = response.data {
+                        /* Handle response from server ? */
+                    }
+                    
+                    if let err = response.error{
+                        onError?(err)
+                        return
+                    }
+                    onCompletion?(nil)
+                }
+            case .failure(let error):
+                print("Error in upload: \(error.localizedDescription)")
+                onError?(error)
+            }
+        }
+    }
 }
+
+
+

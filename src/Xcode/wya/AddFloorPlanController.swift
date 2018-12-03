@@ -60,7 +60,12 @@ class AddFloorPlanController: UIViewController {
     }
     
     @IBAction func addFloor(_ sender: Any) {
-        // CAMERA
+        AttachmentHandler.shared.showAttachmentActionSheet(vc: self)
+        AttachmentHandler.shared.imagePickedBlock = { (image) in
+            // Need to send floor number
+            let qs = QueryService()
+            qs.addFloor(building_name: "Building", floor_number: 1, floor_plan: image)
+        }
     }
 }
 //    let scene = SCNScene()
