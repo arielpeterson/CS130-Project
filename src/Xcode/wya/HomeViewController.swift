@@ -105,19 +105,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         {
             let vc = segue.destination as! NavigationViewController
 
-//            qs.lookup(friend_email: selected_friend_email) // add check to see if selected_friend is nill
-//            {
-//                response in
-//                guard let location = response else {
-//                    print("No loction received.")
-//                    return
-//                }
-//                // Set friend_location in NavigationViewController to location returned by the server
-//                vc.friend_location = location
-//            }
-            // hardcoded value to use for testing if segue destination is set properly
-            vc.friend_location_latitude = 33.4936
-            vc.friend_location_longitude = 117.1484
+            vc.friend_email = selected_friend_email
         }
 
         if segue.destination is SetIndoorLocationController

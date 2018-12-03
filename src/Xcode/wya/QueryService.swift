@@ -14,7 +14,7 @@ import Alamofire
 
 
 // Must change each time we run ngrok
-let SERVER = "http://a124824b.ngrok.io"
+let SERVER = "http://7304fa35.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -107,7 +107,7 @@ class QueryService {
     }
     
     // Looks up location of a friend for a given user. Note has completion handler
-    func lookup(friend_email :String, completion: @escaping (CLLocationCoordinate2D?) -> Void) {
+    func lookup(friend_email :String, completion: @escaping ([String:Any]?) -> Void) {
         
         let urlString = SERVER + "/lookup"
         let parameters : Parameters = ["user_email" : user_email_, "friend_email": friend_email]
@@ -125,27 +125,8 @@ class QueryService {
                     return
                 }
                 
-                
-                // Parse response
-                let location = json["location"] as! [String:AnyObject]
-                let outdoor_location = location["outdoor_location"]
-                print(outdoor_location)
-                print(location)
-                
-                let latitude = outdoor_location!["latitude"] as! Double
-                let longitude = outdoor_location!["longitude"] as! Double
-                // Indoor Location
-                let indoor_location = location["indoor_location"]
-                
-                
-                
-                //let indoor_location = json["indoor_location"] as! [String:Any]
-                
-                
-                
-                // Upon completion, return a the latitude and longitude
-                
-                completion(CLLocationCoordinate2DMake(latitude, longitude))
+                // Upon completion, return the JSON object
+                completion(json)
         }
     }
     
@@ -227,11 +208,6 @@ class QueryService {
             // Upon completion, return the image
             completion(UIImage(data: data))
         }
-    }
-    
-    // Get buildings within radius of location
-    func getBuildingByRadius() {
-        
     }
     
     // Toggle user's location sharing on and off.
