@@ -22,18 +22,20 @@ class NavigationViewController: UIViewController {
     let regionRadius: CLLocationDistance = 1000
     var outdoorLocation = CLLocationCoordinate2D()
     var indoorAvailable = false
-    var indoorLocation = CGPoint()
+    var indoorLocationPoint = CGPoint()
+    var indoorLocation : [String : Any]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationView.delegate = self
         self.setUpLocationManager()
         
+        
         self.qs.lookup(friend_email: friend_email) { response in
             if response != nil {
                 let location = response!["location"] as! [String:Any]
                 let outdoor = location["outdoor_location"] as? [String:Double]
-                let indoor = location["indoor_location"] as? [String:Double]
+                self.indoorLocation = location["indoor_location"] as? [String:Any]
                 
                 if outdoor != nil {
                     self.outdoorLocation.longitude = outdoor!["longitude"]!
@@ -41,8 +43,8 @@ class NavigationViewController: UIViewController {
                     self.centerMapOnLocation(location: self.outdoorLocation)
                 }
                 
-                if indoor != nil {
-                    self.indoorLocation = CGPoint(x: indoor!["x"]!, y: indoor!["y"]!)
+                if self.indoorLocation != nil {
+                    self.indoorLocationPoint = CGPoint(x: (self.indoorLocation!["x"] as! Double), y: (self.indoorLocation!["y"] as! Double))
                     self.indoorAvailable = true
                 }
             }
@@ -69,17 +71,26 @@ class NavigationViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        if segue.identifier ==  "showIndoor"
+        if segue.identifier ==  "viewIndoor"
         {
             let vc = segue.destination as! ViewIndoorLocationController
-            
-            vc.indoorLocation = indoorLocation
+            let il = self.indoorLocation!
+            print( il["building"]as! String)
+            print(il["floor"]as! String)
+            qs.getFloorImage(building_name: il["building"] as! String, floor: il["floor"] as! String) { response in
+                guard let image = response else {
+                    print("Did not get image")
+                    return
+                }
+                vc.image = image
+            }
+            vc.indoorLocationPoint = self.indoorLocationPoint
         }
     }
     
     @objc func showIndoor(_ sender: UITapGestureRecognizer) {
-        if sender.state == .ended && indoorAvailable {
-            self.performSegue(withIdentifier: "showIndoor", sender: self)
+        if sender.state == .ended && self.indoorAvailable {
+            self.performSegue(withIdentifier: "viewIndoor", sender: self)
         }
     }
 }

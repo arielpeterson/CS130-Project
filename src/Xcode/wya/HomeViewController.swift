@@ -108,7 +108,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if segue.identifier ==  "showNavigation"
         {
             let vc = segue.destination as! NavigationViewController
-
             vc.friend_email = selected_friend_email
         }
 

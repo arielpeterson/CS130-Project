@@ -249,8 +249,10 @@ class Db(object):
         """
         location['room'] = room
         try:
+            print("Success if this is not 0 -----> {}".format(res.matched_count))
             res = self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'indoor_location': location}})
             res = self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'last_seen_indoor': last_seen}})
+
             if res.matched_count == 0:
                 return False
             return True
