@@ -14,13 +14,7 @@ import Alamofire
 
 
 // Must change each time we run ngrok
-<<<<<<< HEAD
-let SERVER = "http://caeb9921.ngrok.io"
-=======
-
-let SERVER = "http://8efa8e6c.ngrok.io"
-
->>>>>>> 5aa71c316452dbe7d79f3e24318f2576e1b750fa
+let SERVER = "http://a124824b.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -207,11 +201,7 @@ class QueryService {
                 return
             }
             
-<<<<<<< HEAD
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Any] else {
-=======
             guard let json = try? JSONSerialization.jsonObject(with: data, options: [])  as! [String:Any] else {
->>>>>>> 5aa71c316452dbe7d79f3e24318f2576e1b750fa
                 print("No json data received")
                 completion(nil)
                 return
