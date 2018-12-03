@@ -13,7 +13,6 @@ enum HamburgerLayer {
     case viewFriends
     case addBuilding
     case addFloorplan
-    case account
     case signout
     
     var name: String {
@@ -22,7 +21,6 @@ enum HamburgerLayer {
         case .viewFriends : return "View Friends"
         case .addBuilding : return "Add Building"
         case .addFloorplan: return "Add Floor Plan"
-        case .account: return "My Account"
         case .signout: return "Sign Out"
         }
     }
@@ -33,7 +31,6 @@ enum HamburgerLayer {
         case .viewFriends: return "homeIcon"
         case .addBuilding: return "homeIcon"
         case .addFloorplan: return "documentsIcon"
-        case .account: return "paymentIcon"
         case .signout: return "giftIcon"
         }
     }

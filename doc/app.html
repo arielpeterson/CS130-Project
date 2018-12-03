@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module app</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>app</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/mnt/hgfs/CS130-Project/src/app.py">/mnt/hgfs/CS130-Project/src/app.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;module&nbsp;contains&nbsp;contains&nbsp;the&nbsp;core&nbsp;logic&nbsp;of&nbsp;the&nbsp;server.&nbsp;It&nbsp;provides&nbsp;the&nbsp;mapping&nbsp;of&nbsp;all<br>
+communication&nbsp;between&nbsp;users,&nbsp;friends&nbsp;and&nbsp;the&nbsp;database.&nbsp;We&nbsp;are&nbsp;using&nbsp;the&nbsp;Flask&nbsp;framework&nbsp;to<br>
+handle&nbsp;the&nbsp;server&nbsp;logic.<br>
+&nbsp;<br>
+Endpoints&nbsp;will&nbsp;be&nbsp;exposed&nbsp;at&nbsp;<a href="http://localhost:3001/&lt;endpoint">http://localhost:3001/&lt;endpoint</a>&gt;<br>
+&nbsp;<br>
+Design&nbsp;Pattern<br>
+----------------------<br>
+This&nbsp;component&nbsp;of&nbsp;our&nbsp;application&nbsp;follows&nbsp;the&nbsp;Mediator&nbsp;design&nbsp;pattern&nbsp;as&nbsp;it<br>
+&nbsp;&nbsp;&nbsp;&nbsp;1.&nbsp;Promotes&nbsp;loose&nbsp;coupling&nbsp;by&nbsp;keeping&nbsp;users&nbsp;from&nbsp;referring&nbsp;to&nbsp;each&nbsp;other&nbsp;explicitly.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Any&nbsp;request&nbsp;for&nbsp;data,&nbsp;locations,&nbsp;updating&nbsp;information&nbsp;must&nbsp;go&nbsp;through&nbsp;this&nbsp;module<br>
+&nbsp;&nbsp;&nbsp;&nbsp;2.&nbsp;Promotoes&nbsp;a&nbsp;many-to-many&nbsp;relationship.&nbsp;Each&nbsp;user&nbsp;must&nbsp;communicate&nbsp;with&nbsp;every&nbsp;one&nbsp;of<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;its&nbsp;friends,&nbsp;and&nbsp;every&nbsp;user&nbsp;has&nbsp;a&nbsp;different&nbsp;friend&nbsp;list.&nbsp;This&nbsp;complicated&nbsp;communication<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;is&nbsp;abstracted&nbsp;away&nbsp;by&nbsp;the&nbsp;mediator&nbsp;(app.py)<br>
+&nbsp;<br>
+&nbsp;<br>
+Information&nbsp;Hiding&nbsp;Principle<br>
+----------------------<br>
+All&nbsp;modules&nbsp;that&nbsp;interact&nbsp;with&nbsp;this&nbsp;module&nbsp;must&nbsp;conform&nbsp;to&nbsp;the&nbsp;interface&nbsp;of&nbsp;this&nbsp;class.&nbsp;The&nbsp;only<br>
+parts&nbsp;exposed&nbsp;to&nbsp;other&nbsp;classes&nbsp;are&nbsp;fundamental&nbsp;methods&nbsp;that&nbsp;are&nbsp;not&nbsp;likely&nbsp;to&nbsp;change.<br>
+&nbsp;<br>
+&nbsp;<br>
+A&nbsp;Note&nbsp;on&nbsp;Return&nbsp;Types<br>
+----------------------<br>
+Each&nbsp;endpoint,&nbsp;denoted&nbsp;by&nbsp;"@app.route",&nbsp;receives&nbsp;an&nbsp;HTTP&nbsp;Request&nbsp;as&nbsp;its&nbsp;argument&nbsp;and&nbsp;returns<br>
+a&nbsp;Flask&nbsp;Response&nbsp;object,&nbsp;containing&nbsp;the&nbsp;HTTP&nbsp;status&nbsp;and&nbsp;a&nbsp;data&nbsp;field.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="PIL.Image.html">PIL.Image</a><br>
+<a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="pytesseract.html">pytesseract</a><br>
+<a href="time.html">time</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-add_building"><strong>add_building</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/addBuilding<br>
+Add&nbsp;a&nbsp;new&nbsp;building&nbsp;to&nbsp;database.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;building_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;building's&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;longitude&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;double,&nbsp;building's&nbsp;location's&nbsp;longitude<br>
+&nbsp;&nbsp;&nbsp;&nbsp;latitude&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;double,&nbsp;building's&nbsp;location's&nbsp;latitude<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Failure&nbsp;or&nbsp;missing&nbsp;arguments<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;401&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Building&nbsp;already&nbsp;exists</tt></dd></dl>
+ <dl><dt><a name="-add_floor"><strong>add_floor</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/addFloor<br>
+Save&nbsp;floor&nbsp;plan&nbsp;image,&nbsp;add&nbsp;floor&nbsp;data&nbsp;to&nbsp;db,&nbsp;and&nbsp;process&nbsp;to&nbsp;extract&nbsp;building&nbsp;shape.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;building_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;building's&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;floor_number&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;floor&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;floor_plan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;an&nbsp;image&nbsp;of&nbsp;the&nbsp;floor&nbsp;plan<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Missing&nbsp;building&nbsp;name,&nbsp;number&nbsp;of&nbsp;floors,&nbsp;or&nbsp;location,&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or&nbsp;building&nbsp;already&nbsp;exists&nbsp;and&nbsp;cannot&nbsp;be&nbsp;added&nbsp;as&nbsp;a&nbsp;new&nbsp;building</tt></dd></dl>
+ <dl><dt><a name="-add_friend"><strong>add_friend</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/addUser<br>
+Adds&nbsp;friend&nbsp;to&nbsp;user's&nbsp;friends&nbsp;list.&nbsp;Enpoint&nbsp;/addFriend.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;friend_email&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;friend&nbsp;to&nbsp;be&nbsp;added<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;User&nbsp;does&nbsp;not&nbsp;exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;No&nbsp;username&nbsp;or&nbsp;friend&nbsp;was&nbsp;provided</tt></dd></dl>
+ <dl><dt><a name="-add_user"><strong>add_user</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/addUser<br>
+Adds&nbsp;a&nbsp;new&nbsp;user&nbsp;to&nbsp;the&nbsp;database.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;username&nbsp;of&nbsp;a&nbsp;new&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;email&nbsp;of&nbsp;a&nbsp;new&nbsp;user<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;User&nbsp;already&nbsp;exists<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;No&nbsp;username&nbsp;provided</tt></dd></dl>
+ <dl><dt><a name="-create_test_app"><strong>create_test_app</strong></a>(uri)</dt></dl>
+ <dl><dt><a name="-delete_friend"><strong>delete_friend</strong></a>()</dt><dd><tt>Enpoint:&nbsp;/deleteFriend.<br>
+Adds&nbsp;friend&nbsp;to&nbsp;user's&nbsp;friends&nbsp;list.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;friend_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;friend&nbsp;to&nbsp;be&nbsp;added<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Friend&nbsp;does&nbsp;not&nbsp;exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;No&nbsp;username&nbsp;or&nbsp;friend&nbsp;was&nbsp;provided</tt></dd></dl>
+ <dl><dt><a name="-get_building_metadata"><strong>get_building_metadata</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/getBuildingMetadata<br>
+Get&nbsp;building&nbsp;meta&nbsp;data:&nbsp;location,&nbsp;number&nbsp;of&nbsp;floors.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;building_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;building's&nbsp;name<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Missing&nbsp;building&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;401&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Building&nbsp;does&nbsp;not&nbsp;exist&nbsp;in&nbsp;database</tt></dd></dl>
+ <dl><dt><a name="-get_floor_image"><strong>get_floor_image</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/getFloorImage<br>
+Get&nbsp;building&nbsp;meta&nbsp;data:&nbsp;location,&nbsp;number&nbsp;of&nbsp;floors.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;building_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;building's&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;floor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;an&nbsp;int,&nbsp;floor&nbsp;number<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;send&nbsp;floor&nbsp;plan&nbsp;image</tt></dd></dl>
+ <dl><dt><a name="-get_friends"><strong>get_friends</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/getFriends<br>
+Get&nbsp;the&nbsp;user's&nbsp;list&nbsp;of&nbsp;friends<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user&nbsp;who&nbsp;wants&nbsp;to&nbsp;get&nbsp;list&nbsp;of&nbsp;friends<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;No&nbsp;user&nbsp;name&nbsp;provided.</tt></dd></dl>
+ <dl><dt><a name="-get_name"><strong>get_name</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/getName<br>
+Get&nbsp;a&nbsp;user's&nbsp;name&nbsp;given&nbsp;his/her&nbsp;email<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;a&nbsp;user's&nbsp;email<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;No&nbsp;email&nbsp;provided&nbsp;or&nbsp;user&nbsp;with&nbsp;such&nbsp;email&nbsp;does&nbsp;not&nbsp;exist</tt></dd></dl>
+ <dl><dt><a name="-lookup_loc"><strong>lookup_loc</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/lookup<br>
+Looks&nbsp;up&nbsp;location&nbsp;of&nbsp;a&nbsp;friend&nbsp;for&nbsp;a&nbsp;given&nbsp;user.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;friend_email&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;friend&nbsp;who's&nbsp;location&nbsp;is&nbsp;requested<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;Returns&nbsp;a&nbsp;JSON&nbsp;Object&nbsp;containing&nbsp;user's&nbsp;location&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;No&nbsp;such&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;401&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;Access&nbsp;Denied<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;Requested&nbsp;friend&nbsp;has&nbsp;not&nbsp;enable&nbsp;location&nbsp;sharing</tt></dd></dl>
+ <dl><dt><a name="-model_to_pixel"><strong>model_to_pixel</strong></a>(x, y, shape=[100, 100])</dt><dd><tt>convert&nbsp;model&nbsp;coordinates&nbsp;to&nbsp;actual&nbsp;pixel&nbsp;location&nbsp;on&nbsp;image<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;float,&nbsp;width&nbsp;coordinate<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;float,&nbsp;height&nbsp;coordinate<br>
+&nbsp;&nbsp;&nbsp;&nbsp;shape&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;list&nbsp;of&nbsp;height&nbsp;and&nbsp;width&nbsp;of&nbsp;the&nbsp;actual&nbsp;image<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;tuple&nbsp;(width&nbsp;coordinate,&nbsp;height&nbsp;coordinate)&nbsp;of&nbsp;pixel</tt></dd></dl>
+ <dl><dt><a name="-register"><strong>register</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/registerLocation<br>
+Register&nbsp;a&nbsp;user's&nbsp;most&nbsp;recent&nbsp;location.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;location&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;JSON&nbsp;object,&nbsp;Location&nbsp;object&nbsp;formatted&nbsp;as&nbsp;JSON.&nbsp;Contains&nbsp;either&nbsp;GPS&nbsp;data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;outdoor&nbsp;locations.<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;No&nbsp;such&nbsp;user&nbsp;or&nbsp;missing&nbsp;arguments</tt></dd></dl>
+ <dl><dt><a name="-register_indoor"><strong>register_indoor</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/registerIndoor<br>
+Register&nbsp;a&nbsp;user's&nbsp;indoor&nbsp;location.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;location&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;JSON&nbsp;object,&nbsp;Location&nbsp;object&nbsp;formatted&nbsp;as&nbsp;JSON.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Contains&nbsp;building,&nbsp;floor,&nbsp;user's&nbsp;coordinates&nbsp;as&nbsp;x,&nbsp;y&nbsp;on&nbsp;the&nbsp;floor&nbsp;plan.<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;No&nbsp;such&nbsp;user&nbsp;or&nbsp;missing&nbsp;arguments</tt></dd></dl>
+ <dl><dt><a name="-toggle_loc"><strong>toggle_loc</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/toggle<br>
+Toggle&nbsp;user's&nbsp;location&nbsp;sharing&nbsp;on&nbsp;and&nbsp;off.&nbsp;Endpoint&nbsp;/toggle.<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user&nbsp;who&nbsp;is&nbsp;toggling&nbsp;their&nbsp;location<br>
+&nbsp;<br>
+Response<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;Success<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;No&nbsp;user&nbsp;name&nbsp;provided.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>app</strong> = &lt;Flask 'app'&gt;<br>
+<strong>db</strong> = &lt;db.Db object&gt;<br>
+<strong>request</strong> = &lt;LocalProxy unbound&gt;</td></tr></table>
+</body></html>

@@ -267,6 +267,7 @@
                     </view>
                     <connections>
                         <outlet property="navigationView" destination="9eC-Nr-2We" id="ten-Xl-7JN"/>
+                        <segue destination="Drn-wn-kj7" kind="show" identifier="showIndoor" id="3hE-AW-Otc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jrU-nh-mwE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -515,9 +516,11 @@
                     </view>
                     <connections>
                         <outlet property="sceneView" destination="mXs-NP-lhu" id="dhh-uQ-oyR"/>
+                        <segue destination="0gB-Sf-Wq6" kind="unwind" identifier="unwindToHome" unwindAction="unwindToHomeWithSegue:" id="oWh-Kz-Jjg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HQP-XJ-uBm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="0gB-Sf-Wq6" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3601" y="-13"/>
         </scene>
@@ -530,11 +533,11 @@
                         <viewControllerLayoutGuide type="bottom" id="KsS-ys-4Ls"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="HOf-uQ-s64">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="441" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cZO-0q-eF4">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
+                                <rect key="frame" x="0.0" y="0.0" width="441" height="766"/>
                             </sceneKitView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

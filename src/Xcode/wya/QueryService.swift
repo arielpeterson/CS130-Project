@@ -14,7 +14,7 @@ import Alamofire
 
 
 // Must change each time we run ngrok
-let SERVER = "http://7304fa35.ngrok.io"
+let SERVER = "http://54dd6bd9.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -24,8 +24,8 @@ class QueryService {
 
     init() {
         // We are using email for username
-        username_ =  (GIDSignIn.sharedInstance().currentUser?.profile.givenName)!
         user_email_ =  (GIDSignIn.sharedInstance().currentUser?.profile.email)!
+        username_ =  user_email_
     }
     
     // Adds a new user to the database.
@@ -105,6 +105,22 @@ class QueryService {
             debugPrint(response)
         }
     }
+    
+    func registerIndoor(location : [Any]) {
+        let urlString = SERVER + "/registerIndoor"
+        // Store MKCoordinateREgion as JSON?
+        let params : [String:Any] = ["user_email" :  user_email_, "location": ["building": location[0],
+                                                                               "floor": location[1],
+                                                                               "x": location[2],
+                                                                               "y": location[3]]]
+        let request = Alamofire.request(urlString, method: .post, parameters: params, encoding: JSONEncoding.default).response { response in
+            // Handle resonse
+            debugPrint(response)
+        }
+    }
+    
+    
+
     
     // Looks up location of a friend for a given user. Note has completion handler
     func lookup(friend_email :String, completion: @escaping ([String:Any]?) -> Void) {
@@ -194,7 +210,7 @@ class QueryService {
     }
     
     // Get floor plan image
-    func getFloorImage(building_name: String, floor: Int, completion: @escaping (UIImage?) -> Void) {
+    func getFloorImage(building_name: String, floor: String, completion: @escaping (UIImage?) -> Void) {
         let urlString = SERVER + "/getFloorImage"
         let parameters : Parameters = ["building_name" : building_name, "floor" : floor]
         Alamofire.request(urlString, parameters: parameters).response { response in
@@ -231,7 +247,9 @@ class QueryService {
             }
             
             if let data = imageData{
-                multipartFormData.append(data, withName: "floor_plan", fileName: "dick_pic.png", mimeType: "image/png")
+                multipartFormData.append(data, withName: "floor_plan",
+                                         fileName: "floor_" + String(parameters["floor_number"] as! Int) + ".png",
+                                         mimeType: "image/png")
             }
             
         }, usingThreshold: UInt64.init(), to: url, method: .post, headers: headers) { (result) in

@@ -21,6 +21,8 @@ class NavigationViewController: UIViewController {
     //let regionRadius: CLLocationDistance = 100000
     let regionRadius: CLLocationDistance = 1000
     var outdoorLocation = CLLocationCoordinate2D()
+    var indoorAvailable = false
+    var indoorLocation = CGPoint()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,14 +32,24 @@ class NavigationViewController: UIViewController {
         self.qs.lookup(friend_email: friend_email) { response in
             if response != nil {
                 let location = response!["location"] as! [String:Any]
-                let outdoor = location["outdoor_location"] as! [String:Double]
+                let outdoor = location["outdoor_location"] as? [String:Double]
                 let indoor = location["indoor_location"] as? [String:Double]
-                self.outdoorLocation.longitude = outdoor["longitude"]!
-                self.outdoorLocation.latitude = outdoor["latitude"]!
                 
-                self.centerMapOnLocation(location: self.outdoorLocation)
+                if outdoor != nil {
+                    self.outdoorLocation.longitude = outdoor!["longitude"]!
+                    self.outdoorLocation.latitude = outdoor!["latitude"]!
+                    self.centerMapOnLocation(location: self.outdoorLocation)
+                }
+                
+                if indoor != nil {
+                    self.indoorLocation = CGPoint(x: indoor!["x"]!, y: indoor!["y"]!)
+                    self.indoorAvailable = true
+                }
             }
         }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showIndoor(_:)))
+        navigationView.addGestureRecognizer(tap)
     }
     
     func centerMapOnLocation(location: CLLocationCoordinate2D) {
@@ -49,12 +61,26 @@ class NavigationViewController: UIViewController {
         navigationView.addAnnotation(endPin)
         
     }
-
-
     
     func setUpLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier ==  "showIndoor"
+        {
+            let vc = segue.destination as! ViewIndoorLocationController
+            
+            vc.indoorLocation = indoorLocation
+        }
+    }
+    
+    @objc func showIndoor(_ sender: UITapGestureRecognizer) {
+        if sender.state == .ended && indoorAvailable {
+            self.performSegue(withIdentifier: "showIndoor", sender: self)
+        }
     }
 }
 
