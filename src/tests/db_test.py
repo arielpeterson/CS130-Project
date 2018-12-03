@@ -7,7 +7,7 @@ import os, subprocess
 import context
 from db import Db
 
-PATH_TO_MONGOD = '/usr/local/bin/mongod'
+PATH_TO_MONGOD = '/usr/bin/mongod'
 
 
 class DbTest(unittest.TestCase):
@@ -76,15 +76,25 @@ class DbTest(unittest.TestCase):
         friend1_name = 'One'
         friend1= 'friend_{}@ucla.edu'.format(time.time())
 
+        # Add friend to non_user
+        rv = self.db_test.add_friend(user, friend0)
+        self.assertEqual(rv, False)
+        
         # Add initial user to database
         rv = self.db_test.add_user(user_name, user)
+        rv = self.db_test.add_user(friend0_name, friend0)
+        rv = self.db_test.add_user(friend1_name, friend1)
         rv = self.db_test.get_friends_list(user)
 
         # Add new friend
         rv = self.db_test.add_friend(user, friend0)
         result = self.db_verify['User'].find_one({'email': user})
-        self.assertEqual(result['friends_list'],[friend0] )
         self.assertEqual(rv, True)
+        self.assertEqual(result['friends_list'],[friend0] )
+        
+        # Add friend who isn't a user
+        rv = self.db_test.add_friend(user, 'not_a_user@ucla.edu')
+        self.assertEqual(rv, False)
 
         # Add same friend. Make sure we don't duplicate
         rv = self.db_test.add_friend(user, friend0)
