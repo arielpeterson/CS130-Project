@@ -39,11 +39,8 @@ from PIL import Image
 from db import Db
 from image import CvExtractor
 
-
 app = Flask(__name__)
 db = Db()
-
-import environ
 
 
 def create_test_app(uri):
@@ -194,11 +191,11 @@ def register_indoor():
     user_email = data['user_email'] 
         
     # TODO: let's expect this location json to be (x,y) in model coordinates
-    location = data['location'] 
+    location = data['location']
 
     building = location['building']
     floor = location['floor']
-    path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building, '{}.png'.format(floor))
+    path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building + '_{}.jpg'.format(floor))
     image = None
 
     try:
@@ -209,11 +206,12 @@ def register_indoor():
         return Response('No floor plan found', status=400)
         
     # Crop 
-    px,py = model_to_pixel(location['x'], location['y'], image.shape)
-    image = image.crop((px-50, py-50, px+50, py+50))
-    
+    px,py = model_to_pixel(location['x'], location['y'], image.size)
+    image = image.crop((px-150, py-150, px+150, py+150))
     # Read room number
-    room = int(pytesseract.image_to_string(image))
+    room = pytesseract.image_to_string(image)
+    if room == '':
+        room = None
     res = db.register_indoor(user_email, location, room, last_seen)
     if res:
         return Response('Updated!', status=200)
@@ -399,18 +397,17 @@ def add_floor():
         print('bad floor')
         return Response("Invalid floor number", status=400)
 
-    # Save full image as ../images/<building_name>/<floor>.png
-    full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name, '{}.png'.format(floor_number))
+    # Save full image as ../images/<building>_<floor>.png
+    full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name + '_{}.png'.format(floor_number))
     if not os.path.exists(full_image_path):
         os.makedirs(os.path.dirname(full_image_path))
-    floor_plan.save(full_image_path)
+    floor_plan.resize((960,960)).save(full_image_path)
 
     # Run CV on image
     cv = CvExtractor()
-    proc_image = cv.extract_image(full_image_path)
+    proc_image_path = cv.extract_image(full_image_path, building_name, floor_number)
 
     # Save this image a well
-    proc_image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number))
     if not os.path.exist(proc_image_path):
         os.makedirs(os.path.dirname(proc_image_path))
     proc_image.save()
