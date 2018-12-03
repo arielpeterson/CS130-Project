@@ -412,8 +412,6 @@ def add_floor():
 
     # Save full image as ../images/<building>_<floor>.png
     full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name + '_{}.png'.format(floor_number))
-    if not os.path.exists(full_image_path):
-        os.makedirs(os.path.dirname(full_image_path))
     floor_plan.resize((960,960)).save(full_image_path)
 
     # Run CV on image
