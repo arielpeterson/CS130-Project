@@ -187,7 +187,7 @@ class QueryService {
     }
     
     // Get building location, number of floors
-    func getBuildingMetadata(building_name: String, completion: @escaping ([String:String]?) -> Void) {
+    func getBuildingMetadata(building_name: String, completion: @escaping ([String:Any]?) -> Void) {
         let urlString = SERVER + "/getBuildingMetadata"
         let parameters : Parameters = ["building_name" : building_name]
         Alamofire.request(urlString, parameters: parameters).response { response in
@@ -198,7 +198,7 @@ class QueryService {
                 return
             }
             
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:String] else {
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: [])  as! [String:Any] else {
                 print("No json data received")
                 completion(nil)
                 return
