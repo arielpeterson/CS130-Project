@@ -155,6 +155,8 @@ def register():
         Code: 400       -- No such user
     """
     data = request.get_json(force=True)
+    print(data['user_email'])
+    print(data['location'])
     user_email = data['user_email'] 
 
     location = data['location'] 
@@ -267,7 +269,7 @@ def lookup_loc():
         return Response('Friend has location toggled off', status=401)
     
     # Get location
-    if not last_seen:
+    if not last_seen and last_seen != 0.0:
         minutes = None
     else:
         last_seen = time.time() - last_seen
@@ -418,16 +420,43 @@ def get_building_metadata():
     building_name = request.args.get('building_name')
     if not building_name:
         return Response("Must provide building name", status=400)
+    location = db.get_building_location(building_name)
+    if not location:
+        return Response("Building is not in database", status=400)
     floors = db.get_building(building_name)
-    return Response(json.dumps({'floors': len(floors)}), status=200, mimetype='application/json')
-
+    return Response(json.dumps({'location': location, 'number_of_floors': len(floors)}), status=200, mimetype='application/json')
 
 @app.route('/getFloorImage', methods=['GET'])
-def get_building():
+def get_floor_image():
     building_name = request.args.get('building_name')
     floor = request.args.get('floor')
     image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor))
     return send_file(image_path)
+    
+@app.route('/getBuildingByRadius', methods=['GET'])
+def get_building_by_radius():
+    location = request.args.get('location')
+    radius = request.args.get('radius')
+    return db.get_building_by_radius(location, radius)
+    
+@app.route('/addBuilding', methods=['GET'])
+def add_building():
+    building_name = request.args.get('building_name')
+    if not building_name:
+        return Response('Must provide building name', status=400)
+
+    longitude = request.args.get('longitude')
+    if not longitude:
+        return Response('Must provide longitude', status=400)
+
+    latitude = request.args.get('latitude')
+    if not longitude:
+        return Response('Must provide latitude', status=400)
+
+    res = db.add_building(building_name, {'longitude': longitude, 'latitude': latitude})
+    if not res:
+        return Response('Cannot add building', status=400)
+    return Response('Building added!', status=200)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1')
