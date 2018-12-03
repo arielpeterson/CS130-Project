@@ -36,7 +36,7 @@ from flask import Flask, request, Response
 from PIL import Image
 
 from db import Db
-#from image import CvExtractor
+from image import CvExtractor
 
 
 app = Flask(__name__)
@@ -345,7 +345,7 @@ def add_floor():
     if not floor_plan:
         return Response("Must provide floor plan image", status=400)
 
-    # building = db.get_building(building_name) REMOVE
+    floors = len(db.get_building(building_name))
 
     # Update database with new floor or create building in database
     # TODO temp
@@ -356,12 +356,14 @@ def add_floor():
         return Response('Could not add floor to database', status=400)
     
     floor_number = int(floor_number)
-    if floor_number < 0 or floor_number > building['num_floors']:
+    if floor_number < 0 or floor_number > floors:
         print('bad floor')
         return Response("Invalid floor number", status=400)
 
     # Save full image as ../images/<building_name>/<floor>.png
     full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name, '{}.png'.format(floor_number))
+    if not os.path.exists(full_image_path):
+        os.makedirs(os.path.dirname(full_image_path))
     floor_plan.save(full_image_path)
 
     # Run CV on image
@@ -369,7 +371,10 @@ def add_floor():
     proc_image = cv.extract_image(full_image_path)
 
     # Save this image a well
-    proc_image.save(os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number)))
+    proc_image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number))
+    if not os.path.exist(proc_image_path):
+        os.makedirs(os.path.dirname(proc_image_path))
+    proc_image.save()
 
     return Response("Floor is added.", status=200)
 
