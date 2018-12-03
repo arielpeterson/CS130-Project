@@ -152,15 +152,16 @@ def register():
     Response
     --------------------
         Code: 200       -- Success
-        Code: 400       -- No such user
+        Code: 400       -- No such user or missing arguments
     """
     data = request.get_json(force=True)
-    print(data['user_email'])
-    print(data['location'])
+    if 'user_email' not in data or not data['user_email']:
+        return Response('Must provide user email', status=400)
+    if 'location' not in data or not data['location']:
+        return Response('Must provide location', status=400)
+        
     user_email = data['user_email'] 
-
     location = data['location'] 
-
     res = db.set_location(user_email, location)
     if res:
         return Response('Updated!', status=200)
@@ -182,20 +183,18 @@ def register_indoor():
     Response
     --------------------
         Code: 200       -- Success
-        Code: 400       -- No such user or no user_email provided
-        Code: 401       -- No location provided
+        Code: 400       -- No such user or missing arguments
     """
     data = request.get_json(force=True)
-    user_email = data['user_email'] 
-
-    if not user_email:
+    if 'user_email' not in data or not data['user_email']:
         return Response('Must provide user email', status=400)
+    if 'location' not in data or not data['location']:
+        return Response('Must provide location', status=400)
+        
+    user_email = data['user_email'] 
         
     # TODO: let's expect this location json to be (x,y) in model coordinates
     location = data['location'] 
-
-    if not location:
-        return Response('Must provide location', status=401)
 
     building = location['building']
     floor = location['floor']
@@ -277,11 +276,9 @@ def lookup_loc():
     data = {'location': location, 'minutes_ago_indoor': minutes}
     return Response(json.dumps(data), status=200, mimetype='application/json')
 
-
 @app.route('/getFriends', methods=['GET'])
 def get_friends():
     """
-        
     Endpoint: /getFriends
     Get the user's list of friends
     
@@ -293,8 +290,8 @@ def get_friends():
     --------------------
     Code: 200           -- Success
     Code: 400           -- No user name provided.
-    
     """
+    
     user_email = request.args.get('user_email')
     if not user_email:
         logging.info('/addUser: no user name')
@@ -476,10 +473,14 @@ def get_building_by_radius():
     Response
     --------------------
         Code: 200       -- Success
-        Code: 400       -- No building within radius
+        Code: 400       -- No building within radius or missing arguments
     """
     location = request.args.get('location')
+    if not location:
+        return Response('Must provide location', status=400)
     radius = request.args.get('radius')
+    if not radius:
+        return Response('Must provide radius', status=400)
     res = db.get_building_by_radius(location, radius)
     if res:
         return Response(json.dumps({'buildings': res}),status=200, mimetype='application/json')
@@ -501,7 +502,7 @@ def add_building():
     Response
     --------------------
         Code: 200       -- Success
-        Code: 400       -- Failure
+        Code: 400       -- Failure or missing arguments
     """
     building_name = request.args.get('building_name')
     if not building_name:
