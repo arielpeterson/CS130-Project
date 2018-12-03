@@ -260,7 +260,7 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res().status_code, 200)
         
         # Missing arguments
-        res = go(self.app.get, '/getBuildingByRadius', query_string={'building_name': 'a_building'})
+        res = go(self.app.get, '/addBuilding', query_string={'building_name': 'a_building'})
         self.assertEqual(res().status_code, 400)
         
     def test_registerIndoor(self):
@@ -299,25 +299,6 @@ class AppTest(unittest.TestCase):
         '''Test 14: /addFloor endpoint'''
         
         pass
-
-    def test_get_building_by_radius(self):
-        '''Test 15: /getBuildingByRadius endpoint'''
-        
-        # Missing location
-        res = go(self.app.get, '/getBuildingByRadius', query_string={'radius': 5.0})
-        self.assertEqual(res().status_code, 400)
-        
-        '''
-        # Some building within radius
-        res = go(self.app.get, '/getBuildingByRadius', query_string={'longitude': 1.0, 'latitude': 1.0, 'radius': 5.0})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': 'a_building', 'location': {'longitude': 2.0, 'latitude': 2.0}}]})
-        self.assertEqual(res().status_code, 200)
-        
-        # No building within radius
-        res = go(self.app.get, '/getBuildingByRadius', query_string={'longitude': 1.0, 'latitude': 1.0, 'radius': 5.0})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': 'a_building', 'location': {'longitude': 10.0, 'latitude': 10.0}}]})
-        self.assertEqual(res().status_code, 400)
-        '''
         
 if __name__ == '__main__':
     unittest.main()

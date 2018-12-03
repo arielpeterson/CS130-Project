@@ -461,36 +461,6 @@ def get_floor_image():
     image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor))
     return send_file(image_path)
     
-@app.route('/getBuildingByRadius', methods=['GET'])
-def get_building_by_radius():
-    """
-    Endpoint: /getFloorImage
-    Get building meta data: location, number of floors.
-
-    Arguments
-    --------------------
-        longitude       -- a float, longitude
-        latitude        -- a float, latitude
-        radius          -- a float, radius
-
-    Response
-    --------------------
-        Code: 200       -- Success
-        Code: 400       -- No building within radius or missing arguments
-    """
-    longitude = request.args.get('longitude')
-    latitude = request.args.get('latitude')
-    radius = request.args.get('radius')
-    if not longitude or not latitude or not radius:
-        return Response('Must provide longitude and latitude, and radius', status=400)
-
-    location = dict({'longitude': longitude, 'latitude': latitude})
-    res = db.get_building_by_radius(location, radius)
-    if res:
-        return Response(json.dumps({'buildings': res}),status=200, mimetype='application/json')
-    message = 'No building within radius of ' + str(radius)
-    return Response(message, status=400)
-    
 @app.route('/addBuilding', methods=['GET'])
 def add_building():
     """

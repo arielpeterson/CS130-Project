@@ -325,25 +325,4 @@ class Db(object):
         if not building:
             return None
         return building.get('location')
-        
-    def get_building_by_radius(self, location, radius):
-        radius_sqr = np.square(float(radius))
-        longitude = float(location['longitude'])
-        lat = float(location['latitude'])
-        buildings = []
 
-        try:
-            collect = self._db[self.BUILDING_TABLE].distinct("building_name")
-            if not collect:
-                return []
-            for name in collect:
-                loc = self._db[self.BUILDING_TABLE].find_one({'building_name': name})
-                b_long = float(loc['longitude'])
-                b_lat = float(loc['latitude'])
-                distance = np.square(b_long - longitude) + np.square(b_lat - lat)
-                if distance <= radius_sqr:
-                    buildings.append({'building_name': name, 'location': loc})
-        except Exception:
-            print(str(Exception))
-
-        return buildings
