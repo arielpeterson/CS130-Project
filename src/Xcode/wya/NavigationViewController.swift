@@ -50,7 +50,7 @@ class NavigationViewController: UIViewController {
             }
         }
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showIndoor(_:)))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(viewIndoor(_:)))
         navigationView.addGestureRecognizer(tap)
     }
     

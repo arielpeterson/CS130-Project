@@ -236,7 +236,7 @@
                         <outlet property="shareLocationButton" destination="Gco-hc-rny" id="YNf-Hr-gvn"/>
                         <outlet property="tableView" destination="AIa-TN-frx" id="HQH-qG-ZAY"/>
                         <segue destination="BFi-14-YEx" kind="show" identifier="showNavigation" id="XJR-OG-6ZO"/>
-                        <segue destination="EQ0-rl-fv3" kind="show" identifier="showIndoor" id="hsk-Lp-hjd"/>
+                        <segue destination="EQ0-rl-fv3" kind="show" identifier="setIndoor" id="hsk-Lp-hjd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ziq-YG-TPx" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -13,7 +13,7 @@ import GoogleSignIn
 import Alamofire
 
 // Must change each time we run ngrok
-let SERVER = "http://54dd6bd9.ngrok.io"
+let SERVER = "ttp://8b2dd908.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
