@@ -85,6 +85,7 @@ class QueryService {
             
             guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>] else {
                 print("No json data received")
+                completion(nil)
                 return
             }
             
@@ -120,6 +121,7 @@ class QueryService {
                 
                 guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Any] else {
                     print("No json data received")
+                    completion(nil)
                     return
                 }
                 
@@ -155,6 +157,7 @@ class QueryService {
             
             guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:String] else {
                 print("No json data received")
+                completion(nil)
                 return
             }
             
@@ -197,6 +200,7 @@ class QueryService {
             
             guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:String] else {
                 print("No json data received")
+                completion(nil)
                 return
             }
             
