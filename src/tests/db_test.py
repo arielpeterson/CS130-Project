@@ -76,15 +76,25 @@ class DbTest(unittest.TestCase):
         friend1_name = 'One'
         friend1= 'friend_{}@ucla.edu'.format(time.time())
 
+        # Add friend to non_user
+        rv = self.db_test.add_friend(user, friend0)
+        self.assertEqual(rv, False)
+        
         # Add initial user to database
         rv = self.db_test.add_user(user_name, user)
+        rv = self.db_test.add_user(friend0_name, friend0)
+        rv = self.db_test.add_user(friend1_name, friend1)
         rv = self.db_test.get_friends_list(user)
 
         # Add new friend
         rv = self.db_test.add_friend(user, friend0)
         result = self.db_verify['User'].find_one({'email': user})
-        self.assertEqual(result['friends_list'],[friend0] )
         self.assertEqual(rv, True)
+        self.assertEqual(result['friends_list'],[friend0] )
+        
+        # Add friend who isn't a user
+        rv = self.db_test.add_friend(user, 'not_a_user@ucla.edu')
+        self.assertEqual(rv, False)
 
         # Add same friend. Make sure we don't duplicate
         rv = self.db_test.add_friend(user, friend0)
@@ -148,7 +158,7 @@ class DbTest(unittest.TestCase):
         self.assertEqual(result['location'], location_user0)
 
         # Set indoor location for user0
-        rv = self.db_test.register_indoor(user0,indoor_loc_user0, room_user0, last_seen)
+        rv = self.db_test.register_indoor(user0, indoor_loc_user0, room_user0, last_seen)
         result = self.db_verify['User'].find_one({'email': user0})
         self.assertEqual(rv, True)
         self.assertEqual(result['indoor_location'], indoor_res)
@@ -168,6 +178,14 @@ class DbTest(unittest.TestCase):
         rv = self.db_test.get_location(user0)
         user0_loc = {'outdoor_location': location_user0, 'indoor_location': indoor_res}
         self.assertEqual(rv, (user0_loc, last_seen))
+        
+        # Set location for non-user
+        rv = self.db_test.set_location('non-user',location_user0)
+        self.assertEqual(rv, False)
+        
+        # Register indoor location for non-user
+        rv = self.db_test.register_indoor('not_exist',indoor_loc_user0, room_user0, last_seen)
+        self.assertEqual(rv, False)
 
     def test_building(self):
         """ 

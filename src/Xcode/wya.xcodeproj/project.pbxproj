@@ -13,12 +13,15 @@
 		8629651821AFA26800F240AE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651721AFA26800F240AE /* HomeViewController.swift */; };
 		8629651A21AFA30200F240AE /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651921AFA30200F240AE /* NavigationViewController.swift */; };
 		8E26420621B044CE00BAF9B5 /* ViewFriendsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */; };
+		8E9F7AAB21B4E99D00252187 /* another.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 8E9F7AAA21B4E99D00252187 /* another.jpeg */; };
+		8E9F7AAD21B4E9AA00252187 /* texture.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 8E9F7AAC21B4E9A900252187 /* texture.jpeg */; };
 		8EB20BA421B03A3B00BF211B /* QueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB20BA321B03A3B00BF211B /* QueryService.swift */; };
 		8EDC809B21B0E5220025ED4B /* MyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */; };
+		8EEB278021B52FEC00354AF0 /* red_dot.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8EEB277F21B52FEC00354AF0 /* red_dot.jpg */; };
 		9A4241D521B4CC1D000F8334 /* SetIndoorLocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4241D421B4CC1D000F8334 /* SetIndoorLocationController.swift */; };
-		9A4241D721B51B2A000F8334 /* AddBuildingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4241D621B51B2A000F8334 /* AddBuildingController.swift */; };
-		9A498DEA21B47C64006B5D52 /* texture.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9A498DE821B47C64006B5D52 /* texture.jpeg */; };
-		9A498DEB21B47C64006B5D52 /* another.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9A498DE921B47C64006B5D52 /* another.jpeg */; };
+
+		9A498DEF21B49448006B5D52 /* PinBuildingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A498DEE21B49448006B5D52 /* PinBuildingController.swift */; };
+
 		9AEDAF2B21B3AC9E009C78E9 /* AddFloorPlanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */; };
 		B33E89A61ED67A3B00E5A503 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33E89A51ED67A3B00E5A503 /* AppDelegate.swift */; };
 		B33E89AB1ED67A3B00E5A503 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B33E89A91ED67A3B00E5A503 /* Main.storyboard */; };
@@ -39,12 +42,15 @@
 		8629651721AFA26800F240AE /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		8629651921AFA30200F240AE /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFriendsController.swift; sourceTree = "<group>"; };
+		8E9F7AAA21B4E99D00252187 /* another.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = another.jpeg; path = ../../../../Desktop/another.jpeg; sourceTree = "<group>"; };
+		8E9F7AAC21B4E9A900252187 /* texture.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = texture.jpeg; path = ../../../../Desktop/texture.jpeg; sourceTree = "<group>"; };
 		8EB20BA321B03A3B00BF211B /* QueryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryService.swift; sourceTree = "<group>"; };
 		8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MyTableViewCell.swift; path = ../MyTableViewCell.swift; sourceTree = "<group>"; };
+		8EEB277F21B52FEC00354AF0 /* red_dot.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = red_dot.jpg; path = ../../../../Desktop/red_dot.jpg; sourceTree = "<group>"; };
 		9A4241D421B4CC1D000F8334 /* SetIndoorLocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetIndoorLocationController.swift; sourceTree = "<group>"; };
-		9A4241D621B51B2A000F8334 /* AddBuildingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBuildingController.swift; sourceTree = "<group>"; };
-		9A498DE821B47C64006B5D52 /* texture.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = texture.jpeg; path = ../../../../sk/sk/texture.jpeg; sourceTree = "<group>"; };
-		9A498DE921B47C64006B5D52 /* another.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = another.jpeg; path = ../../../../sk/sk/another.jpeg; sourceTree = "<group>"; };
+
+		9A498DEE21B49448006B5D52 /* PinBuildingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinBuildingController.swift; sourceTree = "<group>"; };
+
 		9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFloorPlanController.swift; sourceTree = "<group>"; };
 		9B757972FD9C35F6773132A8 /* Pods-wya.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wya.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wya/Pods-wya.debug.xcconfig"; sourceTree = "<group>"; };
 		A2F7274B2487BD77FB273E15 /* Pods-Menu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Menu/Pods-Menu.debug.xcconfig"; sourceTree = "<group>"; };
@@ -141,10 +147,13 @@
 				9A4241D421B4CC1D000F8334 /* SetIndoorLocationController.swift */,
 				8629651921AFA30200F240AE /* NavigationViewController.swift */,
 				8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */,
-				9A498DE921B47C64006B5D52 /* another.jpeg */,
-				9A498DE821B47C64006B5D52 /* texture.jpeg */,
-				9A4241D621B51B2A000F8334 /* AddBuildingController.swift */,
+				8E9F7AAA21B4E99D00252187 /* another.jpeg */,
+				8E9F7AAC21B4E9A900252187 /* texture.jpeg */,
 				9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */,
+				8EEB277F21B52FEC00354AF0 /* red_dot.jpg */,
+				9A498DEE21B49448006B5D52 /* PinBuildingController.swift */,
+				8629651921AFA30200F240AE /* NavigationViewController.swift */,
+
 				B33E89AC1ED67A3B00E5A503 /* Assets.xcassets */,
 				B33E89AE1ED67A3B00E5A503 /* LaunchScreen.storyboard */,
 				B33E89B11ED67A3B00E5A503 /* Info.plist */,
@@ -186,7 +195,7 @@
 				TargetAttributes = {
 					B33E89A11ED67A3B00E5A503 = {
 						CreatedOnToolsVersion = 8.3.2;
-						DevelopmentTeam = L5HME6UZJC;
+						DevelopmentTeam = PL93N8S7QM;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -214,10 +223,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E9F7AAD21B4E9AA00252187 /* texture.jpeg in Resources */,
 				B33E89B01ED67A3B00E5A503 /* LaunchScreen.storyboard in Resources */,
-				9A498DEA21B47C64006B5D52 /* texture.jpeg in Resources */,
 				B33E89AD1ED67A3B00E5A503 /* Assets.xcassets in Resources */,
-				9A498DEB21B47C64006B5D52 /* another.jpeg in Resources */,
+				8EEB278021B52FEC00354AF0 /* red_dot.jpg in Resources */,
+				8E9F7AAB21B4E99D00252187 /* another.jpeg in Resources */,
+
 				B33E89AB1ED67A3B00E5A503 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,12 +245,14 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-wya/Pods-wya-resources.sh",
+				"${PODS_ROOT}/GTMOAuth2/Source/Touch/GTMOAuth2ViewTouch.xib",
 				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GTMOAuth2ViewTouch.nib",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -435,10 +448,11 @@
 			baseConfigurationReference = 9B757972FD9C35F6773132A8 /* Pods-wya.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = L5HME6UZJC;
+				DEVELOPMENT_TEAM = PL93N8S7QM;
 				INFOPLIST_FILE = wya/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = zeeshan.wya;
+
+				PRODUCT_BUNDLE_IDENTIFIER = "privacy-concerns.wya";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 			};
@@ -449,10 +463,11 @@
 			baseConfigurationReference = F53D81C3D845CD5181456F65 /* Pods-wya.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = L5HME6UZJC;
+				DEVELOPMENT_TEAM = PL93N8S7QM;
 				INFOPLIST_FILE = wya/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = zeeshan.wya;
+
+				PRODUCT_BUNDLE_IDENTIFIER = "privacy-concerns.wya";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 			};
