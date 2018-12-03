@@ -206,7 +206,7 @@ class AppTest(unittest.TestCase):
         
         '''
         Using shape=[500, 500]
-        Condition evaluation: TTFF
+        Condition evaluation: FFTT
         Branch coverage: 100%
         '''
         res = go(my_app.model_to_pixel, 101, 101, [500, 500])
