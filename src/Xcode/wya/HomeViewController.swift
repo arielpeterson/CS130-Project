@@ -81,7 +81,17 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.cellForRow(at: indexPath) as! UITableViewCell
         //let selected_friend = cell.textLabel?.text! // friends name
         selected_friend_email = friends[indexPath.row]
-    
+        
+//        qs.lookup(friend_email: selected_friend_email) // add check to see if selected_friend is nill
+//        {
+//            response in
+//            guard let location = response else {
+//                print("No loction received.")
+//                return
+//            }
+//            // Set friend_location in NavigationViewController to location returned by the server
+//            vc.friend_location = location
+//        }
         self.performSegue(withIdentifier: "showNavigation", sender: self)
     }
     
@@ -89,28 +99,29 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // Called before segue is performed to set parameters in Target View Controller
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        if segue.destination is NavigationViewController
+        if segue.identifier ==  "showNavigation"
         {
-            let vc = segue.destination as? NavigationViewController
-            
-            qs.lookup(friend_email: selected_friend_email) // add check to see if selected_friend is nill
-            {
-                response in
-                guard let location = response else {
-                    print("No loction received.")
-                    return
-                }
-                // send friend_location to NavigationViewController
-                vc?.destination = location
-            }
+            let vc = segue.destination as! NavigationViewController
+
+//            qs.lookup(friend_email: selected_friend_email) // add check to see if selected_friend is nill
+//            {
+//                response in
+//                guard let location = response else {
+//                    print("No loction received.")
+//                    return
+//                }
+//                // Set friend_location in NavigationViewController to location returned by the server
+//                vc.friend_location = location
+//            }
             // hardcoded value to use for testing if segue destination is set properly
-            // vc?.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
+            vc.friend_location_latitude = 33.4936
+            vc.friend_location_longitude = 117.1484
         }
-        
+
         if segue.destination is SetIndoorLocationController
         {
             let vc = segue.destination as? SetIndoorLocationController
-            
+
             vc?.image = UIImage(contentsOfFile: Bundle.main.path(forResource: "another", ofType: "jpeg")!)!
         }
     }
