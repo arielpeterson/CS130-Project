@@ -14,7 +14,13 @@ import Alamofire
 
 
 // Must change each time we run ngrok
+<<<<<<< HEAD
 let SERVER = "http://caeb9921.ngrok.io"
+=======
+
+let SERVER = "http://8efa8e6c.ngrok.io"
+
+>>>>>>> 5aa71c316452dbe7d79f3e24318f2576e1b750fa
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -125,13 +131,26 @@ class QueryService {
                     return
                 }
                 
-                // TO DO: this line is causing a crash because outdoor_location is null even though the user's location is registered in the database.
                 
-                let outdoor_location = json["location"] as! [String:Any]
+                // Parse response
+                let location = json["location"] as! [String:AnyObject]
+                let outdoor_location = location["outdoor_location"]
+                print(outdoor_location)
+                print(location)
+                
+                let latitude = outdoor_location!["latitude"] as! Double
+                let longitude = outdoor_location!["longitude"] as! Double
+                // Indoor Location
+                let indoor_location = location["indoor_location"]
+                
+                
+                
                 //let indoor_location = json["indoor_location"] as! [String:Any]
-                let latitude: Double = outdoor_location["latitude"] as! Double
-                let longitude: Double = outdoor_location["longitude"] as! Double
+                
+                
+                
                 // Upon completion, return a the latitude and longitude
+                
                 completion(CLLocationCoordinate2DMake(latitude, longitude))
         }
     }
@@ -188,7 +207,11 @@ class QueryService {
                 return
             }
             
+<<<<<<< HEAD
             guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Any] else {
+=======
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: [])  as! [String:Any] else {
+>>>>>>> 5aa71c316452dbe7d79f3e24318f2576e1b750fa
                 print("No json data received")
                 completion(nil)
                 return
