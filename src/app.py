@@ -218,6 +218,19 @@ def register_indoor():
     return Response('Could not upload location for user', status=400)
 
 def model_to_pixel(x, y, shape=[100, 100]):
+    """
+    convert model coordinates to actual pixel location on image
+
+    Arguments
+    --------------------
+        x               -- a float, width coordinate
+        y               -- a float, height coordinate
+        shape           -- list of height and width of the actual image
+
+    Return
+    --------------------
+        result          -- a tuple (width coordinate, height coordinate) of pixel 
+    """
     if x < 0:
         x = 0
     if y < 0:

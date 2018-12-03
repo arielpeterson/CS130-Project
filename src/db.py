@@ -115,7 +115,7 @@ class Db(object):
         Arguments
         --------------------
             user_email       -- a string, user
-            friend_email     -- a string, friend to be deleted
+            friend_email     -- a string, friend to be added
 
         Return
         --------------------
@@ -125,6 +125,10 @@ class Db(object):
         if friends_list is None:         # No such user
             return False
         if friend_email in friends_list:  # Don't add duplicates
+            return False
+            
+        friend = self._db[self.USER_TABLE].find_one({'email': friend_email})
+        if not friend:                  # Don't add someone who isn't a user
             return False
 
         # Make update
@@ -245,8 +249,10 @@ class Db(object):
         """
         location['room'] = room
         try:
-            self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'indoor_location': location}})
-            self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'last_seen_indoor': last_seen}})
+            res = self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'indoor_location': location}})
+            res = self._db[self.USER_TABLE].update_one({'email': user_email}, {'$set': {'last_seen_indoor': last_seen}})
+            if res.matched_count == 0:
+                return False
             return True
         except Exception:
             return False
@@ -312,6 +318,7 @@ class Db(object):
             result          -- a Boolean, returns true if successfully added
                                and false otherwise.
         """
+        
         building = self._db[self.BUILDING_TABLE].find_one({'building_name': building_name})
         if not building:        
             res = self._db[self.BUILDING_TABLE].insert_one({'building_name': building_name, 'location': location})
@@ -321,6 +328,19 @@ class Db(object):
         return False
         
     def get_building_location(self, building_name):
+        """
+        get building location
+
+
+        Arguments
+        --------------------
+            building_name   -- a string, building_name
+
+        Return
+        --------------------
+            result          -- building location, None if building does not exist in database
+        """
+        
         building = self._db[self.BUILDING_TABLE].find_one({'building_name': building_name})
         if not building:
             return None

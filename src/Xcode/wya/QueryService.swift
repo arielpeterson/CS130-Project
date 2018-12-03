@@ -85,6 +85,7 @@ class QueryService {
             
             guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>] else {
                 print("No json data received")
+                completion(nil)
                 return
             }
             
@@ -120,16 +121,30 @@ class QueryService {
                 
                 guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Any] else {
                     print("No json data received")
+                    completion(nil)
                     return
                 }
                 
-                // TO DO: this line is causing a crash because outdoor_location is null even though the user's location is registered in the database.
                 
-                let outdoor_location = json["location"] as! [String:Any]
+                // Parse response
+                let location = json["location"] as! [String:AnyObject]
+                let outdoor_location = location["outdoor_location"]
+                print(outdoor_location)
+                print(location)
+                
+                let latitude = outdoor_location!["latitude"] as! Double
+                let longitude = outdoor_location!["longitude"] as! Double
+                // Indoor Location
+                let indoor_location = location["indoor_location"]
+                
+                
+                
                 //let indoor_location = json["indoor_location"] as! [String:Any]
-                let latitude: Double = outdoor_location["latitude"] as! Double
-                let longitude: Double = outdoor_location["longitude"] as! Double
+                
+                
+                
                 // Upon completion, return a the latitude and longitude
+                
                 completion(CLLocationCoordinate2DMake(latitude, longitude))
         }
     }
@@ -155,21 +170,12 @@ class QueryService {
             
             guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:String] else {
                 print("No json data received")
+                completion(nil)
                 return
             }
             
             // Upon completion, return the user's name
             completion(json["name"])
-        }
-    }
-    
-    // Add floor plan of building
-    func addFloor(building_name: String, floor_number: String, floor_plan: UIImage) {
-        let urlString = SERVER + "/addFloor"
-        let parameters : Parameters = ["building_name" : building_name, "floor_number" : floor_number, "floor_plan" : floor_plan]
-        Alamofire.request(urlString, parameters: parameters).response { response in
-            // Handle response
-            debugPrint(response)
         }
     }
     
@@ -184,7 +190,7 @@ class QueryService {
     }
     
     // Get building location, number of floors
-    func getBuildingMetadata(building_name: String, completion: @escaping ([String:String]?) -> Void) {
+    func getBuildingMetadata(building_name: String, completion: @escaping ([String:Any]?) -> Void) {
         let urlString = SERVER + "/getBuildingMetadata"
         let parameters : Parameters = ["building_name" : building_name]
         Alamofire.request(urlString, parameters: parameters).response { response in
@@ -195,8 +201,9 @@ class QueryService {
                 return
             }
             
-            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:String] else {
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: [])  as! [String:Any] else {
                 print("No json data received")
+                completion(nil)
                 return
             }
             
@@ -226,4 +233,54 @@ class QueryService {
     func getBuildingByRadius() {
         
     }
+    
+    // Toggle user's location sharing on and off.
+    func addFloor(building_name: String, floor_number: Int, floor_plan: UIImage) {
+        let urlString = "/addFloor"
+        let img = floor_plan.jpegData(compressionQuality: 0.2)
+        let params : Parameters = ["building_name" : building_name,
+                                   "floor_number" : floor_number ]
+        requestWith(endUrl: urlString, imageData: img , parameters: params) { response in
+            print("Sent Floorplan")
+        }
+    }
+    func requestWith(endUrl: String, imageData: Data?, parameters: [String : Any], onCompletion: (( [String: Any]?) -> Void)? = nil, onError: ((Error?) -> Void)? = nil) {
+        
+        let url = SERVER + endUrl /* your API url */
+        let headers: HTTPHeaders = ["Content-type": "multipart/form-data"]
+        
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
+            for (key, value) in parameters {
+                multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
+            }
+            
+            if let data = imageData{
+                multipartFormData.append(data, withName: "floor_plan", fileName: "dick_pic.png", mimeType: "image/png")
+            }
+            
+        }, usingThreshold: UInt64.init(), to: url, method: .post, headers: headers) { (result) in
+            switch result {
+            case .success(let upload, _, _):
+                upload.response { response in
+                    print("Succesfully uploaded")
+                    
+                    if let data = response.data {
+                        /* Handle response from server ? */
+                    }
+                    
+                    if let err = response.error{
+                        onError?(err)
+                        return
+                    }
+                    onCompletion?(nil)
+                }
+            case .failure(let error):
+                print("Error in upload: \(error.localizedDescription)")
+                onError?(error)
+            }
+        }
+    }
 }
+
+
+
