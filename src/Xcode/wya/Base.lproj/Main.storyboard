@@ -239,7 +239,7 @@
                         <outlet property="shareLocationButton" destination="Gco-hc-rny" id="YNf-Hr-gvn"/>
                         <outlet property="tableView" destination="AIa-TN-frx" id="HQH-qG-ZAY"/>
                         <segue destination="BFi-14-YEx" kind="show" identifier="showNavigation" id="XJR-OG-6ZO"/>
-                        <segue destination="EQ0-rl-fv3" kind="show" identifier="showIndoor" id="hsk-Lp-hjd"/>
+                        <segue destination="EQ0-rl-fv3" kind="show" identifier="setIndoor" id="hsk-Lp-hjd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ziq-YG-TPx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -267,7 +267,7 @@
                     </view>
                     <connections>
                         <outlet property="navigationView" destination="9eC-Nr-2We" id="ten-Xl-7JN"/>
-                        <segue destination="Drn-wn-kj7" kind="show" identifier="showIndoor" id="3hE-AW-Otc"/>
+                        <segue destination="Drn-wn-kj7" kind="show" identifier="viewIndoor" id="3hE-AW-Otc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jrU-nh-mwE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -524,10 +524,10 @@
             </objects>
             <point key="canvasLocation" x="3601" y="-13"/>
         </scene>
-        <!--View Controller-->
+        <!--View Indoor Location Controller-->
         <scene sceneID="HPV-Jq-1mk">
             <objects>
-                <viewController id="Drn-wn-kj7" sceneMemberID="viewController">
+                <viewController id="Drn-wn-kj7" customClass="ViewIndoorLocationController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jfb-SW-PW5"/>
                         <viewControllerLayoutGuide type="bottom" id="KsS-ys-4Ls"/>

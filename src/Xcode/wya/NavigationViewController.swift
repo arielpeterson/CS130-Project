@@ -48,7 +48,7 @@ class NavigationViewController: UIViewController {
             }
         }
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(showIndoor(_:)))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(viewIndoor(_:)))
         navigationView.addGestureRecognizer(tap)
     }
     
@@ -69,7 +69,7 @@ class NavigationViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        if segue.identifier ==  "showIndoor"
+        if segue.identifier ==  "viewIndoor"
         {
             let vc = segue.destination as! ViewIndoorLocationController
             
@@ -77,9 +77,9 @@ class NavigationViewController: UIViewController {
         }
     }
     
-    @objc func showIndoor(_ sender: UITapGestureRecognizer) {
+    @objc func viewIndoor(_ sender: UITapGestureRecognizer) {
         if sender.state == .ended && indoorAvailable {
-            self.performSegue(withIdentifier: "showIndoor", sender: self)
+            self.performSegue(withIdentifier: "viewIndoor", sender: self)
         }
     }
 }
