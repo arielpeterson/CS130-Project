@@ -185,14 +185,9 @@ class AppTest(unittest.TestCase):
         res = go(self.app.get, '/getFriends', query_string={'user_email': self.email})
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list':['friend_1']}]})
         self.assertEqual(res().status_code, 200)
-    
-    def test_addFloor(self):
-        '''Test 9: /addFloor endpoint'''
-        
-        pass
-    
+       
     def test_getBuildingMetadata(self):
-        '''Test 10: /getBuildingMetadata endpoint'''
+        '''Test 9: /getBuildingMetadata endpoint'''
         
         # No building name provided
         res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': ''})
@@ -218,14 +213,9 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res().status_code, 200)
         self.assertEqual(res().get_json()['number_of_floors'], 1)
         self.assertEqual(res().get_json()['location'], {'longitude': 0.0, 'latitude': 0.0})
-    
-    def test_getFloorImage(self):
-        '''Test 11: /getFloorImage endpoint'''
-        
-        pass
         
     def test_modal_to_pixel(self):
-        '''Test 12: modal_to_pixel function'''
+        '''Test 10: modal_to_pixel function'''
         
         '''
         Using default shape=[100, 100]
@@ -244,7 +234,7 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res(), (500, 500))
 
     def test_getName(self):
-        '''Test 13: /getName endpoint'''
+        '''Test 11: /getName endpoint'''
     
         # No email provided
         res = go(self.app.get, '/getName', query_string={'email': ''})
@@ -261,7 +251,7 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res().status_code, 200)
         
     def test_get_building_by_radius(self):
-        '''Test 14: /getBuildingByRadius endpoint'''
+        '''Test 12: /getBuildingByRadius endpoint'''
         
         # Missing location
         res = go(self.app.get, '/getBuildingByRadius', query_string={'radius': 5.0})
@@ -280,7 +270,7 @@ class AppTest(unittest.TestCase):
         '''
         
     def test_add_building(self):
-        '''Test 15: /addBuilding endpoint'''
+        '''Test 13: /addBuilding endpoint'''
             
         # Building already exist
         name = 'my_new_building'
@@ -302,6 +292,16 @@ class AppTest(unittest.TestCase):
         # Missing arguments
         res = go(self.app.get, '/getBuildingByRadius', query_string={'building_name': 'a_building'})
         self.assertEqual(res().status_code, 400)
+        
+    def test_getFloorImage(self):
+        '''Test 14: /getFloorImage endpoint'''
+        
+        pass
+        
+    def test_addFloor(self):
+        '''Test 15: /addFloor endpoint'''
+        
+        pass
 
 if __name__ == '__main__':
     unittest.main()
