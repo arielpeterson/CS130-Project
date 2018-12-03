@@ -66,7 +66,7 @@ class Db(object):
         # Add new user. Location Sharing defaults to false
         self._db[self.USER_TABLE].insert_one({'user': user_name,
                                               'email': email,
-                                              'location_sharing': False,
+                                              'location_sharing': True,
                                               'friends_list': []})
         return True
 

@@ -42,6 +42,9 @@ from image import CvExtractor
 app = Flask(__name__)
 db = Db()
 
+os.environ['FLOOR_DIR'] = '../floor-images' # This is used for images processed to be sent to front-end
+os.environ['FULL_IMAGE_DIR'] = '../images' # This is used for images taken by user
+
 
 def create_test_app(uri):
     global db, app
@@ -413,7 +416,7 @@ def add_floor():
         return Response("Invalid floor number", status=400)
 
     # Save full image as ../images/<building>_<floor>.png
-    full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name + '_{}.png'.format(floor_number))
+    full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name + '_{}.jpg'.format(floor_number))
     floor_plan.resize((960,960)).save(full_image_path)
 
     # Run CV on image

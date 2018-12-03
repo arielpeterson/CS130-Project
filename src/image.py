@@ -71,7 +71,7 @@ class CvExtractor:
 
         # Save
         fn = str(building) + '_' + str(floor) + '.png'
-        image_dir = os.environ.get('IMAGE_DIR')
+        image_dir = os.environ.get('FLOOR_DIR')
         cv2.imwrite(os.path.join(image_dir, fn), image)
         return fn
 
