@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     // [END appdelegate_interfaces]
     var window: UIWindow?
-    let qs =  QueryService()
+    //let qs =  QueryService()
     
     // [START didfinishlaunching]
     func application(_ application: UIApplication,
@@ -56,6 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
             let idToken = user.authentication.idToken // Safe to send to the server
 
             // Add user if they don't exist, otherwise does nothing
+            let qs = QueryService()
             qs.addUser()
             
             // [START_EXCLUDE]

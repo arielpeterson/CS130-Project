@@ -14,22 +14,24 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var shareLocationButton: UIButton!
     
-    var errorMessage = ""
-    let SERVER = "http://c02c0a92.ngrok.io"
+    @IBOutlet weak var stopSharingLocationButton: UIButton!
     let locationManager = CLLocationManager()
+    let newPin = MKMarkerAnnotationView()
+    
     let range : Double = 1000
     let qs = QueryService()
+    // List of user's friends emails
     var friends : [String] = []
-   
+    var selected_friend_email : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Get friends
-        tableView.register(HomeViewCell.self, forCellReuseIdentifier: "customcell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "customcell")
         checkLocationServices()
-
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name(rawValue: "load"), object: nil)
         qs.getFriends() { response in
             guard let friendList = response else {
                 print("No friends! :(")
@@ -38,56 +40,51 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.friends = friendList
             DispatchQueue.main.async(execute: {self.do_table_refresh()})
         }
+        
     }
     
-    func do_table_refresh()
-    {
+    func do_table_refresh() {
         self.tableView.reloadData()
     }
     
+    @objc func refresh(notification: NSNotification) {
+        qs.getFriends() { response in
+            guard let friendList = response else {
+                print("No friends! :(")
+                return
+            }
+            self.friends = friendList
+            DispatchQueue.main.async(execute: {self.do_table_refresh()})
+        }
+        self.tableView.reloadData()
+        
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return friends.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath) as! HomeViewCell
-        cell.nameLabel.text = friends[indexPath.row]
-        cell.myHomeViewController = self
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath) as! UITableViewCell
+        qs.getName(email: friends[indexPath.row]) { response in
+            guard let name = response else {
+                print("No name for that email address")
+                return
+            }
+            cell.textLabel?.text = name
+        }
         return cell
+        
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let qs = QueryService()
-        let cell = tableView.cellForRow(at: indexPath) as! HomeViewCell
-        
-        // TODO: This is returing nil. idk why
-        selected_friend = cell.nameLabel.text!
-        
-        // TO DO: uncommet this line when return type from qs.lookup is CLLocationCoordinate2D
-        // Change to wait for completionHandler from query
-
-        let navigationVC = NavigationViewController()
-
-        qs.lookup(friend_name: selected_friend!) // add check to see if selected_friend is nill
-        {
-            response in
-            guard let location = response else {
-                print("No loction received.")
-                return
-            }
-            // send friend_location to NavigationViewController
-            navigationVC.destination = location
-        }
-        
+        let cell = tableView.cellForRow(at: indexPath) as! UITableViewCell
+        //let selected_friend = cell.textLabel?.text! // friends name
+        selected_friend_email = friends[indexPath.row]
+    
         self.performSegue(withIdentifier: "showNavigation", sender: self)
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            self.friends.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        }
-    }
     
     // Called before segue is performed to set parameters in Target View Controller
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
@@ -96,7 +93,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         {
             let vc = segue.destination as? NavigationViewController
             
-            qs.lookup(user_name: user_name, friend_name: selected_friend) // add check to see if selected_friend is nill
+            qs.lookup(friend_email: selected_friend_email) // add check to see if selected_friend is nill
             {
                 response in
                 guard let location = response else {
@@ -104,13 +101,20 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     return
                 }
                 // send friend_location to NavigationViewController
-                // Hard coded location to test if segue destination is set properly
                 vc?.destination = location
             }
             // hardcoded value to use for testing if segue destination is set properly
             // vc?.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
         }
+        
+        if segue.destination is SetIndoorLocationController
+        {
+            let vc = segue.destination as? SetIndoorLocationController
+            
+            vc?.image = UIImage(contentsOfFile: Bundle.main.path(forResource: "another", ofType: "jpeg")!)!
+        }
     }
+    
     func setUpLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -144,17 +148,60 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             break
         }
     }
+    
+    
+    // Update your location and start sharing your location with all your friends
+    @IBAction func shareLocationButtonTapped(_ sender: Any) {
+        let mylocation = locationManager.location?.coordinate
+        qs.registerLocation(location: mylocation!)
+        
+//        // IF NO BUILDING AT THAT LOCATION
+//        let alert = UIAlertController(title: "Success", message: "You updated your location", preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+//         self.present(alert, animated: true, completion: nil)
+        
+        // IF BUILDING AT THAT LOCATION
+        let indoorAlert = UIAlertController(title: "Enter Floor Number", message: nil, preferredStyle: .alert)
+        indoorAlert.addTextField{
+            textField in textField.text = "1"
+        }
+        indoorAlert.addAction(UIAlertAction(title: "OK", style: .default)
+        {
+            action in let text = indoorAlert.textFields![0].text!
+            if Double(text) != nil {
+                // FLOOR EXISTS, pass image
+                self.performSegue(withIdentifier: "showIndoor", sender: self)
+                
+            }
+            else {
+                // FLOOR DOESN'T EXIST
+                let floorAlert = UIAlertController(title: "Error", message: "Floor does not exist", preferredStyle: .alert)
+                floorAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+                self.present(floorAlert, animated: true, completion: nil)
+            }
+        })
+        self.present(indoorAlert, animated: true, completion: nil)
+    }
+    
+    // TO DO: Stop sharing location button that calls toggle()
+    // User's are automatically not sharing location when they first log in
+    // Function is_sharing to check if a user is currently sharing their location
+    
+    
 }
 
 extension HomeViewController: CLLocationManagerDelegate {
     // called whenever user's location updates
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        //mapView.removeAnnotation(newPin)
         guard let location = locations.last else {
             return
         }
         let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         let region = MKCoordinateRegion.init(center: center, latitudinalMeters: range, longitudinalMeters: range)
         mapView.setRegion(region, animated: true)
+        //newPin.coordinate = location.coordinate
+        //mapView.addAnnotation(newPin)
     }
     
     // called whenever permission changes
@@ -163,33 +210,5 @@ extension HomeViewController: CLLocationManagerDelegate {
     }
 }
 
-class HomeViewCell : UITableViewCell {
-    
-    var myHomeViewController: HomeViewController?
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    let nameLabel: UILabel = {
-        let label = UILabel()
-        label.text = ""
-        label.translatesAutoresizingMaskIntoConstraints = false
-        //label.font = UIFont.boldSystemFont(ofSize: 14)
-        return label
-    }()
-    
-    func setupViews() {
-        addSubview(nameLabel)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel]))
-        
-    }
-    
-    
-}
+
 

@@ -16,6 +16,7 @@ class HamburgerViewModel: NSObject {
         
         layers.append(.home)
         layers.append(.viewFriends)
+        layers.append(.addBuilding)
         layers.append(.addFloorplan)
         layers.append(.account)
         layers.append(.signout)

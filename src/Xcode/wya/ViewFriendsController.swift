@@ -13,26 +13,26 @@ import CoreLocation
 import GoogleSignIn
 
 
-var friends : [String] = []
+let user = GIDSignIn.sharedInstance().currentUser
+let user_name = (user?.profile.givenName)!
+
 
 class ViewFriendsController : UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     var errorMessage = ""
     let defaultSession = URLSession(configuration: .default)
     var dataTask: URLSessionDataTask?
-    let SERVER = "http://c02c0a92.ngrok.io"
     let qs = QueryService()
     
+    // List of friend's emails
     var friends : [String] = []
     
     @IBOutlet weak var tableView: UITableView!
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.register(MyCell.self, forCellReuseIdentifier: "customcell")
-        
-        qs.getFriends(user_name: "Ariel") { response in
+        qs.getFriends() { response in
             guard let friendList = response else {
                 print("No friends! :(")
                 return
@@ -44,126 +44,87 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
         tableView.dataSource = self
         tableView.delegate = self
         
-        
     }
     
-    func do_table_refresh()
-    {
+    func do_table_refresh(){
         self.tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return friends.count
+        return friends.count // +1 for the Add Friend Button
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath) as! MyCell
-        
-        //cell.nameLabel.text = friends[indexPath.row]
-        cell.nameLabel.text = friends[indexPath.row]
-        cell.myViewFriendsController = self
-        return cell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "mycell", for: indexPath) as! MyTableViewCell
+            qs.getName(email: friends[indexPath.row]) { response in
+                guard let name = response else {
+                    print("No name for that email address")
+                    return
+                }
+                cell.nameLabel?.text = name
+                cell.cellDelegate = self
+                cell.index = indexPath
+            }
+            return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    @IBAction func addFriendButtonTapped(_ sender: Any) {
         
-        let cell = tableView.cellForRow(at: indexPath) as! MyCell
-        let selected_friend = cell.nameLabel.text
+        let alert = UIAlertController(title: "Add Friend", message: "Enter your friend's email", preferredStyle: .alert)
+        let error_email_dne = UIAlertController(title: "Error", message: "No friend with that email exists", preferredStyle: .alert)
+        let error_duplicate_friend = UIAlertController(title: "Error", message: "You are already friends with that user", preferredStyle: .alert)
         
-    }
-    
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return tableView.dequeueReusableHeaderFooterView(withIdentifier: "headerId")
-    }
-    
-    
-    func deleteCell(cell: UITableViewCell) {
-        if let deletionIndexPath = tableView.indexPath(for: cell) {
-            // get friend's name
-            let delete_friend_name = friends[deletionIndexPath.row]
-            friends.remove(at: deletionIndexPath.row)
-            // do a database call to delete friend
-            let qs = QueryService()
-            qs.deleteFriend(friend_name: delete_friend_name)
-            tableView.deleteRows(at: [deletionIndexPath], with: .automatic)
+        alert.addTextField { (textField) in
+            textField.text = ""
         }
+        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Enter", style: .default, handler: { [weak alert] (_) in
+            let add_friend_email = alert!.textFields![0].text // Force unwrapping because we know it exists.
+            // Check if friend is a user in our database
+            self.qs.getName(email: add_friend_email!) { response in
+                guard let name = response else {
+                    print("No name for that email address")
+                    error_email_dne.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+                    self.present(error_email_dne, animated: true, completion: nil)
+                    return
+                }
+            }
+            // Check if user is already friends
+            if self.friends.contains(add_friend_email!) {
+                print("No name for that email address")
+                error_duplicate_friend.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+                self.present(error_duplicate_friend, animated: true, completion: nil)
+                return
+            }
+            
+            
+            self.qs.addFriend(friend_email: add_friend_email!)
+            
+            self.friends.append(add_friend_email!)
+            //print("Text field: \(UITextField.text)")
+            self.do_table_refresh()
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "load"), object: nil)
+        }))
+    
+        self.present(alert, animated: true, completion:nil)
+    
     }
+    
+    
     
 }
 
-class Header: UITableViewHeaderFooterView {
-    
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        setupViews()
+
+extension ViewFriendsController: TableViewNew {
+    func onDeleteCell(index: Int, cell: MyTableViewCell) {
+        print(index)
+        let deletionIndexPath = tableView.indexPath(for: cell)
+        let delete_friend_email = friends[index]
+        friends.remove(at: index)
+        // do a database call to delete friend
+        qs.deleteFriend(friend_email: delete_friend_email)
+        tableView.deleteRows(at: [deletionIndexPath!], with: .automatic)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "load"), object: nil)
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    let nameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "My Friends"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 14)
-        return label
-    }()
-    
-    func setupViews() {
-        addSubview(nameLabel)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel]))
-        
-    }
-    
 }
 
-class MyCell : UITableViewCell {
-    
-    var myViewFriendsController: ViewFriendsController?
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    let deleteButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Delete", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    
-    
-    let nameLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Sample Item"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        //label.font = UIFont.boldSystemFont(ofSize: 14)
-        return label
-    }()
-    
-    func setupViews() {
-        addSubview(nameLabel)
-        addSubview(deleteButton)
-        
-        deleteButton.addTarget(self, action: #selector(handleDeleteAction), for: .touchUpInside)
-        //addButton.addTarget(self, action: #selector(handleAddAction), for: .touchUpInside)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]-8-[v1(80)]-8-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": deleteButton]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": deleteButton]))
-        
-    }
-    
-    @objc func handleDeleteAction() {
-        myViewFriendsController?.deleteCell(cell: self)
-    }
-    
-    
-}
