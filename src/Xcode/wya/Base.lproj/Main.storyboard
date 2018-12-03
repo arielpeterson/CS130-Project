@@ -188,6 +188,7 @@
                     </view>
                     <connections>
                         <outlet property="sceneView" destination="lTo-qx-s2E" id="ZJV-ru-biJ"/>
+                        <segue destination="NO9-q0-ady" kind="show" identifier="noBuilding" id="8co-mL-Eni"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tnf-Od-PJB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -526,4 +527,7 @@
         <image name="hamburger" width="37.5" height="37.5"/>
         <image name="login_screen" width="1125" height="2436"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="8co-mL-Eni"/>
+    </inferredMetricsTieBreakers>
 </document>
