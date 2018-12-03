@@ -15,42 +15,72 @@ class NavigationViewController: UIViewController {
    
     @IBOutlet weak var navigationView: MKMapView!
     
-    var friend_location_latitude : CLLocationDegrees?
-    var friend_location_longitude : CLLocationDegrees?
+    let qs = QueryService()
+    var friend_email = ""
     let locationManager = CLLocationManager()
     //let regionRadius: CLLocationDistance = 100000
-    let regionRadius: CLLocationDistance = 100
-
-    
+    let regionRadius: CLLocationDistance = 1000
+    var outdoorLocation = CLLocationCoordinate2D()
+    var indoorAvailable = false
+    var indoorLocation = CGPoint()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationView.delegate = self
         self.setUpLocationManager()
-        // set initial location in Honolulu
-        let initialLocation = CLLocation(latitude: 34.070470, longitude: -118.442646)
-        // let initialLocation = CLLocation(latitude: friend_location_latitude!, longitude: friend_location_longitude!)
         
-        centerMapOnLocation(location: initialLocation)
-
+        self.qs.lookup(friend_email: friend_email) { response in
+            if response != nil {
+                let location = response!["location"] as! [String:Any]
+                let outdoor = location["outdoor_location"] as? [String:Double]
+                let indoor = location["indoor_location"] as? [String:Double]
+                
+                if outdoor != nil {
+                    self.outdoorLocation.longitude = outdoor!["longitude"]!
+                    self.outdoorLocation.latitude = outdoor!["latitude"]!
+                    self.centerMapOnLocation(location: self.outdoorLocation)
+                }
+                
+                if indoor != nil {
+                    self.indoorLocation = CGPoint(x: indoor!["x"]!, y: indoor!["y"]!)
+                    self.indoorAvailable = true
+                }
+            }
+        }
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showIndoor(_:)))
+        navigationView.addGestureRecognizer(tap)
     }
     
-    func centerMapOnLocation(location: CLLocation) {
-        let coordinateRegion = MKCoordinateRegion(center: location.coordinate,
+    func centerMapOnLocation(location: CLLocationCoordinate2D) {
+        let coordinateRegion = MKCoordinateRegion(center: location,
                                                   latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
         navigationView.setRegion(coordinateRegion, animated: true)
         let endPin = MKPointAnnotation()
-        endPin.coordinate = location.coordinate
-        endPin.title = "Moore Hall"
+        endPin.coordinate = location
         navigationView.addAnnotation(endPin)
         
     }
-
-
     
     func setUpLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier ==  "showIndoor"
+        {
+            let vc = segue.destination as! ViewIndoorLocationController
+            
+            vc.indoorLocation = indoorLocation
+        }
+    }
+    
+    @objc func showIndoor(_ sender: UITapGestureRecognizer) {
+        if sender.state == .ended && indoorAvailable {
+            self.performSegue(withIdentifier: "showIndoor", sender: self)
+        }
     }
 }
 

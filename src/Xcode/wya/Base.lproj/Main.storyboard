@@ -267,6 +267,7 @@
                     </view>
                     <connections>
                         <outlet property="navigationView" destination="9eC-Nr-2We" id="ten-Xl-7JN"/>
+                        <segue destination="Drn-wn-kj7" kind="show" identifier="showIndoor" id="3hE-AW-Otc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jrU-nh-mwE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -523,10 +524,39 @@
             </objects>
             <point key="canvasLocation" x="3601" y="-13"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="HPV-Jq-1mk">
+            <objects>
+                <viewController id="Drn-wn-kj7" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jfb-SW-PW5"/>
+                        <viewControllerLayoutGuide type="bottom" id="KsS-ys-4Ls"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HOf-uQ-s64">
+                        <rect key="frame" x="0.0" y="0.0" width="441" height="800"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cZO-0q-eF4">
+                                <rect key="frame" x="0.0" y="0.0" width="441" height="766"/>
+                            </sceneKitView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="cZO-0q-eF4" firstAttribute="top" secondItem="HOf-uQ-s64" secondAttribute="top" id="a8b-M6-yVG"/>
+                            <constraint firstItem="KsS-ys-4Ls" firstAttribute="top" secondItem="cZO-0q-eF4" secondAttribute="bottom" id="jia-d0-Qgr"/>
+                            <constraint firstAttribute="trailing" secondItem="cZO-0q-eF4" secondAttribute="trailing" id="oqI-CE-DM4"/>
+                            <constraint firstItem="cZO-0q-eF4" firstAttribute="leading" secondItem="HOf-uQ-s64" secondAttribute="leading" id="r5P-22-RF7"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ChH-H2-V1f" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2801" y="-695"/>
+        </scene>
     </scenes>
     <resources>
         <image name="carsIcon" width="24" height="24"/>
-        <image name="hamburger" width="37.5" height="37.5"/>
+        <image name="hamburger" width="25" height="25"/>
         <image name="login_screen" width="1125" height="2436"/>
     </resources>
     <inferredMetricsTieBreakers>

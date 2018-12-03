@@ -18,6 +18,7 @@
 		8EDC809B21B0E5220025ED4B /* MyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */; };
 		9A4241D521B4CC1D000F8334 /* SetIndoorLocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4241D421B4CC1D000F8334 /* SetIndoorLocationController.swift */; };
 		9A4241D721B51B2A000F8334 /* AddBuildingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4241D621B51B2A000F8334 /* AddBuildingController.swift */; };
+		9A81F7A421B5674000F06EC0 /* ViewIndoorLocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A81F7A321B5674000F06EC0 /* ViewIndoorLocationController.swift */; };
 		9AEDAF2B21B3AC9E009C78E9 /* AddFloorPlanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */; };
 		B33E89A61ED67A3B00E5A503 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33E89A51ED67A3B00E5A503 /* AppDelegate.swift */; };
 		B33E89AB1ED67A3B00E5A503 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B33E89A91ED67A3B00E5A503 /* Main.storyboard */; };
@@ -43,6 +44,7 @@
 		8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MyTableViewCell.swift; path = ../MyTableViewCell.swift; sourceTree = "<group>"; };
 		9A4241D421B4CC1D000F8334 /* SetIndoorLocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetIndoorLocationController.swift; sourceTree = "<group>"; };
 		9A4241D621B51B2A000F8334 /* AddBuildingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBuildingController.swift; sourceTree = "<group>"; };
+		9A81F7A321B5674000F06EC0 /* ViewIndoorLocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewIndoorLocationController.swift; sourceTree = "<group>"; };
 		9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFloorPlanController.swift; sourceTree = "<group>"; };
 		9B757972FD9C35F6773132A8 /* Pods-wya.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-wya.debug.xcconfig"; path = "Pods/Target Support Files/Pods-wya/Pods-wya.debug.xcconfig"; sourceTree = "<group>"; };
 		A2F7274B2487BD77FB273E15 /* Pods-Menu.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menu.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Menu/Pods-Menu.debug.xcconfig"; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				8629651721AFA26800F240AE /* HomeViewController.swift */,
 				9A4241D421B4CC1D000F8334 /* SetIndoorLocationController.swift */,
 				8629651921AFA30200F240AE /* NavigationViewController.swift */,
+				9A81F7A321B5674000F06EC0 /* ViewIndoorLocationController.swift */,
 				8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */,
 				9A4241D621B51B2A000F8334 /* AddBuildingController.swift */,
 				9AEDAF2A21B3AC9E009C78E9 /* AddFloorPlanController.swift */,
@@ -286,6 +289,7 @@
 				8EDC809B21B0E5220025ED4B /* MyTableViewCell.swift in Sources */,
 				8629651421AF931400F240AE /* LoginViewController.swift in Sources */,
 				8629651821AFA26800F240AE /* HomeViewController.swift in Sources */,
+				9A81F7A421B5674000F06EC0 /* ViewIndoorLocationController.swift in Sources */,
 				B33E89E31ED7D83500E5A503 /* HamburgerViewModel.swift in Sources */,
 				8EB20BA421B03A3B00BF211B /* QueryService.swift in Sources */,
 				9AEDAF2B21B3AC9E009C78E9 /* AddFloorPlanController.swift in Sources */,

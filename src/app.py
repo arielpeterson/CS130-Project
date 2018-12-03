@@ -42,9 +42,6 @@ from image import CvExtractor
 app = Flask(__name__)
 db = Db()
 
-# os.environ['FLOOR_DIR'] = '/Users/bradsquicciarini/CS130-Project/images'
-# os.environ['FULL_IMAGE_DIR'] = '/Users/bradsquicciarini/CS130-Project/images'
-
 
 def create_test_app(uri):
     global db, app
