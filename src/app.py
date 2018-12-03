@@ -152,13 +152,16 @@ def register():
     Response
     --------------------
         Code: 200       -- Success
-        Code: 400       -- No such user
+        Code: 400       -- No such user or missing arguments
     """
     data = request.get_json(force=True)
+    if 'user_email' not in data or not data['user_email']:
+        return Response('Must provide user email', status=400)
+    if 'location' not in data or not data['location']:
+        return Response('Must provide location', status=400)
+        
     user_email = data['user_email'] 
-
     location = data['location'] 
-
     res = db.set_location(user_email, location)
     if res:
         return Response('Updated!', status=200)
@@ -180,20 +183,18 @@ def register_indoor():
     Response
     --------------------
         Code: 200       -- Success
-        Code: 400       -- No such user or no user_email provided
-        COde: 401       -- No location provided
+        Code: 400       -- No such user or missing arguments
     """
     data = request.get_json(force=True)
-    user_email = data['user_email'] 
-
-    if not user_email:
+    if 'user_email' not in data or not data['user_email']:
         return Response('Must provide user email', status=400)
+    if 'location' not in data or not data['location']:
+        return Response('Must provide location', status=400)
+        
+    user_email = data['user_email'] 
         
     # TODO: let's expect this location json to be (x,y) in model coordinates
     location = data['location'] 
-
-    if not location:
-        return Response('Must provide location', status=401)
 
     building = location['building']
     floor = location['floor']
@@ -267,7 +268,7 @@ def lookup_loc():
         return Response('Friend has location toggled off', status=401)
     
     # Get location
-    if not last_seen:
+    if not last_seen and last_seen != 0.0:
         minutes = None
     else:
         last_seen = time.time() - last_seen
@@ -275,11 +276,9 @@ def lookup_loc():
     data = {'location': location, 'minutes_ago_indoor': minutes}
     return Response(json.dumps(data), status=200, mimetype='application/json')
 
-
 @app.route('/getFriends', methods=['GET'])
 def get_friends():
     """
-        
     Endpoint: /getFriends
     Get the user's list of friends
     
@@ -291,8 +290,8 @@ def get_friends():
     --------------------
     Code: 200           -- Success
     Code: 400           -- No user name provided.
-    
     """
+    
     user_email = request.args.get('user_email')
     if not user_email:
         logging.info('/addUser: no user name')
@@ -414,20 +413,113 @@ def add_floor():
 
 @app.route('/getBuildingMetadata', methods=['GET'])
 def get_building_metadata():
+    """
+    Endpoint: /getBuildingMetadata
+    Get building meta data: location, number of floors.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+
+    Response
+    --------------------
+        Code: 200       -- Success
+        Code: 400       -- Missing building name
+        Code: 401       -- Building does not exist in database
+    """
+    
     """ TODO Right now this just returns the number of floors. Future want vertices"""
     building_name = request.args.get('building_name')
     if not building_name:
         return Response("Must provide building name", status=400)
+    location = db.get_building_location(building_name)
+    if not location:
+        return Response("Building is not in database", status=401)
     floors = db.get_building(building_name)
-    return Response(json.dumps({'floors': len(floors)}), status=200, mimetype='application/json')
-
+    return Response(json.dumps({'location': location, 'number_of_floors': len(floors)}), status=200, mimetype='application/json')
 
 @app.route('/getFloorImage', methods=['GET'])
-def get_building():
+def get_floor_image():
+    """
+    Endpoint: /getFloorImage
+    Get building meta data: location, number of floors.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+        floor               -- an int, floor number
+
+    Response
+    --------------------
+        send floor plan image
+    """
+    
     building_name = request.args.get('building_name')
     floor = request.args.get('floor')
     image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor))
     return send_file(image_path)
+    
+@app.route('/getBuildingByRadius', methods=['GET'])
+def get_building_by_radius():
+    """
+    Endpoint: /getFloorImage
+    Get building meta data: location, number of floors.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+        floor               -- an int, floor number
+
+    Response
+    --------------------
+        Code: 200       -- Success
+        Code: 400       -- No building within radius or missing arguments
+    """
+    location = request.args.get('location')
+    if not location:
+        return Response('Must provide location', status=400)
+    radius = request.args.get('radius')
+    if not radius:
+        return Response('Must provide radius', status=400)
+    res = db.get_building_by_radius(location, radius)
+    if res:
+        return Response(json.dumps({'buildings': res}),status=200, mimetype='application/json')
+    message = 'No building within radius of ' + str(radius)
+    return Response(message, status=400)
+    
+@app.route('/addBuilding', methods=['GET'])
+def add_building():
+    """
+    Endpoint: /addBuilding
+    Add a new building to database.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+        longitude           -- a double, building's location's longitude
+        latitude            -- a double, building's location's latitude
+
+    Response
+    --------------------
+        Code: 200       -- Success
+        Code: 400       -- Failure or missing arguments
+    """
+    building_name = request.args.get('building_name')
+    if not building_name:
+        return Response('Must provide building name', status=400)
+
+    longitude = request.args.get('longitude')
+    if not longitude:
+        return Response('Must provide longitude', status=400)
+
+    latitude = request.args.get('latitude')
+    if not longitude:
+        return Response('Must provide latitude', status=400)
+
+    res = db.add_building(building_name, {'longitude': longitude, 'latitude': latitude})
+    if not res:
+        return Response('Cannot add building', status=400)
+    return Response('Building added!', status=200)
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1')

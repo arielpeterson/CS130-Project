@@ -16,6 +16,7 @@ the internals of MongoDB. These methods that are unlikely to change, but the dat
 
 import os
 import logging
+import numpy as np
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
@@ -262,14 +263,86 @@ class Db(object):
         --------------------
             floors          -- a list of dictionaries, keys: 'floor', 'vertices'
         """
-        floors = list(self._db[self.BUILDING_TABLE].find({'building_name': building_name}, {'building_name': 0}))
+        floors = list(self._db[self.BUILDING_TABLE].find({'building_name': building_name}, {'building_name': 0, 'location': 0}))
+        
+        for floor in floors:
+            if 'floor' in floor:
+                continue
+            else:
+                floors.remove(floor)
+                break
         return floors
 
     def add_floor(self, building_name, floor, vertices):
+        """
+        Add a floor to an existing building
+
+        Arguments
+        --------------------
+            building_name   -- a String, building name
+            floor           -- an int, floor
+            vertices        -- a list of floor vertices
+
+        Return
+        --------------------
+            result          -- a Boolean, return success or failure
+        """
+        building = self._db[self.BUILDING_TABLE].find_one({'building_name': building_name})
+        if not building:
+            return False
+        location = building['location']
         res = self._db[self.BUILDING_TABLE].insert_one({'building_name': building_name,
+                                                        'location': location,
                                                         'vertices': vertices,
                                                         'floor': floor})
         if not res.acknowledged:
             return False
         return True
 
+    def add_building(self, building_name, location):
+        """
+        add a new building
+
+        Arguments
+        --------------------
+            building_name   -- a string, building_name
+
+        Return
+        --------------------
+            result          -- a Boolean, returns true if successfully added
+                               and false otherwise.
+        """
+        building = self._db[self.BUILDING_TABLE].find_one({'building_name': building_name})
+        if not building:        
+            res = self._db[self.BUILDING_TABLE].insert_one({'building_name': building_name, 'location': location})
+            if not res.acknowledged:
+                return False
+            return True
+        return False
+        
+    def get_building_location(self, building_name):
+        building = self._db[self.BUILDING_TABLE].find_one({'building_name': building_name})
+        if not building:
+            return None
+        return building.get('location')
+        
+    def get_building_by_radius(self, location, radius):
+        radius_sqr = np.square(radius)
+        longitude = location['longitude']
+        lat = location['latitude']
+        buildings_loc = []
+        buildings = []
+        collect = list(self._db[self.BUILDING_TABLE].distinct('location'))
+        if not collect:
+            return []
+        for loc in collect:
+            b_long = loc['longitude']
+            b_lat = loc['latitude']
+            distance = np.square(b_long - longitude) + np.square(b_lat - lat)
+            if distance <= radius_sqr:
+                buildings_loc.append(loc)
+        for loc in buildings_loc:
+            building = self._db[self.BUILDING_TABLE].find_one({'location': loc})
+            buildings.append({'building': building['building_name'], 'location': loc})
+            
+        return buildings
