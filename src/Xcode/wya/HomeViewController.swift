@@ -32,6 +32,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "customcell")
         checkLocationServices()
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name(rawValue: "load"), object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         qs.getFriends() { response in
             guard let friendList = response else {
                 print("No friends! :(")
@@ -40,7 +43,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.friends = friendList
             DispatchQueue.main.async(execute: {self.do_table_refresh()})
         }
-        
     }
     
     func do_table_refresh() {
