@@ -183,7 +183,7 @@ def register_indoor():
     --------------------
         Code: 200       -- Success
         Code: 400       -- No such user or no user_email provided
-        COde: 401       -- No location provided
+        Code: 401       -- No location provided
     """
     data = request.get_json(force=True)
     user_email = data['user_email'] 
@@ -416,18 +416,47 @@ def add_floor():
 
 @app.route('/getBuildingMetadata', methods=['GET'])
 def get_building_metadata():
+    """
+    Endpoint: /getBuildingMetadata
+    Get building meta data: location, number of floors.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+
+    Response
+    --------------------
+        Code: 200       -- Success
+        Code: 400       -- Missing building name
+        Code: 401       -- Building does not exist in database
+    """
+    
     """ TODO Right now this just returns the number of floors. Future want vertices"""
     building_name = request.args.get('building_name')
     if not building_name:
         return Response("Must provide building name", status=400)
     location = db.get_building_location(building_name)
     if not location:
-        return Response("Building is not in database", status=400)
+        return Response("Building is not in database", status=401)
     floors = db.get_building(building_name)
     return Response(json.dumps({'location': location, 'number_of_floors': len(floors)}), status=200, mimetype='application/json')
 
 @app.route('/getFloorImage', methods=['GET'])
 def get_floor_image():
+    """
+    Endpoint: /getFloorImage
+    Get building meta data: location, number of floors.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+        floor               -- an int, floor number
+
+    Response
+    --------------------
+        send floor plan image
+    """
+    
     building_name = request.args.get('building_name')
     floor = request.args.get('floor')
     image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor))
@@ -435,12 +464,45 @@ def get_floor_image():
     
 @app.route('/getBuildingByRadius', methods=['GET'])
 def get_building_by_radius():
+    """
+    Endpoint: /getFloorImage
+    Get building meta data: location, number of floors.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+        floor               -- an int, floor number
+
+    Response
+    --------------------
+        Code: 200       -- Success
+        Code: 400       -- No building within radius
+    """
     location = request.args.get('location')
     radius = request.args.get('radius')
-    return db.get_building_by_radius(location, radius)
+    res = db.get_building_by_radius(location, radius)
+    if res:
+        return Response(json.dumps({'buildings': res}),status=200, mimetype='application/json')
+    message = 'No building within radius of ' + str(radius)
+    return Response(message, status=400)
     
 @app.route('/addBuilding', methods=['GET'])
 def add_building():
+    """
+    Endpoint: /addBuilding
+    Add a new building to database.
+
+    Arguments
+    --------------------
+        building_name       -- a string, building's name
+        longitude           -- a double, building's location's longitude
+        latitude            -- a double, building's location's latitude
+
+    Response
+    --------------------
+        Code: 200       -- Success
+        Code: 400       -- Failure
+    """
     building_name = request.args.get('building_name')
     if not building_name:
         return Response('Must provide building name', status=400)
