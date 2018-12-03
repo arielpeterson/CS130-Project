@@ -30,6 +30,9 @@ class HamburgerViewController: UIViewController {
     func viewFriendsAction() {
         performSegue(withIdentifier: "viewFriends_segue", sender: self)
     }
+    func addBuildingAction() {
+        performSegue(withIdentifier: "addBuilding_segue", sender: self)
+    }
     func addFloorplanAction() {
         performSegue(withIdentifier: "addFloorplan_segue", sender: self)
     }
@@ -75,6 +78,7 @@ extension HamburgerViewController: UITableViewDataSource, UITableViewDelegate {
         switch row {
         case .home: homeAction()
         case .viewFriends: viewFriendsAction()
+        case .addBuilding: addBuildingAction()
         case .addFloorplan: addFloorplanAction()
         case .account: accountAction()
         case .signout: signOutAction()

@@ -11,6 +11,7 @@ import UIKit
 enum HamburgerLayer {
     case home
     case viewFriends
+    case addBuilding
     case addFloorplan
     case account
     case signout
@@ -19,7 +20,8 @@ enum HamburgerLayer {
         switch self {
         case .home: return "Home"
         case .viewFriends : return "View Friends"
-        case .addFloorplan: return "Add Floorplan"
+        case .addBuilding : return "Add Building"
+        case .addFloorplan: return "Add Floor Plan"
         case .account: return "My Account"
         case .signout: return "Sign Out"
         }
@@ -29,6 +31,7 @@ enum HamburgerLayer {
         switch self {
         case .home: return "homeIcon"
         case .viewFriends: return "homeIcon"
+        case .addBuilding: return "homeIcon"
         case .addFloorplan: return "documentsIcon"
         case .account: return "paymentIcon"
         case .signout: return "giftIcon"
