@@ -334,18 +334,16 @@ class Db(object):
 
         try:
             collect = self._db[self.BUILDING_TABLE].distinct("building_name")
+            if not collect:
+                return []
+            for name in collect:
+                loc = self._db[self.BUILDING_TABLE].find_one({'building_name': name})
+                b_long = float(loc['longitude'])
+                b_lat = float(loc['latitude'])
+                distance = np.square(b_long - longitude) + np.square(b_lat - lat)
+                if distance <= radius_sqr:
+                    buildings.append({'building_name': name, 'location': loc})
         except Exception:
             print(str(Exception))
-            
-        '''
-        if not collect:
-            return []
-        for name in collect:
-            loc = self._db[self.BUILDING_TABLE].find_one({'building_name': name})
-            b_long = float(loc['longitude'])
-            b_lat = float(loc['latitude'])
-            distance = np.square(b_long - longitude) + np.square(b_lat - lat)
-            if distance <= radius_sqr:
-                buildings.append({'building_name': name, 'location': loc})
-        '''
+
         return buildings
