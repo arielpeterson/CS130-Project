@@ -147,30 +147,9 @@ class AppTest(unittest.TestCase):
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': 'toggle_me', 'location_sharing': False}]})
         self.server.reply({'n': 1, 'ok': 1.0})
         self.assertEqual(res().status_code, 200)
-
-    def test_registerIndoor(self):
-        '''Test 7: /registerIndoor endpoint'''
-
-        location=json.dumps({'building': 'MooreHall','floor': '1', 'x': 10, 'y': 10})
-        
-        # Missing user email
-        res = go(self.app.post, '/registerIndoor', data=json.dumps({'user_email': '', 'location': location}))
-        self.assertEqual(res().status_code, 400)
-        
-        # Missing location
-        res = go(self.app.post, '/registerIndoor', data=json.dumps({'user_email': self.email, 'location': {}}))
-        self.assertEqual(res().status_code, 400)
-        
-        '''
-        # Register location successfully
-        res = go(self.app.post, '/registerIndoor', json=location, data=json.dumps({'user_email': self.email, 'location': {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82}}))
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'location_sharing': True, 'indoor_location': {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82, 'room': 1009}}]})
-        self.server.reply({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True})
-        self.assertEqual(res().status_code, 200)
-        '''
     
     def test_getFriends(self):
-        '''Test 8: /getFriends endpoint'''
+        '''Test 7: /getFriends endpoint'''
 
         # No username provided
         res = go(self.app.get, '/getFriends', query_string={'user_email': ''})
@@ -187,7 +166,7 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res().status_code, 200)
        
     def test_getBuildingMetadata(self):
-        '''Test 9: /getBuildingMetadata endpoint'''
+        '''Test 8: /getBuildingMetadata endpoint'''
         
         # No building name provided
         res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': ''})
@@ -215,7 +194,7 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res().get_json()['location'], {'longitude': 0.0, 'latitude': 0.0})
         
     def test_modal_to_pixel(self):
-        '''Test 10: modal_to_pixel function'''
+        '''Test 9: modal_to_pixel function'''
         
         '''
         Using default shape=[100, 100]
@@ -234,7 +213,7 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res(), (500, 500))
 
     def test_getName(self):
-        '''Test 11: /getName endpoint'''
+        '''Test 10: /getName endpoint'''
     
         # No email provided
         res = go(self.app.get, '/getName', query_string={'email': ''})
@@ -251,7 +230,7 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res().status_code, 200)
         
     def test_get_building_by_radius(self):
-        '''Test 12: /getBuildingByRadius endpoint'''
+        '''Test 11: /getBuildingByRadius endpoint'''
         
         # Missing location
         res = go(self.app.get, '/getBuildingByRadius', query_string={'radius': 5.0})
@@ -270,7 +249,7 @@ class AppTest(unittest.TestCase):
         '''
         
     def test_add_building(self):
-        '''Test 13: /addBuilding endpoint'''
+        '''Test 12: /addBuilding endpoint'''
             
         # Building already exist
         name = 'my_new_building'
@@ -293,6 +272,28 @@ class AppTest(unittest.TestCase):
         res = go(self.app.get, '/getBuildingByRadius', query_string={'building_name': 'a_building'})
         self.assertEqual(res().status_code, 400)
         
+    def test_registerIndoor(self):
+        '''Test 13: /registerIndoor endpoint'''
+
+        location=json.dumps({'building': 'MooreHall','floor': '1', 'x': 10, 'y': 10})
+        
+        # Missing user email
+        res = go(self.app.post, '/registerIndoor', data=json.dumps({'user_email': '', 'location': location}))
+        self.assertEqual(res().status_code, 400)
+        
+        # Missing location
+        res = go(self.app.post, '/registerIndoor', data=json.dumps({'user_email': self.email, 'location': {}}))
+        self.assertEqual(res().status_code, 400)
+        
+        '''
+        # Register location successfully
+
+        res = go(self.app.post, '/registerIndoor', json=location, data=json.dumps({'user_email': self.email, 'location': {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82}}))
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'location_sharing': True, 'indoor_location': {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82, 'room': 1009}}]})
+        self.server.reply({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True})
+        self.assertEqual(res().status_code, 200)
+        ''' 
+       
     def test_getFloorImage(self):
         '''Test 14: /getFloorImage endpoint'''
         
