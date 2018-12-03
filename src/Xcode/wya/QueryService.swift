@@ -14,7 +14,7 @@ import Alamofire
 
 
 // Must change each time we run ngrok
-let SERVER = "http://8c51e5f9.ngrok.io"
+let SERVER = "http://8efa8e6c.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -123,13 +123,26 @@ class QueryService {
                     return
                 }
                 
-                // TO DO: this line is causing a crash because outdoor_location is null even though the user's location is registered in the database.
                 
-                let outdoor_location = json["location"] as! [String:Any]
+                // Parse response
+                let location = json["location"] as! [String:AnyObject]
+                let outdoor_location = location["outdoor_location"]
+                print(outdoor_location)
+                print(location)
+                
+                let latitude = outdoor_location!["latitude"] as! Double
+                let longitude = outdoor_location!["longitude"] as! Double
+                // Indoor Location
+                let indoor_location = location["indoor_location"]
+                
+                
+                
                 //let indoor_location = json["indoor_location"] as! [String:Any]
-                let latitude: Double = outdoor_location["latitude"] as! Double
-                let longitude: Double = outdoor_location["longitude"] as! Double
+                
+                
+                
                 // Upon completion, return a the latitude and longitude
+                
                 completion(CLLocationCoordinate2DMake(latitude, longitude))
         }
     }
