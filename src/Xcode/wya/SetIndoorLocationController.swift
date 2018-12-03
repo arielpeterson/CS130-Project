@@ -47,7 +47,5 @@ class SetIndoorLocationController: UIViewController {
             markerNode.position = sceneView.unprojectPoint(SCNVector3(tapLocation.x, tapLocation.y, 0.0))
             scene.rootNode.addChildNode(markerNode)
         }
-        
-        sceneView.allowsCameraControl = true
     }
 }
