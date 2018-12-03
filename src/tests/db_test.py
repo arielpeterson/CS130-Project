@@ -7,7 +7,7 @@ import os, subprocess
 import context
 from db import Db
 
-PATH_TO_MONGOD = '/usr/bin/mongod'
+PATH_TO_MONGOD = '/usr/local/bin/mongod'
 
 
 class DbTest(unittest.TestCase):
