@@ -1,17 +1,15 @@
+import os
 import json
 import unittest
+import io
+
 from mockupdb import MockupDB, go
 from context import app
 import app as my_app
 
-import os
-
 # TEMP
 os.environ['FLOOR_DIR'] = '../../floor-images' # This is used for images processed to be sent to front-end
 os.environ['FULL_IMAGE_DIR'] = '../../images' # This is used for images taken by user
-
-# TEMP
-os.environ['IMAGE_DIR'] = '../../images'
 
 
 class AppTest(unittest.TestCase):
@@ -26,6 +24,7 @@ class AppTest(unittest.TestCase):
         self.user = 'i_am_a_user'
         self.email = 'user@email.ucla'
         self.building = 'test_building'
+        self.image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), 'MooreHall_1.jpg')
         self.server = MockupDB(auto_ismaster={"maxWireVersion": 6})
         self.server.run()
         self.app = app.create_test_app(self.server.uri).test_client()
@@ -52,24 +51,24 @@ class AppTest(unittest.TestCase):
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'user': self.user, 'email': self.email}]})
         self.assertEqual(res().status_code, 400)
 
-    def test_addFriend(self):
-        ''' Test 2: /addFriend endpoint'''
+    # def test_addFriend(self):
+    #     ''' Test 2: /addFriend endpoint'''
 
-        # No username/friend provided
-        res = go(self.app.get, '/addFriend', query_string={'user_email': '', 'friend_email': ''})
-        self.assertEqual(res().status_code, 400)
+    #     # No username/friend provided
+    #     res = go(self.app.get, '/addFriend', query_string={'user_email': '', 'friend_email': ''})
+    #     self.assertEqual(res().status_code, 400)
 
-        # Friend was added successfully
-        res = go(self.app.get, '/addFriend', query_string={'user_email': self.email, 'friend_email': 'friend_test@ucla.edu'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list': []}]})
-        self.server.reply({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True})
-        self.assertEqual(res().status_code, 200)
+    #     # Friend was added successfully
+    #     res = go(self.app.get, '/addFriend', query_string={'user_email': self.email, 'friend_email': 'friend_test@ucla.edu'})
+    #     self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'friends_list': []}]})
+    #     self.server.reply({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True})
+    #     self.assertEqual(res().status_code, 200)
 
 
-        # Add friend to non-existent user
-        res = go(self.app.get, '/addFriend', query_string={'user_email': 'not_a_user', 'friend_email': 'friend_test'})
-        self.server.reply(cursor={'id': 0, 'firstBatch': []})
-        self.assertEqual(res().status_code, 400)
+    #     # Add friend to non-existent user
+    #     res = go(self.app.get, '/addFriend', query_string={'user_email': 'not_a_user', 'friend_email': 'friend_test'})
+    #     self.server.reply(cursor={'id': 0, 'firstBatch': []})
+    #     self.assertEqual(res().status_code, 400)
 
     def test_deleteFriend(self):
         ''' Test 3: /deleteFriend endpoint'''
@@ -225,17 +224,6 @@ class AppTest(unittest.TestCase):
     def test_add_floor(self):
         pass
 
-    def test_get_building_metadata(self):
-        res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': self.building})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': self.building, 'floor': 1}, {'building_name': self.building, 'floor': 2}]})
-        result = res()
-        self.assertEqual(result.status_code, 200)
-        self.assertEqual(result, 2)
-
-        res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': 'not_a_building'})
-        self.assertEqual(res().status_code, 400)
-
-
     def test_get_floor_image(self):
         pass
 
@@ -283,8 +271,14 @@ class AppTest(unittest.TestCase):
     def test_registerIndoor(self):
         '''Test 12: /registerIndoor endpoint'''
 
-        location=json.dumps({'building': 'MooreHall','floor': '1', 'x': 10, 'y': 10})
-        
+        location={'building': 'MooreHall','floor': '1', 'x': 15, 'y': 58}
+
+        # Success
+        res = go(self.app.post, '/registerIndoor', data=json.dumps({'user_email': self.email, 'location': location})) 
+        self.server.reply({'n': 1, 'ok': 1.0})
+        self.server.reply({'n': 1, 'ok': 1.0})
+        self.assertEqual(res().status_code, 200)
+
         # Missing user email
         res = go(self.app.post, '/registerIndoor', data=json.dumps({'user_email': '', 'location': location}))
         self.assertEqual(res().status_code, 400)
@@ -309,13 +303,28 @@ class AppTest(unittest.TestCase):
        
     def test_getFloorImage(self):
         '''Test 13: /getFloorImage endpoint'''
-        
-        pass
-        
+        res = go(self.app.get, '/getFloorImage', query_string={'building_name': self.building, 'floor': 1})
+        self.assertEqual(res().status_code, 200)
+
     def test_addFloor(self):
         '''Test 14: /addFloor endpoint'''
-        
-        pass
-        
+        res = go(self.app.post, '/addFloor', data={'building_name': self.building, 'floor_number': 1, 'floor_plan': (io.BytesIO(open(self.image_path, 'rb').read()), 'MooreHall_1.jpg')})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': self.building, 'location': dict(longitude=10, latitude=10)}]})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [None]})
+        self.assertEqual(res().status_code, 200)
+
+        # No building_name
+        res = go(self.app.post, '/addFloor', data={'building_name': '', 'floor_number': 1, 'floor_plan': (io.BytesIO(open(self.image_path, 'rb').read()), 'MooreHall_1.jpg')})
+        self.assertEqual(res().status_code, 400)
+
+        # No floor
+        res = go(self.app.post, '/addFloor', data={'building_name': self.building, 'floor_plan': (io.BytesIO(open(self.image_path, 'rb').read()), 'MooreHall_1.jpg')})
+        self.assertEqual(res().status_code, 400)
+
+        # No image
+        res = go(self.app.post, '/addFloor', data={'building_name': self.building, 'floor_number': 1})
+        self.assertEqual(res().status_code, 400)
+
+
 if __name__ == '__main__':
     unittest.main()

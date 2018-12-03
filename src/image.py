@@ -69,49 +69,8 @@ class CvExtractor:
         # Crop
         image = image[b:t, l:r]
 
-        # Create 2D image white mask to filter lines
-        height, width, _ = image.shape
-        mask = np.ones([height, width], dtype=np.uint8) * 255
-        full_lines = []
-        
-        for line in lines:
-            for x1,y1,x2,y2 in line:
-                full_lines.append((x1, y1))
-                full_lines.append((x2, y2))
-                
-                # vertical lines
-                if x1 - x2 == 0:
-                    for y in range(y1 + 1, y2):
-                        full_lines.append((x1, y))
-                    continue
-                    
-                # other lines
-                m = (y1 - y2) / (x1 - x2)
-            
-                for x in range(x1 + 1, x2):
-                    # horizontal lines
-                    if int(m) == 0:
-                        y = y1
-                        
-                    # inclined lines
-                    else:
-                        y = np.floor(m * (x - x1) + y1)
-                        if y >= height:
-                            y = height - 1
-                    full_lines.append((x, y))
-                
-        for pixel in full_lines:
-            x = int(pixel[0])
-            y = int(pixel[1])
-            if x >= width or y >= height:
-                continue
-            mask[y][x] = 0
-        
-        # Apply mask
-        image = mask
-
         # Save
-        fn = str(building) + '_floor' + str(floor) + '_' + str(time.time()) + '.png'
+        fn = str(building) + '_' + str(floor) + '.png'
         image_dir = os.environ.get('IMAGE_DIR')
         cv2.imwrite(os.path.join(image_dir, fn), image)
         return fn
