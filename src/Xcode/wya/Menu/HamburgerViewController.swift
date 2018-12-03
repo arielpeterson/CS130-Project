@@ -80,7 +80,6 @@ extension HamburgerViewController: UITableViewDataSource, UITableViewDelegate {
         case .viewFriends: viewFriendsAction()
         case .addBuilding: addBuildingAction()
         case .addFloorplan: addFloorplanAction()
-        case .account: accountAction()
         case .signout: signOutAction()
         }
     }

@@ -20,6 +20,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     let locationManager = CLLocationManager()
     let newPin = MKMarkerAnnotationView()
     
+    var indoor_floorplan = UIImage()
+    var building : String?
+    var floor : String?
+    
     let range : Double = 1000
     let qs = QueryService()
     // List of user's friends emails
@@ -123,8 +127,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if segue.destination is SetIndoorLocationController
         {
             let vc = segue.destination as? SetIndoorLocationController
-
-            vc?.image = UIImage(contentsOfFile: Bundle.main.path(forResource: "another", ofType: "jpeg")!)!
+            vc?.image = self.indoor_floorplan
+            vc?.building = self.building!
+            vc?.floor = self.floor!
         }
     }
     
@@ -174,25 +179,40 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
 //         self.present(alert, animated: true, completion: nil)
         
         // IF BUILDING AT THAT LOCATION
-        let indoorAlert = UIAlertController(title: "Enter Floor Number", message: nil, preferredStyle: .alert)
+        let indoorAlert = UIAlertController(title: "Enter Building and Floor Number", message: nil, preferredStyle: .alert)
+        indoorAlert.addTextField{
+            textField in textField.text = "Building"
+        }
         indoorAlert.addTextField{
             textField in textField.text = "1"
         }
         indoorAlert.addAction(UIAlertAction(title: "OK", style: .default)
         {
-            action in let text = indoorAlert.textFields![0].text!
-            if Double(text) != nil {
-                // FLOOR EXISTS, pass image
-                self.performSegue(withIdentifier: "showIndoor", sender: self)
-                
-            }
-            else {
-                // FLOOR DOESN'T EXIST
-                let floorAlert = UIAlertController(title: "Error", message: "Floor does not exist", preferredStyle: .alert)
-                floorAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
-                self.present(floorAlert, animated: true, completion: nil)
+            action in
+            
+            // Check if it exists
+            self.building =  indoorAlert.textFields![0].text!
+            self.floor = indoorAlert.textFields![1].text!
+            self.qs.getBuildingMetadata(building_name: self.building!) { response in
+                guard response != nil else {
+                    // FLOOR DOESN'T EXIST
+                    let floorAlert = UIAlertController(title: "Error", message: "Floor does not exist", preferredStyle: .alert)
+                    floorAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+                    self.present(floorAlert, animated: true, completion: nil)
+                    return
+                }
+                self.qs.getFloorImage(building_name: self.building!, floor: self.floor!) { response in
+                    guard let image = response else {
+                        print("No file in database")
+                        return
+                    }
+                    self.indoor_floorplan = image 
+                    self.performSegue(withIdentifier: "showIndoor", sender: self)
+                }
             }
         })
+        indoorAlert.addAction(UIAlertAction(title: "Cancel", style:  UIAlertAction.Style.cancel))
+
         self.present(indoorAlert, animated: true, completion: nil)
     }
     
@@ -221,7 +241,12 @@ extension HomeViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         checkLocationAuthorization()
     }
+    
+    @IBAction func unwindToHome(segue:UIStoryboardSegue) { }
 }
+
+
+
 
 
 

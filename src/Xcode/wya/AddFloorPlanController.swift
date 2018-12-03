@@ -74,7 +74,7 @@ class AddFloorPlanController: UIViewController {
         AttachmentHandler.shared.imagePickedBlock = { (image) in
             // Need to send floor number
             let qs = QueryService()
-            qs.addFloor(building_name: "Building", floor_number: 1, floor_plan: image)
+            qs.addFloor(building_name: self.building, floor_number: 1, floor_plan: image)
         }
     }
 }

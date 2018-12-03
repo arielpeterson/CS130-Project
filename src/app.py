@@ -33,7 +33,7 @@ import os
 import time
 
 import pytesseract
-from flask import Flask, request, Response
+from flask import Flask, request, Response, send_from_directory, safe_join
 from PIL import Image
 
 from db import Db
@@ -41,6 +41,9 @@ from image import CvExtractor
 
 app = Flask(__name__)
 db = Db()
+
+# os.environ['FLOOR_DIR'] = '/Users/bradsquicciarini/CS130-Project/images'
+# os.environ['FULL_IMAGE_DIR'] = '/Users/bradsquicciarini/CS130-Project/images'
 
 
 def create_test_app(uri):
@@ -182,6 +185,7 @@ def register_indoor():
         Code: 200       -- Success
         Code: 400       -- No such user or missing arguments
     """
+    print(os.path.curdir)
     data = request.get_json(force=True)
     if 'user_email' not in data or not data['user_email']:
         return Response('Must provide user email', status=400)
@@ -390,6 +394,7 @@ def add_floor():
     building_name = request.form['building_name']
     floor_number = request.form['floor_number']
     floor_plan = request.files['floor_plan']
+    floor_plan = Image.open(floor_plan)
     if not building_name:
         return Response("Must provide building name", status=400)
     if not floor_number:
@@ -402,12 +407,12 @@ def add_floor():
     vertices = [(0,0), (100,0), (0,100), (100,100)]
     res = db.add_floor(building_name, floor_number, vertices)
     if not res:
-        print('db prob')
+        print('DB could not add floor')
         return Response('Could not add floor to database', status=400)
     
     floor_number = int(floor_number)
     if floor_number < 0:
-        print('bad floor')
+        print('Incorrect floor number')
         return Response("Invalid floor number", status=400)
 
     # Save full image as ../images/<building>_<floor>.png
@@ -417,11 +422,6 @@ def add_floor():
     # Run CV on image
     cv = CvExtractor()
     proc_image_path = cv.extract_image(full_image_path, building_name, floor_number)
-
-    # Save this image a well
-    if not os.path.exist(proc_image_path):
-        os.makedirs(os.path.dirname(proc_image_path))
-    proc_image.save()
 
     return Response("Floor is added.", status=200)
 
@@ -468,11 +468,11 @@ def get_floor_image():
     --------------------
         send floor plan image
     """
-    
+    print(os.getcwd())
     building_name = request.args.get('building_name')
     floor = request.args.get('floor')
-    image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor))
-    return send_file(image_path)
+    image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name + '_{}.png'.format(floor))
+    return send_from_directory(os.path.join(os.getcwd(), os.environ.get('FLOOR_DIR')), os.path.basename(image_path))
     
 @app.route('/addBuilding', methods=['GET'])
 def add_building():

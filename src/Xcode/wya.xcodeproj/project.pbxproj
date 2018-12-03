@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		1694C07FC81F51B36B2A1C30 /* libPods-wya.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF481C89D416BA512BE22209 /* libPods-wya.a */; };
 		8629651421AF931400F240AE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651321AF931400F240AE /* LoginViewController.swift */; };
-		8629651621AFA0D400F240AE /* MyAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651521AFA0D400F240AE /* MyAccountViewController.swift */; };
 		8629651821AFA26800F240AE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651721AFA26800F240AE /* HomeViewController.swift */; };
 		8629651A21AFA30200F240AE /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8629651921AFA30200F240AE /* NavigationViewController.swift */; };
 		8688C0C521B5331E002EF623 /* another.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 8688C0C421B5331D002EF623 /* another.jpeg */; };
@@ -35,7 +34,6 @@
 		6006E01824C2C19615C1E7F4 /* Pods-Menu.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Menu.release.xcconfig"; path = "Pods/Target Support Files/Pods-Menu/Pods-Menu.release.xcconfig"; sourceTree = "<group>"; };
 		80523F577275F10515F6AE77 /* libPods-Menu.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Menu.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8629651321AF931400F240AE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		8629651521AFA0D400F240AE /* MyAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountViewController.swift; sourceTree = "<group>"; };
 		8629651721AFA26800F240AE /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		8629651921AFA30200F240AE /* NavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		8688C0C421B5331D002EF623 /* another.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = another.jpeg; sourceTree = "<group>"; };
@@ -136,7 +134,6 @@
 				8629651321AF931400F240AE /* LoginViewController.swift */,
 				8688C0C421B5331D002EF623 /* another.jpeg */,
 				8EB20BA321B03A3B00BF211B /* QueryService.swift */,
-				8629651521AFA0D400F240AE /* MyAccountViewController.swift */,
 				8688C0C621B535BC002EF623 /* AttachmentHandler.swift */,
 				B33E89A91ED67A3B00E5A503 /* Main.storyboard */,
 				8629651721AFA26800F240AE /* HomeViewController.swift */,
@@ -293,7 +290,6 @@
 				8EB20BA421B03A3B00BF211B /* QueryService.swift in Sources */,
 				9AEDAF2B21B3AC9E009C78E9 /* AddFloorPlanController.swift in Sources */,
 				B33E89A61ED67A3B00E5A503 /* AppDelegate.swift in Sources */,
-				8629651621AFA0D400F240AE /* MyAccountViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
