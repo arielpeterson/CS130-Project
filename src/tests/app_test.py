@@ -4,6 +4,16 @@ from mockupdb import MockupDB, go
 from context import app
 import app as my_app
 
+import os
+
+# TEMP
+os.environ['FLOOR_DIR'] = '../../floor-images' # This is used for images processed to be sent to front-end
+os.environ['FULL_IMAGE_DIR'] = '../../images' # This is used for images taken by user
+
+# TEMP
+os.environ['IMAGE_DIR'] = '../../images'
+
+
 class AppTest(unittest.TestCase):
     '''
         Unit test for app.py. 
@@ -229,27 +239,8 @@ class AppTest(unittest.TestCase):
         self.server.reply(cursor={'id': 0, 'firstBatch': [{'user': self.user, 'email': self.email}]})
         self.assertEqual(res().status_code, 200)
         
-    def test_get_building_by_radius(self):
-        '''Test 11: /getBuildingByRadius endpoint'''
-        
-        # Missing location
-        res = go(self.app.get, '/getBuildingByRadius', query_string={'radius': 5.0})
-        self.assertEqual(res().status_code, 400)
-        
-        '''
-        # Some building within radius
-        res = go(self.app.get, '/getBuildingByRadius', query_string={'longitude': 1.0, 'latitude': 1.0, 'radius': 5.0})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': 'a_building', 'location': {'longitude': 2.0, 'latitude': 2.0}}]})
-        self.assertEqual(res().status_code, 200)
-        
-        # No building within radius
-        res = go(self.app.get, '/getBuildingByRadius', query_string={'longitude': 1.0, 'latitude': 1.0, 'radius': 5.0})
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': 'a_building', 'location': {'longitude': 10.0, 'latitude': 10.0}}]})
-        self.assertEqual(res().status_code, 400)
-        '''
-        
     def test_add_building(self):
-        '''Test 12: /addBuilding endpoint'''
+        '''Test 11: /addBuilding endpoint'''
             
         # Building already exist
         name = 'my_new_building'
@@ -273,7 +264,7 @@ class AppTest(unittest.TestCase):
         self.assertEqual(res().status_code, 400)
         
     def test_registerIndoor(self):
-        '''Test 13: /registerIndoor endpoint'''
+        '''Test 12: /registerIndoor endpoint'''
 
         location=json.dumps({'building': 'MooreHall','floor': '1', 'x': 10, 'y': 10})
         
@@ -285,24 +276,48 @@ class AppTest(unittest.TestCase):
         res = go(self.app.post, '/registerIndoor', data=json.dumps({'user_email': self.email, 'location': {}}))
         self.assertEqual(res().status_code, 400)
         
+        # No floor plan found
+        res = go(self.app.post, '/registerIndoor', data=json.dumps({'user_email': self.email, 'location': {'building': 'Boelter', 'floor': '1', 'x': 16, 'y': 82}}))
+        self.assertEqual(res().status_code, 400)
+        
         '''
+        Return: no floor plan found
         # Register location successfully
-
-        res = go(self.app.post, '/registerIndoor', json=location, data=json.dumps({'user_email': self.email, 'location': {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82}}))
-        self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'location_sharing': True, 'indoor_location': {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82, 'room': 1009}}]})
-        self.server.reply({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True})
+        res = go(self.app.post, '/registerIndoor', data=json.dumps({'user_email': self.email, 'location': {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82}}))
+        print(res().data)
+        #self.server.reply(cursor={'id': 0, 'firstBatch': [{'email': self.email, 'location_sharing': True, 'indoor_location': {'building': 'MooreHall', 'floor': '1', 'x': 16, 'y': 82, 'room': 1009}}]})
+        #self.server.reply({'n': 1, 'nModified': 1, 'ok': 1.0, 'updatedExisting': True})
         self.assertEqual(res().status_code, 200)
-        ''' 
+        '''
        
     def test_getFloorImage(self):
-        '''Test 14: /getFloorImage endpoint'''
+        '''Test 13: /getFloorImage endpoint'''
         
         pass
         
     def test_addFloor(self):
-        '''Test 15: /addFloor endpoint'''
+        '''Test 14: /addFloor endpoint'''
         
         pass
 
+    def test_get_building_by_radius(self):
+        '''Test 15: /getBuildingByRadius endpoint'''
+        
+        # Missing location
+        res = go(self.app.get, '/getBuildingByRadius', query_string={'radius': 5.0})
+        self.assertEqual(res().status_code, 400)
+        
+        '''
+        # Some building within radius
+        res = go(self.app.get, '/getBuildingByRadius', query_string={'longitude': 1.0, 'latitude': 1.0, 'radius': 5.0})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': 'a_building', 'location': {'longitude': 2.0, 'latitude': 2.0}}]})
+        self.assertEqual(res().status_code, 200)
+        
+        # No building within radius
+        res = go(self.app.get, '/getBuildingByRadius', query_string={'longitude': 1.0, 'latitude': 1.0, 'radius': 5.0})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': 'a_building', 'location': {'longitude': 10.0, 'latitude': 10.0}}]})
+        self.assertEqual(res().status_code, 400)
+        '''
+        
 if __name__ == '__main__':
     unittest.main()

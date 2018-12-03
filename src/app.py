@@ -199,12 +199,14 @@ def register_indoor():
     building = location['building']
     floor = location['floor']
     path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building, '{}.png'.format(floor))
+    image = None
 
     try:
         image = Image.open(path)
         last_seen = time.time()
     except FileNotFoundError:
         logging.info('File not found for building: {}'.format(building))
+        return Response('No floor plan found', status=400)
         
     # Crop 
     px,py = model_to_pixel(location['x'], location['y'], image.shape)
