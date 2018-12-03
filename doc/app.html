@@ -8,7 +8,7 @@
 <td valign=bottom>&nbsp;<br>
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>app</strong></big></big></font></td
 ><td align=right valign=bottom
-><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/bradsquicciarini/CS130-Project/src/app.py">/Users/bradsquicciarini/CS130-Project/src/app.py</a></font></td></tr></table>
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/mnt/hgfs/CS130-Project/src/app.py">/mnt/hgfs/CS130-Project/src/app.py</a></font></td></tr></table>
     <p><tt>This&nbsp;module&nbsp;contains&nbsp;contains&nbsp;the&nbsp;core&nbsp;logic&nbsp;of&nbsp;the&nbsp;server.&nbsp;It&nbsp;provides&nbsp;the&nbsp;mapping&nbsp;of&nbsp;all<br>
 communication&nbsp;between&nbsp;users,&nbsp;friends&nbsp;and&nbsp;the&nbsp;database.&nbsp;We&nbsp;are&nbsp;using&nbsp;the&nbsp;Flask&nbsp;framework&nbsp;to<br>
 handle&nbsp;the&nbsp;server&nbsp;logic.<br>
@@ -43,13 +43,12 @@ a&nbsp;Flask&nbsp;Response&nbsp;object,&nbsp;containing&nbsp;the&nbsp;HTTP&nbsp;
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="PIL.Image.html">PIL.Image</a><br>
-<a href="environ.html">environ</a><br>
-</td><td width="25%" valign=top><a href="json.html">json</a><br>
-<a href="logging.html">logging</a><br>
-</td><td width="25%" valign=top><a href="os.html">os</a><br>
-<a href="pytesseract.html">pytesseract</a><br>
-</td><td width="25%" valign=top><a href="time.html">time</a><br>
-</td></tr></table></td></tr></table><p>
+<a href="json.html">json</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="pytesseract.html">pytesseract</a><br>
+<a href="time.html">time</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -183,7 +182,17 @@ Response<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;400&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;No&nbsp;such&nbsp;user<br>
 &nbsp;&nbsp;&nbsp;&nbsp;Code:&nbsp;401&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;Access&nbsp;Denied<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;&nbsp;Requested&nbsp;friend&nbsp;has&nbsp;not&nbsp;enable&nbsp;location&nbsp;sharing</tt></dd></dl>
- <dl><dt><a name="-model_to_pixel"><strong>model_to_pixel</strong></a>(x, y, shape=[100, 100])</dt></dl>
+ <dl><dt><a name="-model_to_pixel"><strong>model_to_pixel</strong></a>(x, y, shape=[100, 100])</dt><dd><tt>convert&nbsp;model&nbsp;coordinates&nbsp;to&nbsp;actual&nbsp;pixel&nbsp;location&nbsp;on&nbsp;image<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;float,&nbsp;width&nbsp;coordinate<br>
+&nbsp;&nbsp;&nbsp;&nbsp;y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;float,&nbsp;height&nbsp;coordinate<br>
+&nbsp;&nbsp;&nbsp;&nbsp;shape&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;list&nbsp;of&nbsp;height&nbsp;and&nbsp;width&nbsp;of&nbsp;the&nbsp;actual&nbsp;image<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;tuple&nbsp;(width&nbsp;coordinate,&nbsp;height&nbsp;coordinate)&nbsp;of&nbsp;pixel</tt></dd></dl>
  <dl><dt><a name="-register"><strong>register</strong></a>()</dt><dd><tt>Endpoint:&nbsp;/registerLocation<br>
 Register&nbsp;a&nbsp;user's&nbsp;most&nbsp;recent&nbsp;location.<br>
 &nbsp;<br>

@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module db</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>db</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/mnt/hgfs/CS130-Project/src/db.py">/mnt/hgfs/CS130-Project/src/db.py</a></font></td></tr></table>
+    <p><tt>Database&nbsp;module&nbsp;implemented&nbsp;using&nbsp;MongoDB.<br>
+&nbsp;<br>
+Design&nbsp;Pattern<br>
+----------------------<br>
+This&nbsp;module&nbsp;is&nbsp;implemented&nbsp;using&nbsp;a&nbsp;Singleton&nbsp;design&nbsp;pattern.&nbsp;Instantiation&nbsp;of<br>
+the&nbsp;class&nbsp;is&nbsp;restricted&nbsp;to&nbsp;only&nbsp;one&nbsp;class&nbsp;instance.&nbsp;If&nbsp;multiple&nbsp;databases&nbsp;are&nbsp;created,<br>
+there&nbsp;is&nbsp;no&nbsp;gaurantee&nbsp;of&nbsp;synchronoization&nbsp;across&nbsp;these&nbsp;instances.&nbsp;The&nbsp;Singleton&nbsp;design<br>
+proactively&nbsp;prevents&nbsp;such&nbsp;errors.<br>
+&nbsp;<br>
+Information&nbsp;Hiding&nbsp;Principle<br>
+-----------------------------<br>
+The&nbsp;interface&nbsp;to&nbsp;the&nbsp;database&nbsp;is&nbsp;accomplished&nbsp;through&nbsp;a&nbsp;"<a href="#Db">Db</a>"&nbsp;class,&nbsp;rather&nbsp;than&nbsp;exposing<br>
+the&nbsp;internals&nbsp;of&nbsp;MongoDB.&nbsp;These&nbsp;methods&nbsp;that&nbsp;are&nbsp;unlikely&nbsp;to&nbsp;change,&nbsp;but&nbsp;the&nbsp;database&nbsp;may.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="db.html#Db">Db</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Db">class <strong>Db</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Db-__init__"><strong>__init__</strong></a>(self, uri='mongodb://localhost:27017', db='wya')</dt><dd><tt>Initializes&nbsp;database&nbsp;using&nbsp;a&nbsp;singleton&nbsp;design&nbsp;pattern</tt></dd></dl>
+
+<dl><dt><a name="Db-add_building"><strong>add_building</strong></a>(self, building_name, location)</dt><dd><tt>add&nbsp;a&nbsp;new&nbsp;building<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;building_name&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;building_name<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;Boolean,&nbsp;returns&nbsp;true&nbsp;if&nbsp;successfully&nbsp;added<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;false&nbsp;otherwise.</tt></dd></dl>
+
+<dl><dt><a name="Db-add_floor"><strong>add_floor</strong></a>(self, building_name, floor, vertices)</dt><dd><tt>Add&nbsp;a&nbsp;floor&nbsp;to&nbsp;an&nbsp;existing&nbsp;building<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;building_name&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;String,&nbsp;building&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;floor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;an&nbsp;int,&nbsp;floor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;vertices&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;floor&nbsp;vertices<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;Boolean,&nbsp;return&nbsp;success&nbsp;or&nbsp;failure</tt></dd></dl>
+
+<dl><dt><a name="Db-add_friend"><strong>add_friend</strong></a>(self, user_email, friend_email)</dt><dd><tt>Add&nbsp;a&nbsp;friend&nbsp;to&nbsp;a&nbsp;user's&nbsp;friends&nbsp;list<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;friend_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;friend&nbsp;to&nbsp;be&nbsp;added<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;Boolean,&nbsp;indicates&nbsp;success&nbsp;or&nbsp;failure</tt></dd></dl>
+
+<dl><dt><a name="Db-add_user"><strong>add_user</strong></a>(self, user_name, email)</dt><dd><tt>Adds&nbsp;a&nbsp;new&nbsp;user&nbsp;to&nbsp;the&nbsp;database<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;username&nbsp;of&nbsp;user&nbsp;to&nbsp;be&nbsp;added<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;Boolean,&nbsp;indicates&nbsp;success&nbsp;or&nbsp;failure</tt></dd></dl>
+
+<dl><dt><a name="Db-delete_friend"><strong>delete_friend</strong></a>(self, user_email, friend_email)</dt><dd><tt>Delete&nbsp;a&nbsp;friend&nbsp;from&nbsp;a&nbsp;user's&nbsp;friends&nbsp;list<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;friend_email&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;friend&nbsp;to&nbsp;be&nbsp;deleted<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;Boolean,&nbsp;indicates&nbsp;success&nbsp;or&nbsp;failure</tt></dd></dl>
+
+<dl><dt><a name="Db-get_building"><strong>get_building</strong></a>(self, building_name)</dt><dd><tt>Get&nbsp;information&nbsp;about&nbsp;a&nbsp;building&nbsp;and&nbsp;each&nbsp;of&nbsp;its&nbsp;floors<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;building_name&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;String,&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;building<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;floors&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;list&nbsp;of&nbsp;dictionaries,&nbsp;keys:&nbsp;'floor',&nbsp;'vertices'</tt></dd></dl>
+
+<dl><dt><a name="Db-get_building_location"><strong>get_building_location</strong></a>(self, building_name)</dt><dd><tt>get&nbsp;building&nbsp;location<br>
+&nbsp;<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;building_name&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;building_name<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;building&nbsp;location,&nbsp;None&nbsp;if&nbsp;building&nbsp;does&nbsp;not&nbsp;exist&nbsp;in&nbsp;database</tt></dd></dl>
+
+<dl><dt><a name="Db-get_friends_list"><strong>get_friends_list</strong></a>(self, user_email)</dt><dd><tt>Get&nbsp;list&nbsp;of&nbsp;friends&nbsp;for&nbsp;a&nbsp;given&nbsp;user<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;friends_list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;list,&nbsp;all&nbsp;user's&nbsp;current&nbsp;friends<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;None&nbsp;type,&nbsp;if&nbsp;there&nbsp;was&nbsp;no&nbsp;entry&nbsp;in&nbsp;databasse</tt></dd></dl>
+
+<dl><dt><a name="Db-get_location"><strong>get_location</strong></a>(self, friend_email)</dt><dd><tt>Query&nbsp;database&nbsp;for&nbsp;location&nbsp;of&nbsp;specified&nbsp;user<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;friend_email&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;friend's&nbsp;email<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;location&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;JSON&nbsp;String,&nbsp;location&nbsp;of&nbsp;friend_name&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;None&nbsp;type,&nbsp;if&nbsp;there&nbsp;was&nbsp;no&nbsp;entry&nbsp;or&nbsp;not&nbsp;valid&nbsp;lookup</tt></dd></dl>
+
+<dl><dt><a name="Db-get_name"><strong>get_name</strong></a>(self, email)</dt><dd><tt>Get&nbsp;user&nbsp;for&nbsp;a&nbsp;given&nbsp;email<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;email<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;None&nbsp;type,&nbsp;if&nbsp;there&nbsp;was&nbsp;no&nbsp;entry&nbsp;in&nbsp;databasse</tt></dd></dl>
+
+<dl><dt><a name="Db-register_indoor"><strong>register_indoor</strong></a>(self, user_email, location, room, last_seen)</dt><dd><tt>Register&nbsp;a&nbsp;user's&nbsp;indoor&nbsp;location<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;String,&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;location&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;dictionary,&nbsp;keys:&nbsp;'x',&nbsp;'y',&nbsp;'building',&nbsp;'floor'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;room&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;an&nbsp;int,&nbsp;the&nbsp;detected&nbsp;room&nbsp;number&nbsp;of&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;last_seen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;float,&nbsp;the&nbsp;timestamp&nbsp;of&nbsp;when&nbsp;indoor&nbsp;location&nbsp;is&nbsp;registered<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;Boolean,&nbsp;return&nbsp;success&nbsp;or&nbsp;failure</tt></dd></dl>
+
+<dl><dt><a name="Db-set_location"><strong>set_location</strong></a>(self, user_email, location)</dt><dd><tt>Update&nbsp;user&nbsp;with&nbsp;new&nbsp;location&nbsp;from&nbsp;device<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;&nbsp;&nbsp;&nbsp;location&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;location,&nbsp;most&nbsp;recent&nbsp;location&nbsp;of&nbsp;user<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;Boolean,&nbsp;indicates&nbsp;success&nbsp;or&nbsp;failure</tt></dd></dl>
+
+<dl><dt><a name="Db-toggle"><strong>toggle</strong></a>(self, user_email)</dt><dd><tt>Toggle&nbsp;user's&nbsp;location&nbsp;sharing<br>
+&nbsp;<br>
+Arguments<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;string,&nbsp;user<br>
+&nbsp;<br>
+Return<br>
+--------------------<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;--&nbsp;a&nbsp;Boolean,&nbsp;returns&nbsp;False&nbsp;if&nbsp;user&nbsp;doesn't&nbsp;exist<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;true&nbsp;otherwise.</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="Db-__new__"><strong>__new__</strong></a>(cls, uri='mongodb://localhost:27017', db='wya')</dt><dd><tt>Overrides&nbsp;__new__&nbsp;to&nbsp;ensure&nbsp;only&nbsp;a&nbsp;single&nbsp;instance&nbsp;is&nbsp;created</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>BUILDING_TABLE</strong> = 'Building'</dl>
+
+<dl><dt><strong>MONGO_URI</strong> = 'mongodb://localhost:27017'</dl>
+
+<dl><dt><strong>USER_TABLE</strong> = 'User'</dl>
+
+</td></tr></table></td></tr></table>
+</body></html>
