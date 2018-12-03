@@ -15,12 +15,28 @@ class AddFloorPlanController: UIViewController {
 
     var image = UIImage()
     let scene = SCNScene()
-    let markerNode = SCNNode(geometry: SCNPlane(width: 0.01, height: 0.01))
+    let qs = QueryService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        let buildingAlert = UIAlertController(title: "Enter Building Name", message: nil, preferredStyle: .alert)
+        buildingAlert.addTextField{
+            textField in textField.text = "Building"
+        }
+        buildingAlert.addAction(UIAlertAction(title: "OK", style: .default)
+        {
+            action in let text = buildingAlert.textFields![0].text!
+            self.qs.getBuildingMetadata(building_name: text) { response in
+                if response != nil {
+                    
+                }
+                else {
+                    self.performSegue(withIdentifier: "noBuilding", sender: self)
+                }
+            }
+        })
+        self.present(buildingAlert, animated: true, completion: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -32,11 +48,19 @@ class AddFloorPlanController: UIViewController {
         scene.rootNode.addChildNode(cameraNode)
         
         let floorGeometry = SCNPlane(width: 1.0, height: 1.0)
-        floorGeometry.firstMaterial?.diffuse.contents = image
+        
+        // TEMPORARY
+        let texture = UIImage(contentsOfFile: Bundle.main.path(forResource: "another", ofType: "jpeg")!)
+        
+        floorGeometry.firstMaterial?.diffuse.contents = texture
         let floorNode = SCNNode(geometry: floorGeometry)
         scene.rootNode.addChildNode(floorNode)
         
         sceneView.scene = scene
+    }
+    
+    @IBAction func addFloor(_ sender: Any) {
+        // CAMERA
     }
 }
 //    let scene = SCNScene()

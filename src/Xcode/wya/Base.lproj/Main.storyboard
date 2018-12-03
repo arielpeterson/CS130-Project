@@ -21,17 +21,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="login_screen" translatesAutoresizingMaskIntoConstraints="NO" id="NfA-pp-88s">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="913"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="login_screen" translatesAutoresizingMaskIntoConstraints="NO" id="NfA-pp-88s">
+                                <rect key="frame" x="-29" y="0.0" width="443" height="896"/>
                             </imageView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fdr-v2-cPh" customClass="GIDSignInButton">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fdr-v2-cPh" customClass="GIDSignInButton">
                                 <rect key="frame" x="87" y="475" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="NfA-pp-88s" firstAttribute="centerY" secondItem="vz4-NG-hhI" secondAttribute="centerY" id="0Pg-E0-WpK"/>
+                            <constraint firstItem="fdr-v2-cPh" firstAttribute="leading" secondItem="vz4-NG-hhI" secondAttribute="leadingMargin" constant="67" id="15g-2X-nu5"/>
+                            <constraint firstItem="fdr-v2-cPh" firstAttribute="top" secondItem="2wg-TQ-W6A" secondAttribute="bottom" constant="431" id="1Id-Fw-J6u"/>
+                            <constraint firstItem="SKd-Ls-xec" firstAttribute="top" secondItem="fdr-v2-cPh" secondAttribute="bottom" constant="259" id="Kad-mi-b8a"/>
+                            <constraint firstItem="NfA-pp-88s" firstAttribute="centerX" secondItem="vz4-NG-hhI" secondAttribute="centerX" constant="-14.5" id="Rma-Kr-TA1"/>
+                            <constraint firstItem="fdr-v2-cPh" firstAttribute="centerX" secondItem="vz4-NG-hhI" secondAttribute="centerX" id="Yuq-Hj-zhE"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="signInButton" destination="fdr-v2-cPh" id="HLD-gD-lBa"/>
@@ -182,6 +188,7 @@
                     </view>
                     <connections>
                         <outlet property="sceneView" destination="lTo-qx-s2E" id="ZJV-ru-biJ"/>
+                        <segue destination="NO9-q0-ady" kind="show" identifier="noBuilding" id="8co-mL-Eni"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tnf-Od-PJB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -517,7 +524,10 @@
     </scenes>
     <resources>
         <image name="carsIcon" width="24" height="24"/>
-        <image name="hamburger" width="25" height="25"/>
+        <image name="hamburger" width="37.5" height="37.5"/>
         <image name="login_screen" width="1125" height="2436"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="8co-mL-Eni"/>
+    </inferredMetricsTieBreakers>
 </document>

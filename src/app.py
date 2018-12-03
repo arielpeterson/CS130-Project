@@ -37,7 +37,7 @@ from flask import Flask, request, Response
 from PIL import Image
 
 from db import Db
-#from image import CvExtractor
+from image import CvExtractor
 
 
 app = Flask(__name__)
@@ -401,6 +401,8 @@ def add_floor():
 
     # Save full image as ../images/<building_name>/<floor>.png
     full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name, '{}.png'.format(floor_number))
+    if not os.path.exists(full_image_path):
+        os.makedirs(os.path.dirname(full_image_path))
     floor_plan.save(full_image_path)
 
     # Run CV on image
@@ -408,7 +410,10 @@ def add_floor():
     proc_image = cv.extract_image(full_image_path)
 
     # Save this image a well
-    proc_image.save(os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number)))
+    proc_image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number))
+    if not os.path.exist(proc_image_path):
+        os.makedirs(os.path.dirname(proc_image_path))
+    proc_image.save()
 
     return Response("Floor is added.", status=200)
 

@@ -222,6 +222,23 @@ class AppTest(unittest.TestCase):
         res = go(my_app.model_to_pixel, 101, 101, [500, 500])
         self.assertEqual(res(), (500, 500))
 
+    def test_add_floor(self):
+        pass
+
+    def test_get_building_metadata(self):
+        res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': self.building})
+        self.server.reply(cursor={'id': 0, 'firstBatch': [{'building_name': self.building, 'floor': 1}, {'building_name': self.building, 'floor': 2}]})
+        result = res()
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(result, 2)
+
+        res = go(self.app.get, '/getBuildingMetadata', query_string={'building_name': 'not_a_building'})
+        self.assertEqual(res().status_code, 400)
+
+
+    def test_get_floor_image(self):
+        pass
+
     def test_getName(self):
         '''Test 10: /getName endpoint'''
     
