@@ -15,6 +15,7 @@
 		8E26420621B044CE00BAF9B5 /* ViewFriendsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */; };
 		8EB20BA421B03A3B00BF211B /* QueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB20BA321B03A3B00BF211B /* QueryService.swift */; };
 		8EDC809B21B0E5220025ED4B /* MyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */; };
+		9A4241D521B4CC1D000F8334 /* SetIndoorLocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4241D421B4CC1D000F8334 /* SetIndoorLocationController.swift */; };
 		9A498DEA21B47C64006B5D52 /* texture.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9A498DE821B47C64006B5D52 /* texture.jpeg */; };
 		9A498DEB21B47C64006B5D52 /* another.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 9A498DE921B47C64006B5D52 /* another.jpeg */; };
 		9A498DEF21B49448006B5D52 /* PinBuildingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A498DEE21B49448006B5D52 /* PinBuildingController.swift */; };
@@ -40,6 +41,7 @@
 		8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewFriendsController.swift; sourceTree = "<group>"; };
 		8EB20BA321B03A3B00BF211B /* QueryService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryService.swift; sourceTree = "<group>"; };
 		8EDC809A21B0E5220025ED4B /* MyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MyTableViewCell.swift; path = ../MyTableViewCell.swift; sourceTree = "<group>"; };
+		9A4241D421B4CC1D000F8334 /* SetIndoorLocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetIndoorLocationController.swift; sourceTree = "<group>"; };
 		9A498DE821B47C64006B5D52 /* texture.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = texture.jpeg; path = ../../../../sk/sk/texture.jpeg; sourceTree = "<group>"; };
 		9A498DE921B47C64006B5D52 /* another.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = another.jpeg; path = ../../../../sk/sk/another.jpeg; sourceTree = "<group>"; };
 		9A498DEE21B49448006B5D52 /* PinBuildingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinBuildingController.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				8629651521AFA0D400F240AE /* MyAccountViewController.swift */,
 				B33E89A91ED67A3B00E5A503 /* Main.storyboard */,
 				8629651721AFA26800F240AE /* HomeViewController.swift */,
+				9A4241D421B4CC1D000F8334 /* SetIndoorLocationController.swift */,
 				8E26420521B044CE00BAF9B5 /* ViewFriendsController.swift */,
 				9A498DE921B47C64006B5D52 /* another.jpeg */,
 				9A498DE821B47C64006B5D52 /* texture.jpeg */,
@@ -273,6 +276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A4241D521B4CC1D000F8334 /* SetIndoorLocationController.swift in Sources */,
 				8E26420621B044CE00BAF9B5 /* ViewFriendsController.swift in Sources */,
 				B33E89D41ED67AF300E5A503 /* HamburgerViewController.swift in Sources */,
 				8629651A21AFA30200F240AE /* NavigationViewController.swift in Sources */,

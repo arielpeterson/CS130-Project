@@ -243,6 +243,7 @@
                         <outlet property="shareLocationButton" destination="Gco-hc-rny" id="YNf-Hr-gvn"/>
                         <outlet property="tableView" destination="AIa-TN-frx" id="HQH-qG-ZAY"/>
                         <segue destination="BFi-14-YEx" kind="show" identifier="showNavigation" id="XJR-OG-6ZO"/>
+                        <segue destination="EQ0-rl-fv3" kind="show" identifier="showIndoor" id="hsk-Lp-hjd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ziq-YG-TPx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -490,6 +491,38 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yUv-Xc-pZB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2542" y="734"/>
+        </scene>
+        <!--Set Indoor Location Controller-->
+        <scene sceneID="HDf-5I-0yJ">
+            <objects>
+                <viewController id="EQ0-rl-fv3" customClass="SetIndoorLocationController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="z9h-bt-XqL"/>
+                        <viewControllerLayoutGuide type="bottom" id="1DC-4A-QSV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="V7v-pa-o1x">
+                        <rect key="frame" x="0.0" y="0.0" width="441" height="800"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mXs-NP-lhu">
+                                <rect key="frame" x="0.0" y="0.0" width="441" height="800"/>
+                            </sceneKitView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="mXs-NP-lhu" secondAttribute="bottom" id="Mca-U7-1PA"/>
+                            <constraint firstAttribute="trailing" secondItem="mXs-NP-lhu" secondAttribute="trailing" id="OJp-uc-ZO5"/>
+                            <constraint firstItem="mXs-NP-lhu" firstAttribute="leading" secondItem="V7v-pa-o1x" secondAttribute="leading" id="QPD-1g-aAy"/>
+                            <constraint firstItem="mXs-NP-lhu" firstAttribute="top" secondItem="V7v-pa-o1x" secondAttribute="top" id="t0U-EV-Csm"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="sceneView" destination="mXs-NP-lhu" id="dhh-uQ-oyR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HQP-XJ-uBm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3601" y="-13"/>
         </scene>
     </scenes>
     <resources>

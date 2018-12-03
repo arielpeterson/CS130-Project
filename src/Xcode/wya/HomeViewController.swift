@@ -81,17 +81,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.cellForRow(at: indexPath) as! UITableViewCell
         //let selected_friend = cell.textLabel?.text! // friends name
         selected_friend_email = friends[indexPath.row]
-        
-        let navigationVC = NavigationViewController()
-        
-        qs.lookup(friend_email: selected_friend_email){ response in
-            guard let location = response else {
-                print("No loction received.")
-                return
-            }
-            // send friend_location to NavigationViewController
-            navigationVC.destination = location
-        }
     
         self.performSegue(withIdentifier: "showNavigation", sender: self)
     }
@@ -116,6 +105,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             }
             // hardcoded value to use for testing if segue destination is set properly
             // vc?.destination = CLLocationCoordinate2D(latitude: 34.0688, longitude: -118.4440)
+        }
+        
+        if segue.destination is SetIndoorLocationController
+        {
+            let vc = segue.destination as? SetIndoorLocationController
+            
+            vc?.image = UIImage(contentsOfFile: Bundle.main.path(forResource: "another", ofType: "jpeg")!)!
         }
     }
     
@@ -158,10 +154,33 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBAction func shareLocationButtonTapped(_ sender: Any) {
         let mylocation = locationManager.location?.coordinate
         qs.registerLocation(location: mylocation!)
-        let alert = UIAlertController(title: "Success", message: "You updated your location", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
-        self.present(alert, animated: true, completion: nil)
         
+//        // IF NO BUILDING AT THAT LOCATION
+//        let alert = UIAlertController(title: "Success", message: "You updated your location", preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+//         self.present(alert, animated: true, completion: nil)
+        
+        // IF BUILDING AT THAT LOCATION
+        let indoorAlert = UIAlertController(title: "Enter Floor Number", message: nil, preferredStyle: .alert)
+        indoorAlert.addTextField{
+            textField in textField.text = "1"
+        }
+        indoorAlert.addAction(UIAlertAction(title: "OK", style: .default)
+        {
+            action in let text = indoorAlert.textFields![0].text!
+            if Double(text) != nil {
+                // FLOOR EXISTS, pass image
+                self.performSegue(withIdentifier: "showIndoor", sender: self)
+                
+            }
+            else {
+                // FLOOR DOESN'T EXIST
+                let floorAlert = UIAlertController(title: "Error", message: "Floor does not exist", preferredStyle: .alert)
+                floorAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+                self.present(floorAlert, animated: true, completion: nil)
+            }
+        })
+        self.present(indoorAlert, animated: true, completion: nil)
     }
     
     // TO DO: Stop sharing location button that calls toggle()
