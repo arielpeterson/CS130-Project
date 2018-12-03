@@ -38,18 +38,15 @@ class AddFloorPlanController: UIViewController {
                 let alert = UIAlertController(title: "Edit Floor", message: nil, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Modify", style: .default)
                 {
-                    UIAlertAction in let texture = UIImage(contentsOfFile: Bundle.main.path(forResource: "another", ofType: "jpeg")!)
+                    action in let texture = UIImage(contentsOfFile: Bundle.main.path(forResource: "another", ofType: "jpeg")!)
                     floor?.geometry?.firstMaterial?.diffuse.contents = texture
                 })
                 alert.addAction(UIAlertAction(title: "Delete", style: .default)
                 {
-                    UIAlertAction in self.numFloors -= 1
+                    action in self.numFloors -= 1
                     floor?.removeFromParentNode()
                 })
-                alert.addAction(UIAlertAction(title: "Cancel", style: .default)
-                {
-                    UIAlertAction in
-                })
+                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
         }
@@ -77,7 +74,7 @@ class AddFloorPlanController: UIViewController {
         }
         alert.addAction(UIAlertAction(title: "OK", style: .default)
         {
-            UIAlertAction in let text = alert.textFields![0].text!
+            action in let text = alert.textFields![0].text!
             if Double(text) != nil {
                 let floorNum = Double(alert.textFields![0].text!)
                 self.numFloors += 1
