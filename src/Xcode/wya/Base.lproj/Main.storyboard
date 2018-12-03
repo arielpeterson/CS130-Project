@@ -21,17 +21,23 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="login_screen" translatesAutoresizingMaskIntoConstraints="NO" id="NfA-pp-88s">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="913"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="login_screen" translatesAutoresizingMaskIntoConstraints="NO" id="NfA-pp-88s">
+                                <rect key="frame" x="-29" y="0.0" width="443" height="896"/>
                             </imageView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fdr-v2-cPh" customClass="GIDSignInButton">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fdr-v2-cPh" customClass="GIDSignInButton">
                                 <rect key="frame" x="87" y="475" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="NfA-pp-88s" firstAttribute="centerY" secondItem="vz4-NG-hhI" secondAttribute="centerY" id="0Pg-E0-WpK"/>
+                            <constraint firstItem="fdr-v2-cPh" firstAttribute="leading" secondItem="vz4-NG-hhI" secondAttribute="leadingMargin" constant="67" id="15g-2X-nu5"/>
+                            <constraint firstItem="fdr-v2-cPh" firstAttribute="top" secondItem="2wg-TQ-W6A" secondAttribute="bottom" constant="431" id="1Id-Fw-J6u"/>
+                            <constraint firstItem="SKd-Ls-xec" firstAttribute="top" secondItem="fdr-v2-cPh" secondAttribute="bottom" constant="259" id="Kad-mi-b8a"/>
+                            <constraint firstItem="NfA-pp-88s" firstAttribute="centerX" secondItem="vz4-NG-hhI" secondAttribute="centerX" constant="-14.5" id="Rma-Kr-TA1"/>
+                            <constraint firstItem="fdr-v2-cPh" firstAttribute="centerX" secondItem="vz4-NG-hhI" secondAttribute="centerX" id="Yuq-Hj-zhE"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="signInButton" destination="fdr-v2-cPh" id="HLD-gD-lBa"/>
@@ -157,9 +163,11 @@
                                 <rect key="frame" x="0.0" y="44" width="300" height="647"/>
                             </sceneKitView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LLC-uF-Vcq">
-                                <rect key="frame" x="0.0" y="44" width="90" height="30"/>
+                                <rect key="frame" x="210" y="44" width="90" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="90" id="Kj3-3N-j30"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="aca-Om-hnr"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="fFJ-fl-l9R"/>
                                     <constraint firstAttribute="height" constant="30" id="ttc-jt-nzn"/>
                                 </constraints>
                                 <state key="normal" title="Add Floor"/>
@@ -167,32 +175,20 @@
                                     <action selector="addFloor:" destination="cIF-Bb-p4h" eventType="touchUpInside" id="evz-l3-J0i"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mZv-w6-dun">
-                                <rect key="frame" x="190" y="44" width="110" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="110" id="63n-zw-5kQ"/>
-                                    <constraint firstAttribute="height" constant="30" id="6wG-Xh-vyP"/>
-                                </constraints>
-                                <state key="normal" title="Pin Location"/>
-                                <connections>
-                                    <segue destination="NO9-q0-ady" kind="show" id="FZN-0U-DTg"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="mZv-w6-dun" firstAttribute="top" secondItem="ddV-Dk-okz" secondAttribute="bottom" id="Enc-XC-zj1"/>
+                            <constraint firstItem="LLC-uF-Vcq" firstAttribute="top" secondItem="ddV-Dk-okz" secondAttribute="bottom" id="HIe-Jd-ZvU"/>
                             <constraint firstItem="QzF-ka-0Pv" firstAttribute="top" secondItem="lTo-qx-s2E" secondAttribute="bottom" id="JRg-Bm-vRR"/>
-                            <constraint firstItem="LLC-uF-Vcq" firstAttribute="top" secondItem="ddV-Dk-okz" secondAttribute="bottom" id="QTj-1F-etc"/>
+                            <constraint firstAttribute="trailing" secondItem="LLC-uF-Vcq" secondAttribute="trailing" id="Jz2-7e-ESS"/>
                             <constraint firstItem="lTo-qx-s2E" firstAttribute="top" secondItem="ddV-Dk-okz" secondAttribute="bottom" id="REI-0S-yBN"/>
-                            <constraint firstAttribute="trailing" secondItem="mZv-w6-dun" secondAttribute="trailing" id="Z0n-Rm-4Jt"/>
-                            <constraint firstItem="LLC-uF-Vcq" firstAttribute="leading" secondItem="ra3-sU-MI8" secondAttribute="leading" id="ch8-Op-ULe"/>
                             <constraint firstAttribute="trailing" secondItem="lTo-qx-s2E" secondAttribute="trailing" id="mXq-Dv-h5R"/>
                             <constraint firstItem="lTo-qx-s2E" firstAttribute="leading" secondItem="ra3-sU-MI8" secondAttribute="leading" id="rL5-K0-IXu"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="sceneView" destination="lTo-qx-s2E" id="ZJV-ru-biJ"/>
+                        <segue destination="NO9-q0-ady" kind="show" identifier="noBuilding" id="8co-mL-Eni"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tnf-Od-PJB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -445,6 +441,7 @@
                         <segue destination="cIF-Bb-p4h" kind="show" identifier="addFloorplan_segue" id="MD1-iP-l5P"/>
                         <segue destination="6zy-FU-hyr" kind="show" identifier="myAccount_segue" id="5Hl-al-Baz"/>
                         <segue destination="X6g-kI-JQ3" kind="show" identifier="viewFriends_segue" id="vsx-jn-d1u"/>
+                        <segue destination="NO9-q0-ady" kind="show" identifier="addBuilding_segue" id="WeZ-zf-bA4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kXO-GA-W2k" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -452,10 +449,10 @@
             </objects>
             <point key="canvasLocation" x="982.60869565217399" y="733.59375"/>
         </scene>
-        <!--Pin Building Controller-->
+        <!--Add Building Controller-->
         <scene sceneID="AYp-tQ-7JW">
             <objects>
-                <viewController id="NO9-q0-ady" customClass="PinBuildingController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="NO9-q0-ady" customClass="AddBuildingController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="BsJ-Q8-bka"/>
                         <viewControllerLayoutGuide type="bottom" id="Mo4-rk-GYO"/>
@@ -530,4 +527,7 @@
         <image name="hamburger" width="37.5" height="37.5"/>
         <image name="login_screen" width="1125" height="2436"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="8co-mL-Eni"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -14,7 +14,9 @@ import Alamofire
 
 
 // Must change each time we run ngrok
+
 let SERVER = "http://8efa8e6c.ngrok.io"
+
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -85,6 +87,7 @@ class QueryService {
             
             guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Array<String>] else {
                 print("No json data received")
+                completion(nil)
                 return
             }
             
@@ -120,6 +123,7 @@ class QueryService {
                 
                 guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:Any] else {
                     print("No json data received")
+                    completion(nil)
                     return
                 }
                 
@@ -168,6 +172,7 @@ class QueryService {
             
             guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:String] else {
                 print("No json data received")
+                completion(nil)
                 return
             }
             
@@ -175,5 +180,69 @@ class QueryService {
             completion(json["name"])
         }
     }
-
+    
+    // Add floor plan of building
+    func addFloor(building_name: String, floor_number: String, floor_plan: UIImage) {
+        let urlString = SERVER + "/addFloor"
+        let parameters : Parameters = ["building_name" : building_name, "floor_number" : floor_number, "floor_plan" : floor_plan]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            // Handle response
+            debugPrint(response)
+        }
+    }
+    
+    // Add building model
+    func addBuilding(building_name: String, longitude: Double, latitude: Double) {
+        let urlString = SERVER + "/addBuilding"
+        let parameters : Parameters = ["building_name" :  building_name, "longitude": longitude, "latitude": latitude]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            // Handle response
+            debugPrint(response)
+        }
+    }
+    
+    // Get building location, number of floors
+    func getBuildingMetadata(building_name: String, completion: @escaping ([String:String]?) -> Void) {
+        let urlString = SERVER + "/getBuildingMetadata"
+        let parameters : Parameters = ["building_name" : building_name]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            
+            guard let data = response.data else {
+                print("No metadata received")
+                completion(nil)
+                return
+            }
+            
+            guard let json = try? JSONSerialization.jsonObject(with: data, options: []) as! [String:String] else {
+                print("No json data received")
+                completion(nil)
+                return
+            }
+            
+            // Upon completion, return the JSON object
+            completion(json)
+        }
+    }
+    
+    // Get floor plan image
+    func getFloorImage(building_name: String, floor: Int, completion: @escaping (UIImage?) -> Void) {
+        let urlString = SERVER + "/getFloorImage"
+        let parameters : Parameters = ["building_name" : building_name, "floor" : floor]
+        Alamofire.request(urlString, parameters: parameters).response { response in
+            
+            guard let data = response.data else {
+                print("No image received")
+                completion(nil)
+                return
+            }
+            
+            // Upon completion, return the image
+            completion(UIImage(data: data))
+        }
+    }
+    
+    // Get buildings within radius of location
+    func getBuildingByRadius() {
+        
+    }
 }

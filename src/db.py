@@ -115,7 +115,7 @@ class Db(object):
         Arguments
         --------------------
             user_email       -- a string, user
-            friend_email     -- a string, friend to be deleted
+            friend_email     -- a string, friend to be added
 
         Return
         --------------------
@@ -125,6 +125,10 @@ class Db(object):
         if friends_list is None:         # No such user
             return False
         if friend_email in friends_list:  # Don't add duplicates
+            return False
+            
+        friend = self._db[self.USER_TABLE].find_one({'email': friend_email})
+        if not friend:                  # Don't add someone who isn't a user
             return False
 
         # Make update
@@ -325,24 +329,4 @@ class Db(object):
         if not building:
             return None
         return building.get('location')
-        
-    def get_building_by_radius(self, location, radius):
-        radius_sqr = np.square(radius)
-        longitude = location['longitude']
-        lat = location['latitude']
-        buildings_loc = []
-        buildings = []
-        collect = list(self._db[self.BUILDING_TABLE].distinct('location'))
-        if not collect:
-            return []
-        for loc in collect:
-            b_long = loc['longitude']
-            b_lat = loc['latitude']
-            distance = np.square(b_long - longitude) + np.square(b_lat - lat)
-            if distance <= radius_sqr:
-                buildings_loc.append(loc)
-        for loc in buildings_loc:
-            building = self._db[self.BUILDING_TABLE].find_one({'location': loc})
-            buildings.append({'building': building['building_name'], 'location': loc})
-            
-        return buildings
+

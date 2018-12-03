@@ -37,7 +37,7 @@ from flask import Flask, request, Response
 from PIL import Image
 
 from db import Db
-#from image import CvExtractor
+from image import CvExtractor
 
 
 app = Flask(__name__)
@@ -199,12 +199,14 @@ def register_indoor():
     building = location['building']
     floor = location['floor']
     path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building, '{}.png'.format(floor))
+    image = None
 
     try:
         image = Image.open(path)
         last_seen = time.time()
     except FileNotFoundError:
         logging.info('File not found for building: {}'.format(building))
+        return Response('No floor plan found', status=400)
         
     # Crop 
     px,py = model_to_pixel(location['x'], location['y'], image.shape)
@@ -399,6 +401,8 @@ def add_floor():
 
     # Save full image as ../images/<building_name>/<floor>.png
     full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name, '{}.png'.format(floor_number))
+    if not os.path.exists(full_image_path):
+        os.makedirs(os.path.dirname(full_image_path))
     floor_plan.save(full_image_path)
 
     # Run CV on image
@@ -406,7 +410,10 @@ def add_floor():
     proc_image = cv.extract_image(full_image_path)
 
     # Save this image a well
-    proc_image.save(os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number)))
+    proc_image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor_number))
+    if not os.path.exist(proc_image_path):
+        os.makedirs(os.path.dirname(proc_image_path))
+    proc_image.save()
 
     return Response("Floor is added.", status=200)
 
@@ -459,34 +466,6 @@ def get_floor_image():
     image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name, '{}.png'.format(floor))
     return send_file(image_path)
     
-@app.route('/getBuildingByRadius', methods=['GET'])
-def get_building_by_radius():
-    """
-    Endpoint: /getFloorImage
-    Get building meta data: location, number of floors.
-
-    Arguments
-    --------------------
-        building_name       -- a string, building's name
-        floor               -- an int, floor number
-
-    Response
-    --------------------
-        Code: 200       -- Success
-        Code: 400       -- No building within radius or missing arguments
-    """
-    location = request.args.get('location')
-    if not location:
-        return Response('Must provide location', status=400)
-    radius = request.args.get('radius')
-    if not radius:
-        return Response('Must provide radius', status=400)
-    res = db.get_building_by_radius(location, radius)
-    if res:
-        return Response(json.dumps({'buildings': res}),status=200, mimetype='application/json')
-    message = 'No building within radius of ' + str(radius)
-    return Response(message, status=400)
-    
 @app.route('/addBuilding', methods=['GET'])
 def add_building():
     """
@@ -503,22 +482,17 @@ def add_building():
     --------------------
         Code: 200       -- Success
         Code: 400       -- Failure or missing arguments
+        Code: 401       -- Building already exists
     """
     building_name = request.args.get('building_name')
-    if not building_name:
+    longitude = request.args.get('longitude')
+    latitude = request.args.get('latitude')
+    if not building_name or not longitude or not latitude:
         return Response('Must provide building name', status=400)
 
-    longitude = request.args.get('longitude')
-    if not longitude:
-        return Response('Must provide longitude', status=400)
-
-    latitude = request.args.get('latitude')
-    if not longitude:
-        return Response('Must provide latitude', status=400)
-
-    res = db.add_building(building_name, {'longitude': longitude, 'latitude': latitude})
+    res = db.add_building(building_name, dict({'longitude': longitude, 'latitude': latitude}))
     if not res:
-        return Response('Cannot add building', status=400)
+        return Response('Cannot add building', status=401)
     return Response('Building added!', status=200)
 
 if __name__ == '__main__':
