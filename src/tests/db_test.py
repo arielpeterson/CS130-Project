@@ -158,7 +158,7 @@ class DbTest(unittest.TestCase):
         self.assertEqual(result['location'], location_user0)
 
         # Set indoor location for user0
-        rv = self.db_test.register_indoor(user0,indoor_loc_user0, room_user0, last_seen)
+        rv = self.db_test.register_indoor(user0, indoor_loc_user0, room_user0, last_seen)
         result = self.db_verify['User'].find_one({'email': user0})
         self.assertEqual(rv, True)
         self.assertEqual(result['indoor_location'], indoor_res)
@@ -178,6 +178,14 @@ class DbTest(unittest.TestCase):
         rv = self.db_test.get_location(user0)
         user0_loc = {'outdoor_location': location_user0, 'indoor_location': indoor_res}
         self.assertEqual(rv, (user0_loc, last_seen))
+        
+        # Set location for non-user
+        rv = self.db_test.set_location('non-user',location_user0)
+        self.assertEqual(rv, False)
+        
+        # Register indoor location for non-user
+        rv = self.db_test.register_indoor('not_exist',indoor_loc_user0, room_user0, last_seen)
+        self.assertEqual(rv, False)
 
     def test_building(self):
         """ 
