@@ -12,73 +12,60 @@ import CoreLocation
 
 class NavigationViewController: UIViewController {
     
+   
     @IBOutlet weak var navigationView: MKMapView!
     
-    var destination = CLLocationCoordinate2D()
+    var friend_location_latitude : CLLocationDegrees?
+    var friend_location_longitude : CLLocationDegrees?
     let locationManager = CLLocationManager()
+    //let regionRadius: CLLocationDistance = 100000
+    let regionRadius: CLLocationDistance = 100
+
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationView.delegate = self
-        navigationView.showsPointsOfInterest = true
-        navigationView.showsUserLocation = true
-        setUpLocationManager()
-        generateDirections()
+        navigationView.delegate = self
+        self.setUpLocationManager()
+        // set initial location in Honolulu
+        let initialLocation = CLLocation(latitude: 34.070470, longitude: -118.442646)
+        // let initialLocation = CLLocation(latitude: friend_location_latitude!, longitude: friend_location_longitude!)
+        
+        centerMapOnLocation(location: initialLocation)
+
     }
     
-    // without this, the overlay is not visible
-    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-        let renderer = MKPolylineRenderer(overlay: overlay)
-        renderer.strokeColor = UIColor.gray
-        renderer.lineWidth = 5
+    func centerMapOnLocation(location: CLLocation) {
+        let coordinateRegion = MKCoordinateRegion(center: location.coordinate,
+                                                  latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
+        navigationView.setRegion(coordinateRegion, animated: true)
+        let endPin = MKPointAnnotation()
+        endPin.coordinate = location.coordinate
+        endPin.title = "Moore Hall"
+        navigationView.addAnnotation(endPin)
         
-        return renderer
     }
+
+
     
     func setUpLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
+}
+
+extension NavigationViewController: MKMapViewDelegate {
     
-    func generateDirections() {
-        locationManager.startUpdatingLocation()
-        
-        let location = locationManager.location?.coordinate
-        //let destination = CLLocationCoordinate2DMake(34.0688, -118.4440)
-        
-        let start = MKPlacemark(coordinate: location!)
-        let end = MKPlacemark(coordinate: destination)
-
-        let startItem = MKMapItem(placemark: start)
-        let endItem = MKMapItem(placemark: end)
-
-        let endPin = MKPointAnnotation()
-        endPin.coordinate = destination
-        endPin.title = "X"
-        navigationView.addAnnotation(endPin)
-
-        
-        let request = MKDirections.Request()
-        request.source = startItem
-        request.destination = endItem
-        request.transportType = .walking
-        
-        let directions = MKDirections(request: request)
-        directions.calculate(completionHandler: {
-            response, error in
-            guard let response = response else {
-                return
-            }
-            
-            let route = response.routes[0]
-            self.navigationView.addOverlay(route.polyline, level: .aboveRoads)
-            
-            let region = route.polyline.boundingMapRect
-            self.navigationView.setRegion(MKCoordinateRegion(region), animated: true)
-        })
+    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+        //        let selectedAnnotation = view.annotation as? MKPointAnnotation
+        //        let building_coordinates = selectedAnnotation?.coordinate
+        //        print(building_coordinates)
+        //        let qs = QueryService()
+        //  transition to 
+        print("clicked")
     }
 }
 
-extension NavigationViewController: MKMapViewDelegate {}
-
 extension NavigationViewController: CLLocationManagerDelegate {}
+
+
