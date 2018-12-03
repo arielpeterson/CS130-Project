@@ -467,20 +467,22 @@ def get_building_by_radius():
 
     Arguments
     --------------------
-        building_name       -- a string, building's name
-        floor               -- an int, floor number
+        longitude       -- a float, longitude
+        latitude        -- a float, latitude
+        radius          -- a float, radius
 
     Response
     --------------------
         Code: 200       -- Success
         Code: 400       -- No building within radius or missing arguments
     """
-    location = request.args.get('location')
-    if not location:
-        return Response('Must provide location', status=400)
+    longitude = request.args.get('longitude')
+    latitude = request.args.get('latitude')
     radius = request.args.get('radius')
-    if not radius:
-        return Response('Must provide radius', status=400)
+    if not longitude or not latitude or not radius:
+        return Response('Must provide longitude and latitude, and radius', status=400)
+
+    location = dict({'longitude': longitude, 'latitude': latitude})
     res = db.get_building_by_radius(location, radius)
     if res:
         return Response(json.dumps({'buildings': res}),status=200, mimetype='application/json')
@@ -503,22 +505,17 @@ def add_building():
     --------------------
         Code: 200       -- Success
         Code: 400       -- Failure or missing arguments
+        Code: 401       -- Building already exists
     """
     building_name = request.args.get('building_name')
-    if not building_name:
+    longitude = request.args.get('longitude')
+    latitude = request.args.get('latitude')
+    if not building_name or not longitude or not latitude:
         return Response('Must provide building name', status=400)
 
-    longitude = request.args.get('longitude')
-    if not longitude:
-        return Response('Must provide longitude', status=400)
-
-    latitude = request.args.get('latitude')
-    if not longitude:
-        return Response('Must provide latitude', status=400)
-
-    res = db.add_building(building_name, {'longitude': longitude, 'latitude': latitude})
+    res = db.add_building(building_name, dict({'longitude': longitude, 'latitude': latitude}))
     if not res:
-        return Response('Cannot add building', status=400)
+        return Response('Cannot add building', status=401)
     return Response('Building added!', status=200)
 
 if __name__ == '__main__':

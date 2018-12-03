@@ -7,8 +7,8 @@ import os, subprocess
 import context
 from db import Db
 
-PATH_TO_MONGOD = '/usr/local/bin/mongod'
-
+#PATH_TO_MONGOD = '/usr/local/bin/mongod'
+PATH_TO_MONGOD = '/usr/bin/mongod'
 
 class DbTest(unittest.TestCase):
     '''
@@ -169,30 +169,52 @@ class DbTest(unittest.TestCase):
         user0_loc = {'outdoor_location': location_user0, 'indoor_location': indoor_res}
         self.assertEqual(rv, (user0_loc, last_seen))
 
-    def test_get_building(self):
+    def test_building(self):
         """ 
             Test 4:
-            Verify that we can add building floors and get building
+            Verify that we can add building, building floors and get building
         """
 
         # Building
         building = 'MooreHall'
+        location = {'longitude': 10.0, 'latitude': 1.0}
         floor = '1'
         vertices = [[0,0], [100,0], [0,100], [100,100]]
         floors = [{'floor': '1', 'vertices': [[0,0], [100,0], [0,100], [100,100]]}]
 
         # Add building to database
-        rv = self.db_test.add_floor(building, floor, vertices)
+        rv = self.db_test.add_building(building, location)
         self.assertEqual(rv, True)
         verify = self.db_verify['Building'].find_one({'building_name': building})
         self.assertEqual(verify['building_name'], building)
-        self.assertEqual(verify['floor'], floor)
+        self.assertEqual(verify['location'], location)
+        
+        # Add existing building
+        rv = self.db_test.add_building(building, location)
+        self.assertEqual(rv, False)
+        
+        # Add floor to building
+        rv = self.db_test.add_floor(building, floor, vertices)
+        verify = self.db_verify['Building'].find_one({'building_name': building, 'floor': floor})
+        self.assertEqual(rv, True)
         self.assertEqual(verify['vertices'], vertices)
+        
+        # Add floor to non-existing building
+        rv = self.db_test.add_floor("not_exist", floor, vertices)
+        self.assertEqual(rv, False)
    
         # Get floors of a building
         rv = self.db_test.get_building(building)
         self.assertEqual(rv[0]['floor'], floors[0]['floor'])
         self.assertEqual(rv[0]['vertices'], floors[0]['vertices'])
+        
+        # Get building location
+        rv = self.db_test.get_building_location(building)
+        self.assertEqual(rv, location)
+        
+        # Get location of non existing building
+        rv = self.db_test.get_building_location('not_exist')
+        self.assertEqual(rv, None)
 
     def test_get_name(self):
         """ 
@@ -212,7 +234,7 @@ class DbTest(unittest.TestCase):
 
         # Get user name from email
         rv = self.db_test.get_name(email)
-        self.assertEqual(rv, user)
+        self.assertEqual(rv, user)        
 
 if __name__ == '__main__':
     unittest.main()
