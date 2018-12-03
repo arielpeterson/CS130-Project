@@ -16,23 +16,33 @@ class AddFloorPlanController: UIViewController {
     var image = UIImage()
     let scene = SCNScene()
     let qs = QueryService()
+    var building = ""
+    var floorNum = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let buildingAlert = UIAlertController(title: "Enter Building Name", message: nil, preferredStyle: .alert)
+        let buildingAlert = UIAlertController(title: "Enter Building Name and Floor Number", message: nil, preferredStyle: .alert)
         buildingAlert.addTextField{
             textField in textField.text = "Building"
         }
+        buildingAlert.addTextField {
+            textField in textField.text = "1"
+        }
         buildingAlert.addAction(UIAlertAction(title: "OK", style: .default)
         {
-            action in let text = buildingAlert.textFields![0].text!
-            self.qs.getBuildingMetadata(building_name: text) { response in
+            action in self.building = buildingAlert.textFields![0].text!
+            self.floorNum = buildingAlert.textFields![1].text!
+            self.qs.getBuildingMetadata(building_name: self.building) { response in
                 if response != nil {
-                    
+//                    self.building = response!["name"] as! String
                 }
                 else {
-                    self.performSegue(withIdentifier: "noBuilding", sender: self)
+                    let nonexistentAlert = UIAlertController(title: "Error", message: "Must add building", preferredStyle: .alert)
+                    nonexistentAlert.addAction(UIAlertAction(title: "OK", style: .default) {
+                        anotherAction in self.performSegue(withIdentifier: "noBuilding", sender: self)
+                    })
+                    self.present(nonexistentAlert, animated: true, completion: nil)
                 }
             }
         })
