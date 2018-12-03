@@ -318,6 +318,7 @@ class Db(object):
             result          -- a Boolean, returns true if successfully added
                                and false otherwise.
         """
+        
         building = self._db[self.BUILDING_TABLE].find_one({'building_name': building_name})
         if not building:        
             res = self._db[self.BUILDING_TABLE].insert_one({'building_name': building_name, 'location': location})
@@ -327,6 +328,19 @@ class Db(object):
         return False
         
     def get_building_location(self, building_name):
+        """
+        get building location
+
+
+        Arguments
+        --------------------
+            building_name   -- a string, building_name
+
+        Return
+        --------------------
+            result          -- building location, None if building does not exist in database
+        """
+        
         building = self._db[self.BUILDING_TABLE].find_one({'building_name': building_name})
         if not building:
             return None
