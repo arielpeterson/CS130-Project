@@ -24,19 +24,16 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="login_screen" translatesAutoresizingMaskIntoConstraints="NO" id="NfA-pp-88s">
                                 <rect key="frame" x="-29" y="0.0" width="443" height="896"/>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fdr-v2-cPh" customClass="GIDSignInButton">
-                                <rect key="frame" x="87" y="475" width="240" height="128"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fdr-v2-cPh" customClass="GIDSignInButton">
+                                <rect key="frame" x="87" y="464" width="240" height="62"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="NfA-pp-88s" firstAttribute="centerY" secondItem="vz4-NG-hhI" secondAttribute="centerY" id="0Pg-E0-WpK"/>
-                            <constraint firstItem="fdr-v2-cPh" firstAttribute="leading" secondItem="vz4-NG-hhI" secondAttribute="leadingMargin" constant="67" id="15g-2X-nu5"/>
-                            <constraint firstItem="fdr-v2-cPh" firstAttribute="top" secondItem="2wg-TQ-W6A" secondAttribute="bottom" constant="431" id="1Id-Fw-J6u"/>
-                            <constraint firstItem="SKd-Ls-xec" firstAttribute="top" secondItem="fdr-v2-cPh" secondAttribute="bottom" constant="259" id="Kad-mi-b8a"/>
                             <constraint firstItem="NfA-pp-88s" firstAttribute="centerX" secondItem="vz4-NG-hhI" secondAttribute="centerX" constant="-14.5" id="Rma-Kr-TA1"/>
-                            <constraint firstItem="fdr-v2-cPh" firstAttribute="centerX" secondItem="vz4-NG-hhI" secondAttribute="centerX" id="Yuq-Hj-zhE"/>
                         </constraints>
                     </view>
                     <connections>
@@ -46,7 +43,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="33F-CU-DRK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-639.13043478260875" y="-13.392857142857142"/>
+            <point key="canvasLocation" x="-640.57971014492762" y="-14.0625"/>
         </scene>
         <!--Menu View Controller-->
         <scene sceneID="yS1-yO-Obh">
@@ -239,7 +236,7 @@
                         <outlet property="shareLocationButton" destination="Gco-hc-rny" id="YNf-Hr-gvn"/>
                         <outlet property="tableView" destination="AIa-TN-frx" id="HQH-qG-ZAY"/>
                         <segue destination="BFi-14-YEx" kind="show" identifier="showNavigation" id="XJR-OG-6ZO"/>
-                        <segue destination="EQ0-rl-fv3" kind="show" identifier="showIndoor" id="hsk-Lp-hjd"/>
+                        <segue destination="EQ0-rl-fv3" kind="show" identifier="setIndoor" id="hsk-Lp-hjd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ziq-YG-TPx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -267,7 +264,7 @@
                     </view>
                     <connections>
                         <outlet property="navigationView" destination="9eC-Nr-2We" id="ten-Xl-7JN"/>
-                        <segue destination="Drn-wn-kj7" kind="show" identifier="showIndoor" id="3hE-AW-Otc"/>
+                        <segue destination="Drn-wn-kj7" kind="show" identifier="viewIndoor" id="3hE-AW-Otc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jrU-nh-mwE" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -306,7 +303,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="300" height="725"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" misplaced="YES" id="qMW-bR-jow">
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="qMW-bR-jow">
                             <rect key="frame" x="0.0" y="0.0" width="300" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
@@ -320,7 +317,7 @@
                             </subviews>
                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         </view>
-                        <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zI5-KO-Bfa">
+                        <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zI5-KO-Bfa">
                             <rect key="frame" x="0.0" y="183" width="300" height="70"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Add Friend"/>
@@ -390,7 +387,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="separatorInset" minX="49" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="HamburgerCell" rowHeight="56" id="k2Q-yr-b9w" customClass="HamburgerCell" customModule="wya" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="HamburgerCell" rowHeight="56" id="k2Q-yr-b9w" customClass="HamburgerCell" customModule="wya" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="300" height="56"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="k2Q-yr-b9w" id="TOn-GQ-lKs">
@@ -524,10 +521,10 @@
             </objects>
             <point key="canvasLocation" x="3601" y="-13"/>
         </scene>
-        <!--View Controller-->
+        <!--View Indoor Location Controller-->
         <scene sceneID="HPV-Jq-1mk">
             <objects>
-                <viewController id="Drn-wn-kj7" sceneMemberID="viewController">
+                <viewController id="Drn-wn-kj7" customClass="ViewIndoorLocationController" customModule="wya" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jfb-SW-PW5"/>
                         <viewControllerLayoutGuide type="bottom" id="KsS-ys-4Ls"/>
@@ -548,15 +545,18 @@
                             <constraint firstItem="cZO-0q-eF4" firstAttribute="leading" secondItem="HOf-uQ-s64" secondAttribute="leading" id="r5P-22-RF7"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="sceneView" destination="cZO-0q-eF4" id="0f0-4V-sx2"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ChH-H2-V1f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2801" y="-695"/>
+            <point key="canvasLocation" x="3717" y="-605"/>
         </scene>
     </scenes>
     <resources>
         <image name="carsIcon" width="24" height="24"/>
-        <image name="hamburger" width="25" height="25"/>
+        <image name="hamburger" width="37.5" height="37.5"/>
         <image name="login_screen" width="1125" height="2436"/>
     </resources>
     <inferredMetricsTieBreakers>

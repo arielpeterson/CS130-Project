@@ -12,9 +12,8 @@ import MapKit
 import GoogleSignIn
 import Alamofire
 
-
 // Must change each time we run ngrok
-let SERVER = "http://54dd6bd9.ngrok.io"
+let SERVER = "ttp://8b2dd908.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
@@ -227,7 +226,7 @@ class QueryService {
     }
     
     // Toggle user's location sharing on and off.
-    func addFloor(building_name: String, floor_number: Int, floor_plan: UIImage) {
+    func addFloor(building_name: String, floor_number: String, floor_plan: UIImage) {
         let urlString = "/addFloor"
         let img = floor_plan.jpegData(compressionQuality: 0.2)
         let params : Parameters = ["building_name" : building_name,
@@ -248,7 +247,7 @@ class QueryService {
             
             if let data = imageData{
                 multipartFormData.append(data, withName: "floor_plan",
-                                         fileName: "floor_" + String(parameters["floor_number"] as! Int) + ".png",
+                                         fileName: "floor_" + (parameters["floor_number"] as! String) + ".png",
                                          mimeType: "image/png")
             }
             

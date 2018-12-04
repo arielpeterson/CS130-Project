@@ -108,11 +108,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if segue.identifier ==  "showNavigation"
         {
             let vc = segue.destination as! NavigationViewController
-
             vc.friend_email = selected_friend_email
         }
 
-        if segue.destination is SetIndoorLocationController
+        if segue.identifier == "setIndoor"
         {
             let vc = segue.destination as? SetIndoorLocationController
             vc?.image = self.indoor_floorplan
@@ -195,7 +194,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         return
                     }
                     self.indoor_floorplan = image 
-                    self.performSegue(withIdentifier: "showIndoor", sender: self)
+                    self.performSegue(withIdentifier: "setIndoor", sender: self)
                 }
             }
         })

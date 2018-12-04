@@ -1,5 +1,5 @@
 """
-This module contains contains the core logic of the server. It provides the mapping of all
+this module contains contains the core logic of the server. It provides the mapping of all
 communication between users, friends and the database. We are using the Flask framework to
 handle the server logic.
 
@@ -34,7 +34,7 @@ app = Flask(__name__)
 db = Db()
 
 os.environ['FLOOR_DIR'] = '../floor-images' # This is used for images processed to be sent to front-end
-os.environ['FULL_IMAGE_DIR'] = '../images' # This is used for images taken by user
+os.environ['FULL_IMAGE_DIR'] = '../floor-images' # This is used for images taken by user
 
 
 def create_test_app(uri):
@@ -194,7 +194,9 @@ def register_indoor():
     image = None
 
     try:
-        image = Image.open(path)
+        print("Looking in : {}".format('/Users/bradsquicciarini/build.jpg'))
+        image = Image.open('/Users/bradsquicciarini/build.jpg')
+        print("Not found")
         last_seen = time.time()
     except FileNotFoundError:
         logging.info('File not found for building: {}'.format(building))
@@ -204,9 +206,9 @@ def register_indoor():
     # px,py = model_to_pixel(location['x'], location['y'], image.size)
     image = image.crop((location['x']-150, location['y']-150, location['x']+150, location['y']+150))
     # Read room number
-    room = pytesseract.image_to_string(image)
-    if room == '':
-        room = None
+#    room = pytesseract.image_to_string(image)
+ #   if room == '':
+    room = None
     res = db.register_indoor(user_email, location, room, last_seen)
     if res:
         return Response('Updated!', status=200)

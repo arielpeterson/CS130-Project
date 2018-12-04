@@ -58,11 +58,12 @@ class AddFloorPlanController: UIViewController {
         let floorGeometry = SCNPlane(width: 1.0, height: 1.0)
         
         // TEMPORARY
-        let texture = UIImage(contentsOfFile: Bundle.main.path(forResource: "another", ofType: "jpeg")!)
+//        let texture = UIImage(contentsOfFile: Bundle.main.path(forResource: "another", ofType: "jpeg")!)
         
-        floorGeometry.firstMaterial?.diffuse.contents = texture
-        let floorNode = SCNNode(geometry: floorGeometry)
-        scene.rootNode.addChildNode(floorNode)
+//        floorGeometry.firstMaterial?.diffuse.contents = texture
+  //      let floorNode = SCNNode(geometry: floorGeometry)
+   //
+        //scene.rootNode.addChildNode(floorNode)
         
         sceneView.scene = scene
     }
@@ -72,7 +73,14 @@ class AddFloorPlanController: UIViewController {
         AttachmentHandler.shared.imagePickedBlock = { (image) in
             // Need to send floor number
             let qs = QueryService()
-            qs.addFloor(building_name: self.building, floor_number: 1, floor_plan: image)
+            qs.addFloor(building_name: self.building, floor_number: self.floorNum, floor_plan: image)
+            let floorGeometry = SCNPlane(width: 1.0, height: 1.0)
+            floorGeometry.firstMaterial?.diffuse.contents = image
+            let floorNode = SCNNode(geometry: floorGeometry)
+            self.scene.rootNode.addChildNode(floorNode)
+            
+            self.sceneView.scene = self.scene
+            
         }
     }
 }
