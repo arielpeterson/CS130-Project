@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import SceneKit
 
 class NavigationViewController: UIViewController {
     
@@ -22,7 +23,7 @@ class NavigationViewController: UIViewController {
     let regionRadius: CLLocationDistance = 1000
     var outdoorLocation = CLLocationCoordinate2D()
     var indoorAvailable = false
-    var indoorLocationPoint = CGPoint()
+    var indoorLocationPoint : [Any]?
     var indoorLocation : [String : Any]?
     
     override func viewDidLoad() {
@@ -44,13 +45,15 @@ class NavigationViewController: UIViewController {
                 }
                 
                 if self.indoorLocation != nil {
-                    self.indoorLocationPoint = CGPoint(x: (self.indoorLocation!["x"] as! Double), y: (self.indoorLocation!["y"] as! Double))
+                    self.indoorLocationPoint = [self.indoorLocation!["x"]!,
+                                                self.indoorLocation!["y"]!,
+                                                self.indoorLocation!["z"]!]
                     self.indoorAvailable = true
                 }
             }
         }
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(viewIndoor(_:)))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(showIndoor(_:)))
         navigationView.addGestureRecognizer(tap)
     }
     
@@ -75,16 +78,9 @@ class NavigationViewController: UIViewController {
         {
             let vc = segue.destination as! ViewIndoorLocationController
             let il = self.indoorLocation!
-            print( il["building"]as! String)
-            print(il["floor"]as! String)
-            qs.getFloorImage(building_name: il["building"] as! String, floor: il["floor"] as! String) { response in
-                guard let image = response else {
-                    print("Did not get image")
-                    return
-                }
-                vc.image = image
-            }
-            vc.indoorLocationPoint = self.indoorLocationPoint
+
+            vc.indoorLocation = self.indoorLocation
+
         }
     }
     

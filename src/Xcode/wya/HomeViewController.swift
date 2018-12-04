@@ -36,6 +36,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "customcell")
         checkLocationServices()
         NotificationCenter.default.addObserver(self, selector: #selector(refresh), name: NSNotification.Name(rawValue: "load"), object: nil)
+        
+        // Register location upon loading
+        qs.registerLocation(location: locationManager.location?.coordinate ?? CLLocationCoordinate2D(latitude: 34.0730698442746, longitude: -118.452035458737))
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -70,21 +73,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "customcell", for: indexPath)
         qs.getName(email: friends[indexPath.row]) { response in
-            guard let name = response else {
-                print("No name for that email address")
-                return
-            }
-            cell.textLabel?.text = name
+            cell.textLabel?.text = response!
         }
         return cell
-        
+
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! UITableViewCell
+        let cell = tableView.cellForRow(at: indexPath)
         //let selected_friend = cell.textLabel?.text! // friends name
         selected_friend_email = friends[indexPath.row]
         

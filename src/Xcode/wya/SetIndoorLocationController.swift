@@ -16,62 +16,61 @@ class SetIndoorLocationController: UIViewController {
     var image = UIImage()
     var building : String?
     var floor : String?
-    let scene = SCNScene()
-    var  plane : SCNPlane?
-    var markerNode : SCNNode?
+    var marker : SCNNode?
     let qs = QueryService()
-    var x : CGFloat = -1.0
-    var y : CGFloat = -1.0
-    
+    let scene = SCNScene()
+
+    // Convert from screen coordinates to world coordinates
+    func CGPointToSCNVector3(view: SCNView, depth: Float, point: CGPoint) -> SCNVector3 {
+        let projectedOrigin = view.projectPoint(SCNVector3Make(0, 0, depth))
+        let locationWithz  = SCNVector3Make(Float(point.x), Float(point.y) - 43, projectedOrigin.z)
+        return view.unprojectPoint(locationWithz)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set the scene
+        sceneView.scene = scene
+        sceneView!.allowsCameraControl = false
+        
+        // Tap gesture
         let tap = UITapGestureRecognizer(target: self, action: #selector(placePin(_:)))
         sceneView.addGestureRecognizer(tap)
         
-        plane = SCNPlane(width: 0.01, height: 0.01)
-       // plane!.firstMaterial?.diffuse.contents = UIColor(red: 30.0 / 255.0, green: 150.0 / 255.0, blue: 30.0 / 255.0, alpha: 1)
-        markerNode = SCNNode(geometry: plane)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
+        // Camera node
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
         cameraNode.position = SCNVector3(x: 0.0, y: 0.0, z: 2.0)
         scene.rootNode.addChildNode(cameraNode)
         
+        // Floorplan Node
         let floorGeometry = SCNPlane(width: 1.0, height: 1.0)
         floorGeometry.firstMaterial?.diffuse.contents = image
         let floorNode = SCNNode(geometry: floorGeometry)
         scene.rootNode.addChildNode(floorNode)
         
-        sceneView.scene = scene
+        // Marker node
+        let triangle = SCNPyramid(width: 0.0025, height: 0.125, length:0.125)
+        triangle.firstMaterial?.diffuse.contents = UIColor(displayP3Red: 101/255, green: 182/255, blue: 245/255, alpha: 1)
+        marker = SCNNode(geometry: triangle);
+        marker!.transform = SCNMatrix4Rotate(marker!.transform, Float.pi/2,0,1,0)
+        marker!.transform = SCNMatrix4Rotate(marker!.transform, Float.pi, 0,0,1)
+        scene.rootNode.addChildNode(marker!)
     }
     
     @objc func placePin(_ sender: UITapGestureRecognizer) {
         if sender.state == .ended  {
             let tapLocation = sender.location(in: sceneView)
-            markerNode!.position = sceneView.unprojectPoint(SCNVector3(tapLocation.x, tapLocation.y, 0.1))
-            scene.rootNode.addChildNode(markerNode!)
-            self.x = tapLocation.x
-            self.y = tapLocation.y
-
-            //
-//            let sayButtonT = UIButton(type: .system)
-//            button.setTitle("Done")
-//            sayButtonT.addTarget(self, action: #selector(unwindToHome(_:)), for: .touchUpInside)
-            
-            let button1 = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(unwindToHome))
-            // action:#selector(Class.MethodName) for swift 3
-            self.navigationItem.rightBarButtonItem  = button1
+            marker!.position = CGPointToSCNVector3(view: sceneView, depth: 0, point: CGPoint(x: tapLocation.x, y: tapLocation.y))
+            let done_button = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.done, target: self, action: #selector(unwindToHome))
+            self.navigationItem.rightBarButtonItem  = done_button
         }
     }
-    @objc
-    func unwindToHome(_ sender: Any) {
-        qs.registerIndoor(location: Array([self.building!, self.floor!, self.x, self.y]))
+    
+    @objc func unwindToHome(_ sender: Any) {
+        // Save marker's location (in world coordinates)
+        qs.registerIndoor(location: [self.building!, self.floor!, marker!.position.x, marker!.position.y, marker!.position.z])
         self.performSegue(withIdentifier: "unwindToHome", sender: self)
     }
 }

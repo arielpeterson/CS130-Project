@@ -58,7 +58,7 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
             let cell = tableView.dequeueReusableCell(withIdentifier: "mycell", for: indexPath) as! MyTableViewCell
             qs.getName(email: friends[indexPath.row]) { response in
                 guard let name = response else {
-                    print("No name for that email address")
+                    print("No name for that username")
                     return
                 }
                 cell.nameLabel?.text = name
@@ -70,8 +70,8 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
     
     @IBAction func addFriendButtonTapped(_ sender: Any) {
         
-        let alert = UIAlertController(title: "Add Friend", message: "Enter your friend's email", preferredStyle: .alert)
-        let error_email_dne = UIAlertController(title: "Error", message: "No friend with that email exists", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add Friend", message: "Enter your friend's username", preferredStyle: .alert)
+        let error_email_dne = UIAlertController(title: "Error", message: "No friend with that username exists", preferredStyle: .alert)
         let error_duplicate_friend = UIAlertController(title: "Error", message: "You are already friends with that user", preferredStyle: .alert)
         
         alert.addTextField { (textField) in
@@ -83,7 +83,7 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
             // Check if friend is a user in our database
             self.qs.getName(email: add_friend_email!) { response in
                 guard let name = response else {
-                    print("No name for that email address")
+                    print("No name for that username")
                     error_email_dne.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
                     self.present(error_email_dne, animated: true, completion: nil)
                     return
@@ -91,12 +91,11 @@ class ViewFriendsController : UIViewController, UITableViewDataSource, UITableVi
             }
             // Check if user is already friends
             if self.friends.contains(add_friend_email!) {
-                print("No name for that email address")
+                print("No name for that username")
                 error_duplicate_friend.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
                 self.present(error_duplicate_friend, animated: true, completion: nil)
                 return
             }
-            
             
             self.qs.addFriend(friend_email: add_friend_email!)
             

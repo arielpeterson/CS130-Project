@@ -13,24 +13,24 @@ import GoogleSignIn
 import Alamofire
 
 // Must change each time we run ngrok
-let SERVER = "ttp://8b2dd908.ngrok.io"
+let SERVER = "http://54dd6bd9.ngrok.io"
 
 class QueryService {
     typealias JSONDictionary = [String: Any]
     var errorMessage = ""
-    var username_ : String
-    var user_email_ : String
+    var email : String
+    var name : String
 
     init() {
         // We are using email for username
-        user_email_ =  (GIDSignIn.sharedInstance().currentUser?.profile.email)!
-        username_ =  user_email_
+        email =  (GIDSignIn.sharedInstance().currentUser?.profile.email)!
+        name = (GIDSignIn.sharedInstance().currentUser?.profile.givenName)!
     }
     
     // Adds a new user to the database.
     func addUser() {
         let urlString = SERVER + "/addUser"
-        let parameters : Parameters = ["user_email": user_email_, "user_name" : username_]
+        let parameters : Parameters = ["user_email" : email, "user_name" : name]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
@@ -41,29 +41,23 @@ class QueryService {
     // AND add user to friend's friend list
     func addFriend(friend_email :String){
         let urlString = SERVER + "/addFriend"
-        var parameters : Parameters = ["user_email" : user_email_, "friend_email": friend_email]
+        let parameters : Parameters = ["user_email" : email, "friend_email" : friend_email]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
         }
-        parameters = ["user_email" : friend_email, "friend_email": user_email_]
-        Alamofire.request(urlString, parameters: parameters).response { response in
-            // Handle response
-            debugPrint(response)
-        }
-        
     }
     
     // Remove friend from user's friend list
     // AND remove user from friend's friend list
     func deleteFriend(friend_email :String) {
         let urlString = SERVER + "/deleteFriend"
-        var parameters : Parameters = ["user_email" : user_email_, "friend_email": friend_email]
+        var parameters : Parameters = ["user_email" : email, "friend_email": friend_email]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
         }
-        parameters = ["user_email" : friend_email, "friend_email": user_email_]
+        parameters = ["user_email" : friend_email, "friend_email": email]
         Alamofire.request(urlString, parameters: parameters).response { response in
             // Handle response
             debugPrint(response)
@@ -73,7 +67,7 @@ class QueryService {
     // Get friends list. Note has a completion handler because asynchronous
     func getFriends(completion: @escaping ([String]?) -> Void) {
         let urlString = SERVER + "/getFriends"
-        var parameters : Parameters = ["user_email" : user_email_]
+        var parameters : Parameters = ["user_email" : email]
         Alamofire.request(urlString, parameters: parameters).response { response in
             
             guard let data = response.data else {
@@ -98,7 +92,7 @@ class QueryService {
     func registerLocation(location : CLLocationCoordinate2D) {
         let urlString = SERVER + "/registerLocation"
         // Store MKCoordinateREgion as JSON?
-        let params : [String:Any] = ["user_email" :  user_email_, "location": ["latitude": location.latitude, "longitude": location.longitude]]
+        let params : [String:Any] = ["user_email" :  email, "location": ["latitude": location.latitude, "longitude": location.longitude]]
         let request = Alamofire.request(urlString, method: .post, parameters: params, encoding: JSONEncoding.default).response { response in
             // Handle resonse
             debugPrint(response)
@@ -108,12 +102,13 @@ class QueryService {
     func registerIndoor(location : [Any]) {
         let urlString = SERVER + "/registerIndoor"
         // Store MKCoordinateREgion as JSON?
-        let params : [String:Any] = ["user_email" :  user_email_, "location": ["building": location[0],
+        let params : [String:Any] = ["user_email" :  email, "location": ["building": location[0],
                                                                                "floor": location[1],
                                                                                "x": location[2],
-                                                                               "y": location[3]]]
-        let request = Alamofire.request(urlString, method: .post, parameters: params, encoding: JSONEncoding.default).response { response in
-            // Handle resonse
+                                                                               "y": location[3],
+                                                                               "z":location[4]]]
+        let request = Alamofire.request(urlString, method: .post, parameters: params, encoding: JSONEncoding.default).response {
+            response in
             debugPrint(response)
         }
     }
@@ -125,7 +120,7 @@ class QueryService {
     func lookup(friend_email :String, completion: @escaping ([String:Any]?) -> Void) {
         
         let urlString = SERVER + "/lookup"
-        let parameters : Parameters = ["user_email" : user_email_, "friend_email": friend_email]
+        let parameters : Parameters = ["user_email" : email, "friend_email": friend_email]
         Alamofire.request(urlString, parameters: parameters).responseJSON
             { response in
                 guard let data = response.data else {
@@ -148,7 +143,7 @@ class QueryService {
     // Toggle user's location sharing on and off.
     func toggle() {
         let urlString = SERVER + "/toggle"
-        let parameters : Parameters = ["user_email" : user_email_]
+        let parameters : Parameters = ["user_email" : email]
         Alamofire.request(urlString, parameters: parameters).response { response in debugPrint(response) }
     }
     
