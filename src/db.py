@@ -239,7 +239,7 @@ class Db(object):
         Arguments
         --------------------
             user_email      -- a String, the name of the user
-            location        -- a dictionary, keys: 'x', 'y', 'building', 'floor'
+            location        -- a dictionary, keys: 'x', 'y', 'z', 'building', 'floor'
             room            -- an int, the detected room number of user
             last_seen       -- a float, the timestamp of when indoor location is registered
 

@@ -5,15 +5,6 @@ handle the server logic.
 
 Endpoints will be exposed at http://localhost:3001/<endpoint>
 
-Design Pattern
-----------------------
-This component of our application follows the Mediator design pattern as it
-    1. Promotes loose coupling by keeping users from referring to each other explicitly.
-       Any request for data, locations, updating information must go through this module
-    2. Promotoes a many-to-many relationship. Each user must communicate with every one of
-       its friends, and every user has a different friend list. This complicated communication
-       is abstracted away by the mediator (app.py)
-
 
 Information Hiding Principle
 ----------------------
@@ -210,8 +201,8 @@ def register_indoor():
         return Response('No floor plan found', status=400)
         
     # Crop 
-    px,py = model_to_pixel(location['x'], location['y'], image.size)
-    image = image.crop((px-150, py-150, px+150, py+150))
+    # px,py = model_to_pixel(location['x'], location['y'], image.size)
+    image = image.crop((location['x']-150, location['y']-150, location['x']+150, location['y']+150))
     # Read room number
     room = pytesseract.image_to_string(image)
     if room == '':
@@ -472,6 +463,7 @@ def get_floor_image():
     building_name = request.args.get('building_name')
     floor = request.args.get('floor')
     image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name + '_{}.png'.format(floor))
+    print(os.path.join(os.getcwd(), os.environ.get('FLOOR_DIR')), os.path.basename(image_path))
     return send_from_directory(os.path.join(os.getcwd(), os.environ.get('FLOOR_DIR')), os.path.basename(image_path))
     
 @app.route('/addBuilding', methods=['GET'])

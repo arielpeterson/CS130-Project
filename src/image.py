@@ -36,6 +36,7 @@ class CvExtractor:
         sorted_lines = sorted(lines, key=lambda x: x[:,1] + x[:,3] - x[:,0], reverse=True)
         # Filter out lines that are too short
         done = False
+        lowest = sorted_lines[0][0]
         for line in sorted_lines:
             if done:
                 break
@@ -49,6 +50,7 @@ class CvExtractor:
         sorted_lines = sorted(lines, key=lambda x: x[:,1] + x[:,3] - x[:,2])
 
         done = False
+        highest = sorted_lines[0][0]
         for line in sorted_lines:
             if done:
                 break
