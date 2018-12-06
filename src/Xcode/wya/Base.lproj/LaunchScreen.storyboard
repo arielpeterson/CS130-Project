@@ -21,12 +21,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="launch_screen" translatesAutoresizingMaskIntoConstraints="NO" id="itq-bB-KWT">
-                                <rect key="frame" x="0.0" y="0.0" width="424" height="896"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="launch_screen" translatesAutoresizingMaskIntoConstraints="NO" id="itq-bB-KWT">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="itq-bB-KWT" secondAttribute="trailing" id="Hab-ks-oxZ"/>
+                            <constraint firstItem="itq-bB-KWT" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="mQb-g6-9lm"/>
+                            <constraint firstItem="itq-bB-KWT" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="o1T-8g-3Wb"/>
+                            <constraint firstAttribute="bottom" secondItem="itq-bB-KWT" secondAttribute="bottom" id="rdV-xU-4g1"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
