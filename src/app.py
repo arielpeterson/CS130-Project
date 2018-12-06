@@ -33,7 +33,7 @@ from image import CvExtractor
 app = Flask(__name__)
 db = Db()
 
-os.environ['FLOOR_DIR'] = '../floor-images' # This is used for images processed to be sent to front-end
+os.environ['FLOOR_DIR'] = '../images' # This is used for images processed to be sent to front-end
 os.environ['FULL_IMAGE_DIR'] = '../floor-images' # This is used for images taken by user
 
 
@@ -194,8 +194,7 @@ def register_indoor():
     image = None
 
     try:
-        print("Looking in : {}".format('/Users/bradsquicciarini/build.jpg'))
-        image = Image.open('/Users/bradsquicciarini/build.jpg')
+        image = Image.open(path)
         print("Not found")
         last_seen = time.time()
     except FileNotFoundError:
@@ -206,9 +205,9 @@ def register_indoor():
     # px,py = model_to_pixel(location['x'], location['y'], image.size)
     image = image.crop((location['x']-150, location['y']-150, location['x']+150, location['y']+150))
     # Read room number
-#    room = pytesseract.image_to_string(image)
- #   if room == '':
-    room = None
+    room = pytesseract.image_to_string(image)
+    if room == '':
+        room = None
     res = db.register_indoor(user_email, location, room, last_seen)
     if res:
         return Response('Updated!', status=200)
@@ -410,7 +409,7 @@ def add_floor():
 
     # Save full image as ../images/<building>_<floor>.png
     full_image_path = os.path.join(os.environ.get('FULL_IMAGE_DIR'), building_name + '_{}.jpg'.format(floor_number))
-    floor_plan.resize((960,960)).save(full_image_path)
+    floor_plan.resize((960,960)).rotate(270).save(full_image_path)
 
     # Run CV on image
     cv = CvExtractor()
@@ -464,9 +463,9 @@ def get_floor_image():
     print(os.getcwd())
     building_name = request.args.get('building_name')
     floor = request.args.get('floor')
-    image_path = os.path.join(os.environ.get('FLOOR_DIR'), building_name + '_{}.png'.format(floor))
-    print(os.path.join(os.getcwd(), os.environ.get('FLOOR_DIR')), os.path.basename(image_path))
-    return send_from_directory(os.path.join(os.getcwd(), os.environ.get('FLOOR_DIR')), os.path.basename(image_path))
+    image_path = os.path.join('../floor-images', building_name + '_{}.png'.format(floor))
+    print(os.path.join(os.getcwd(), '../floor-images'), os.path.basename(image_path))
+    return send_from_directory(os.path.join(os.getcwd(), '../floor-images'), os.path.basename(image_path))
     
 @app.route('/addBuilding', methods=['GET'])
 def add_building():
